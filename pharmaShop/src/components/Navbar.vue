@@ -87,4 +87,12 @@ export default {};
 .span-cart {
   font-size: 17px;
 }
+@media screen and (max-width: 833px) {
+  .login{
+    font-size: 15px;
+  }
+  .register{
+    font-size: 15px;
+  }
+}
 </style>
