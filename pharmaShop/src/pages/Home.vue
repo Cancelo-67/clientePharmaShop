@@ -23,7 +23,6 @@ export default {
       .catch((error) => {
         console.error("Error al obtener los productos:", error);
       });
-    º;
   },
 };
 </script>

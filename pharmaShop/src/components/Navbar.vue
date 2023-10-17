@@ -31,8 +31,28 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
 import "@fortawesome/fontawesome-free/css/all.css";
-export default {};
+export default {
+  methods: {
+    ...mapMutations(["setLogued"]),
+    changeValue() {
+      console.log(setLogued);
+      this.setLogued(false);
+      console.log(setLogued);
+    },
+    logOut() {
+      this.changeValue();
+      this.$router.push("/");
+      localStorage.removeItem("userLogued");
+    },
+  },
+  computed: {
+    ...mapState({
+      logued: (state) => state.logued,
+    }),
+  },
+};
 </script>
 
 <style scoped>
@@ -61,6 +81,7 @@ export default {};
   border-radius: 10%;
 }
 .navbar {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -88,10 +109,10 @@ export default {};
   font-size: 17px;
 }
 @media screen and (max-width: 833px) {
-  .login{
+  .login {
     font-size: 15px;
   }
-  .register{
+  .register {
     font-size: 15px;
   }
 }
