@@ -2,7 +2,7 @@
   <div class="popup" v-if="goodPopup">
     <div class="popup-content">
       <h2>Usuario logueado</h2>
-      <p>Bienvenido a PharmaShop {{ formData.email }}!</p>
+      <p>Bienvenido a PharmaShop!</p>
     </div>
   </div>
   <div class="popup" v-if="badPopup">
@@ -13,9 +13,9 @@
   </div>
   <div class="container">
     <form @submit.prevent="submitForm">
-      <h1>Iniciar de Sesion</h1>
+      <h1>Iniciar Sesión</h1>
       <div class="form-group">
-        <label for="username">Correo Electronico</label>
+        <label for="username">Correo Electrónico</label>
         <input type="text" id="username" v-model="formData.email" />
       </div>
 
@@ -23,17 +23,16 @@
         <label for="password">Contraseña</label>
         <input type="password" id="password" v-model="formData.password" />
       </div>
-      <router-link to="/register">
-        <p>¿Has olvidado tu documentacion?</p>
-      </router-link>
-      <button type="submit">Iniciar Sesion</button>
+      <button type="submit">Iniciar Sesión</button>
       <p>O si lo prefieres</p>
-      <button>
+      <button class="google-login">
         <i class="fa-brands fa-google"></i>
         <p>Acceder con Google</p>
       </button>
       <p>¿Eres un nuevo cliente?</p>
-      <p>Crea una nueva cuenta pulsando aqui</p>
+      <router-link to="/register">
+        <p>Crea una nueva cuenta pulsando aquí</p>
+      </router-link>
     </form>
   </div>
 </template>
@@ -45,7 +44,6 @@ export default {
     return {
       // Creo un objeto que contiene los datos del formulario
       formData: {
-        username: "",
         email: "",
         password: "",
       },
@@ -59,7 +57,7 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        const response = await axios.get("https://dummyjson.com/users");
+        const response = await axios.get("https://dummyjson.com/users"); //https://dummyjson.com/users
         this.users = response.data.users;
         console.log(this.users);
       } catch (error) {
@@ -68,16 +66,12 @@ export default {
     },
     async submitForm() {
       try {
-        const userExists = this.users.some(
-          (user) => user.email === this.formData.email
+        const userExists = this.users.find(
+          (user) =>
+            user.email === this.formData.email &&
+            user.password === this.formData.password
         );
-        const emailExists = this.users.some(
-          (user) => user.email === this.formData.email
-        );
-        const passwordExists = this.users.some(
-          (user) => user.password === this.formData.password
-        );
-        if (!emailExists && !passwordExists) {
+        if (!userExists) {
           this.badPopup = true;
           setTimeout(() => {
             this.badPopup = false;
@@ -106,19 +100,26 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 60vh;
+  padding: 2rem; /* Agregar espacio alrededor del formulario */
+  a {
+    p {
+      text-decoration: none;
+      color: #fff;
+    }
+  }
 }
 
 form {
-  height: 90%;
-  width: 29%;
+  width: 100%;
+  max-width: 450px; /* Limitar el ancho del formulario en pantallas grandes */
   background-color: #003366;
+  padding: 1rem; /* Agregar espacio dentro del formulario */
+  border-radius: 5px;
+  color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  color: #fff;
-  border-radius: 5%;
 }
 
 .form-group {
@@ -128,15 +129,17 @@ form {
 }
 
 label {
-  font-size: 10px;
-  margin-bottom: 7%;
+  font-size: 14px; /* Aumentar el tamaño de la fuente de las etiquetas */
+  margin-bottom: 0.5rem; /* Reducir el espacio entre etiquetas y campos de entrada */
 }
 
 input {
   background-color: #0056b3;
-  border-radius: 4px;
+  border-radius: 5px;
   border: 1px solid;
   color: #fff;
+  padding: 0.5rem; /* Aumentar el espacio interno de los campos de entrada */
+  font-size: 14px; /* Aumentar el tamaño de la fuente de los campos de entrada */
 }
 
 button {
@@ -145,9 +148,21 @@ button {
   color: #fff;
   border: none;
   cursor: pointer;
-  border-radius: 10%;
-  width: 35%;
+  border-radius: 5px;
+  font-size: 14px; /* Aumentar el tamaño de la fuente del botón */
+  margin-top: 1rem; /* Agregar espacio entre el botón y los campos de entrada */
 }
+
+.google-login {
+  display: flex;
+  align-items: center;
+}
+
+.google-login i {
+  font-size: 20px; /* Aumentar el tamaño del ícono de Google */
+  margin-right: 0.5rem; /* Agregar espacio entre el ícono y el texto */
+}
+
 .popup {
   position: fixed;
   top: 0;
@@ -163,7 +178,30 @@ button {
 .popup-content {
   background-color: #fff;
   padding: 1rem;
-  border-radius: 4px;
+  border-radius: 5px;
   text-align: center;
+}
+
+/* Estilos para hacer la página responsive */
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 1rem; /* Reducir el espacio alrededor del formulario en pantallas pequeñas */
+  }
+
+  form {
+    padding: 1rem; /* Reducir el espacio dentro del formulario en pantallas pequeñas */
+  }
+
+  label {
+    font-size: 16px; /* Aumentar el tamaño de la fuente de las etiquetas en pantallas pequeñas */
+  }
+
+  input {
+    font-size: 16px; /* Aumentar el tamaño de la fuente de los campos de entrada en pantallas pequeñas */
+  }
+
+  button {
+    font-size: 16px; /* Aumentar el tamaño de la fuente del botón en pantallas pequeñas */
+  }
 }
 </style>
