@@ -121,7 +121,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  padding: 2rem;
   a {
     p {
       text-decoration: none;
@@ -133,15 +133,14 @@ export default {
 form {
   width: 100%;
   max-width: 450px;
-  height: 50%;
   background-color: #003366;
+  padding: 1rem;
+  color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  color: #fff;
   border-radius: 5px;
-  padding: 20px;
 }
 
 .form-group {
@@ -158,8 +157,9 @@ label {
 input {
   background-color: #0056b3;
   border-radius: 5px;
+  border: 1px solid;
   color: #fff;
-  padding: 0.5rem;
+  padding: 0.3rem;
   font-size: 14px;
 }
 
@@ -172,6 +172,7 @@ button {
   border-radius: 5px;
   font-size: 14px;
   margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 .google-login {
   display: flex;

@@ -30,7 +30,7 @@
         <p>Acceder con Google</p>
       </button>
       <p>¿Eres un nuevo cliente?</p>
-      <router-link to="/register">
+      <router-link to="/register" class="spec">
         <p>Crea una nueva cuenta pulsando aquí</p>
       </router-link>
     </form>
@@ -101,12 +101,6 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 2rem; /* Agregar espacio alrededor del formulario */
-  a {
-    p {
-      text-decoration: none;
-      color: #fff;
-    }
-  }
 }
 
 form {
@@ -120,6 +114,9 @@ form {
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
+}
+.spec {
+  color: #fff;
 }
 
 .form-group {
@@ -138,7 +135,7 @@ input {
   border-radius: 5px;
   border: 1px solid;
   color: #fff;
-  padding: 0.5rem; /* Aumentar el espacio interno de los campos de entrada */
+  padding: 0.3rem; /* Aumentar el espacio interno de los campos de entrada */
   font-size: 14px; /* Aumentar el tamaño de la fuente de los campos de entrada */
 }
 
@@ -151,6 +148,7 @@ button {
   border-radius: 5px;
   font-size: 14px; /* Aumentar el tamaño de la fuente del botón */
   margin-top: 1rem; /* Agregar espacio entre el botón y los campos de entrada */
+  margin-bottom: 1rem;
 }
 
 .google-login {

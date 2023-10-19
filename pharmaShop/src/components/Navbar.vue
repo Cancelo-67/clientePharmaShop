@@ -8,41 +8,42 @@
     <div v-if="!logued" class="navbar-logo">
       <img class="img-logo" src="../images/logo.png" alt="Logo" />
     </div>
-    <div class="navbar-icons">
-      <!-- Usuario logueado -->
+    <div :class="classNavBarIcons">
+      <!-- Usuario logueado desktop -->
       <router-link v-if="logued" to="/profile" class="navbar-icon">
-        <i class="fas fa-user"></i>
+        <button>Categoria 1</button>
       </router-link>
       <router-link v-if="logued" to="/cart" class="navbar-icon">
-        <i class="fas fa-shopping-cart"></i>
+        <button>Categoria 2</button>
       </router-link>
       <router-link v-if="logued" to="/login" class="navbar-icon">
         <i @click="logOut" class="fa-solid fa-right-from-bracket"></i>
       </router-link>
-      <!-- Usuario no logueado -->
-      <router-link v-if="!logued" to="/login" class="login">
+      <!-- Usuario no logueado desktop -->
+      <router-link v-if="!logued" to="/login" class="btn-navbar">
         <p>Iniciar sesión</p>
       </router-link>
-      <router-link v-if="!logued" to="/register" class="register">
+      <router-link v-if="!logued" to="/register" class="btn-navbar">
         <p>Registrarse</p>
       </router-link>
     </div>
-    <!-- Botón de menú hamburguesa para dispositivos móviles -->
+    <!-- Botón de menú desplegable para móviles -->
     <div class="menu-button" @click="toggleMobileMenu">
-      <i class="fa-solid fa-bars"></i>
+      <i class="fa-solid fa-bars" style="color: #003366"></i>
     </div>
-    <!-- Menú desplegable para dispositivos móviles -->
+    <!-- Menú SI logueado desplegable para dispositivos móviles -->
     <transition name="slide">
       <div class="mobile-menu" v-if="showMobileMenu">
-        <router-link to="/profile" class="mobile-menu-item" v-if="logued">
-          Perfil
+        <router-link to="/" class="mobile-menu-item" v-if="logued">
+          <i class="fa-solid fa-house"></i>
         </router-link>
         <router-link to="/cart" class="mobile-menu-item" v-if="logued">
-          Carrito
+          <i class="fa-solid fa-cart-shopping"></i>
         </router-link>
         <router-link to="/login" class="mobile-menu-item" v-if="logued">
-          Cerrar Sesión
+          <i class="fa-solid fa-right-from-bracket"></i>
         </router-link>
+        <!-- Menú NO logueado desplegable para dispositivos móviles -->
         <router-link to="/login" class="mobile-menu-item" v-if="!logued">
           Iniciar Sesión
         </router-link>
@@ -62,14 +63,20 @@ export default {
   data() {
     return {
       showMobileMenu: false,
-      logued: false,
+      logued: true,
+      classNavBarIcons: "navbar-iconsLogued",
     };
+  },
+  watch: {
+    $route(to, from) {
+      this.showMobileMenu = false; // Sirve para quitar el menu de la pantalla cuando cambia de ruta
+    },
   },
   methods: {
     ...mapMutations(["setLogued"]),
     changeValue() {
       this.setLogued(false);
-      this.showMobileMenu = false; // Cerrar el menú en dispositivos móviles al cambiar de estado
+      this.showMobileMenu = false;
       localStorage.removeItem("userLogued");
     },
     logOut() {
@@ -78,6 +85,13 @@ export default {
     },
     toggleMobileMenu() {
       this.showMobileMenu = !this.showMobileMenu;
+    },
+    changeClassNavbarIcons() {
+      if (this.logued) {
+        this.classNavBarIcons = "navbar-iconsLogued";
+      } else {
+        this.classNavBarIcons = "navbar-iconsNoLogued";
+      }
     },
   },
   computed: {
@@ -89,55 +103,54 @@ export default {
 </script>
 
 <style scoped>
+.navbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+}
+.navbar-iconsLogued {
+  width: 93%;
+  display: flex;
+  justify-content: space-evenly;
+}
+.navbar-iconsNoLogued {
+  width: 93%;
+  display: flex;
+}
 .menu-button {
-  display: none; /* Ocultar en pantallas más grandes */
+  display: none;
   font-size: 25px;
   cursor: pointer;
 }
 .navbar-logo {
+  width: 98%;
+  display: flex;
 }
 .img-logo {
   border-radius: 91px;
   width: 150px;
 }
-.register {
+.btn-navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  max-width: 12vw;
+  height: 6vh;
   background-color: #003366;
   text-decoration: none;
-  color: inherit;
-  font-size: 20px;
-  padding: 0.3rem 0.7rem;
+  color: #ffffff;
+  font-size: 15px;
+  border-radius: 5px;
 }
-.register:hover {
-  transition: 0.5s;
-  color: white;
-  background-color: #4a4646;
-  border-radius: 10%;
-}
-.login {
-  text-decoration: none;
-  color: inherit;
-  font-size: 20px;
-  padding: 0.3rem 0.7rem;
-}
-.login:hover {
-  transition: 0.5s;
-  color: white;
-  background-color: #4a4646;
-  border-radius: 10%;
-}
-
-.navbar {
+.fa-solid fa-house .navbar {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 0.4rem;
   background-color: #f1f1f1;
-}
-
-.navbar-icons {
-  /* Estilo de tus iconos de navegación */
-  display: flex;
 }
 
 .mobile-menu {
@@ -159,7 +172,6 @@ export default {
   color: white;
 }
 
-/* Estilos de la animación de deslizamiento */
 .slide-enter-active,
 .slide-leave-active {
   transition: transform 0.8s;
@@ -177,20 +189,26 @@ export default {
 }
 
 /* Media query para mostrar el botón de menú hamburguesa en pantallas pequeñas */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 782px) {
   .navbar {
+    padding: 1rem;
     background-color: transparent;
+  }
+  .navbar-iconsLogued {
+    display: none;
+  }
+  .navbar-iconsNoLogued {
+    display: none;
   }
   .menu-button {
     display: block;
   }
   .navbar-logo {
-    /* Estilo de tu logotipo */
     display: none;
   }
 
   .navbar-icons {
-    display: none; /* Ocultar iconos de navegación en pantallas pequeñas */
+    display: none;
   }
 }
 </style>
