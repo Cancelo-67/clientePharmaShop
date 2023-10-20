@@ -10,15 +10,34 @@
     </div>
     <div :class="classNavBarIcons">
       <!-- Usuario logueado desktop -->
-      <router-link v-if="logued" to="/profile" class="navbar-icon">
-        <button>Categoria 1</button>
+      <router-link v-if="logued" to="" class="navbar-icon">
+        <button class="category-button">Dieta y Nutricion</button>
       </router-link>
-      <router-link v-if="logued" to="/cart" class="navbar-icon">
-        <button>Categoria 2</button>
+      <router-link v-if="logued" to="" class="navbar-icon">
+        <button class="category-button">Salud</button>
       </router-link>
-      <router-link v-if="logued" to="/login" class="navbar-icon">
-        <i @click="logOut" class="fa-solid fa-right-from-bracket"></i>
+      <router-link v-if="logued" to="" class="navbar-icon">
+        <button class="category-button">Cosmetica e higiene</button>
       </router-link>
+      <div>
+        <i class="fa-solid fa-cart-shopping" style="color: #000000"></i>
+      </div>
+      <div>
+        <i
+          class="fa-solid fa-user"
+          @click="showUserMenu = !showUserMenu"
+          style="color: #000000"
+        ></i>
+        <div class="user-dropdown" v-if="showUserMenu">
+          <ul>
+            <li><router-link to="/perfil">Perfil</router-link></li>
+            <li>
+              <router-link to="/configuracion">Configuración</router-link>
+            </li>
+            <li @click="logOut">Cerrar sesión</li>
+          </ul>
+        </div>
+      </div>
       <!-- Usuario no logueado desktop -->
       <router-link v-if="!logued" to="/login" class="btn-navbar">
         <p>Iniciar sesión</p>
@@ -37,7 +56,7 @@
         <router-link to="/" class="mobile-menu-item" v-if="logued">
           <i class="fa-solid fa-house"></i>
         </router-link>
-        <router-link to="/cart" class="mobile-menu-item" v-if="logued">
+        <router-link to="" class="mobile-menu-item" v-if="logued">
           <i class="fa-solid fa-cart-shopping"></i>
         </router-link>
         <router-link to="/login" class="mobile-menu-item" v-if="logued">
@@ -63,14 +82,10 @@ export default {
   data() {
     return {
       showMobileMenu: false,
+      showUserMenu: false,
       logued: true,
       classNavBarIcons: "navbar-iconsLogued",
     };
-  },
-  watch: {
-    $route(to, from) {
-      this.showMobileMenu = false; // Sirve para quitar el menu de la pantalla cuando cambia de ruta
-    },
   },
   methods: {
     ...mapMutations(["setLogued"]),
@@ -81,6 +96,7 @@ export default {
     },
     logOut() {
       this.changeValue();
+      this.showUserMenu = false; // Ocultar el menú después de cerrar sesión
       this.$router.push("/");
     },
     toggleMobileMenu() {
@@ -109,6 +125,11 @@ export default {
   align-items: center;
   padding: 1rem;
 }
+.navbar-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .navbar-iconsLogued {
   width: 93%;
   display: flex;
@@ -124,12 +145,23 @@ export default {
   cursor: pointer;
 }
 .navbar-logo {
-  width: 98%;
+  width: 45%;
   display: flex;
 }
 .img-logo {
   border-radius: 91px;
   width: 150px;
+}
+.category-button {
+  background-color: #003366;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 16px;
 }
 .btn-navbar {
   display: flex;
@@ -144,6 +176,12 @@ export default {
   font-size: 15px;
   border-radius: 5px;
 }
+
+/* Iconos de fontawesome */
+.fa-solid.fa-cart-shopping,
+.fa-solid.fa-user {
+  font-size: 30px;
+}
 .fa-solid fa-house .navbar {
   width: 100%;
   display: flex;
@@ -151,6 +189,34 @@ export default {
   align-items: center;
   padding: 0.4rem;
   background-color: #f1f1f1;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  z-index: 1;
+}
+
+.user-dropdown ul {
+  list-style: none;
+  padding: 0;
+}
+
+.user-dropdown ul li {
+  padding: 5px;
+  cursor: pointer;
+  color: #000;
+  text-decoration: none;
+}
+
+.user-dropdown ul li:hover {
+  background-color: #003366;
+  color: #fff;
 }
 
 .mobile-menu {

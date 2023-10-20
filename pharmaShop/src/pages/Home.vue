@@ -1,19 +1,41 @@
 <template>
-  <div class="page-content">
-    <div class="filter-bar">
-      <div class="filter-title">Filtros</div>
-      <select v-model="selectedFilter" class="filter-select">
-        <option value="all">Todos los productos</option>
-        <option value="10">$10 o menos</option>
-        <option value="20">$20 o menos</option>
-        <option value="50">$50 o menos</option>
-        <option value="100">$100 o menos</option>
-        <option value="200">$200 o menos</option>
-      </select>
-    </div>
+  <div class="first-search">
     <div class="search-bar">
       <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" class="search-input" placeholder="Buscar productos" />
+      <input type="text" class="search-input" placeholder="Buscar" />
+    </div>
+  </div>
+  <div class="page-content">
+    <!-- Botón de filtro para dispositivos móviles -->
+    <button class="filter-toggle" @click="toggleFilters">
+      <i class="fa-solid fa-filter"></i> Filtrar
+    </button>
+    <div class="filter-bar" :class="{ 'show-filters': showFilters }">
+      <div class="filter-close" @click="closeFilters">
+        <button class="close-button">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="filter-title">Filtros</div>
+      <div class="filter-section">
+        <div class="filter-option" @click="filterByPrice('all')">Todo</div>
+        <div class="filter-option" @click="filterByPrice('10')">
+          $10 o menos
+        </div>
+        <div class="filter-option" @click="filterByPrice('20')">
+          da $20 o menos
+        </div>
+        <div class="filter-option" @click="filterByPrice('50')">
+          $50 o menos
+        </div>
+        <div class="filter-option" @click="filterByPrice('100')">
+          $100 o menos
+        </div>
+        <div class="filter-option" @click="filterByPrice('200')">
+          $200 o menos
+        </div>
+        <!-- Agrega más opciones de precio si es necesario -->
+      </div>
     </div>
     <div class="product-container">
       <div
@@ -21,8 +43,9 @@
         :key="product.id"
         class="product"
       >
-        <div>{{ product.title }}</div>
         <img :src="product.images" alt="Imagen de producto" />
+        <div>{{ product.title }}</div>
+        <p>{{ product.price }}€</p>
       </div>
     </div>
   </div>
@@ -36,7 +59,9 @@ export default {
     return {
       response: null,
       products: [],
-      selectedFilter: "all",
+      selectedPrice: "all",
+      selectedBrand: null,
+      showFilters: false, // Agregamos una propiedad para mostrar/ocultar los filtros en dispositivos móviles
     };
   },
   created() {
@@ -49,21 +74,47 @@ export default {
         console.error("Error al obtener los productos:", error);
       });
   },
+  methods: {
+    filterByPrice(price) {
+      this.selectedPrice = price;
+    },
+    filterByBrand(brand) {
+      this.selectedBrand = brand;
+      if (brand === null) {
+        this.selectedBrand = null;
+      }
+    },
+    toggleFilters() {
+      this.showFilters = !this.showFilters;
+    },
+    closeFilters() {
+      this.showFilters = false;
+    },
+  },
   computed: {
     filteredProducts() {
-      if (this.selectedFilter === "all") {
+      if (this.selectedPrice === "all" && this.selectedBrand === null) {
         return this.products;
       }
-      const maxPrice = parseFloat(this.selectedFilter);
-      return this.products.filter(
-        (product) => parseFloat(product.price) <= maxPrice
-      );
+
+      const maxPrice = parseFloat(this.selectedPrice);
+      return this.products.filter((product) => {
+        const priceCondition = parseFloat(product.price) <= maxPrice;
+        const brandCondition =
+          this.selectedBrand === null || product.brand === this.selectedBrand;
+        return priceCondition && brandCondition;
+      });
     },
   },
 };
 </script>
 
 <style scoped>
+.first-search {
+  display: flex;
+  justify-content: center;
+}
+
 .page-content {
   display: flex;
   align-items: flex-start;
@@ -73,26 +124,49 @@ export default {
 }
 
 .filter-bar {
+  color: #ffffff;
+  background-color: #003366;
+  width: 24%;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 20px; /* Aumenta el espacio interior del recuadro */
-  border: 1px solid #ccc; /* Agrega un borde al recuadro de filtros */
+  padding: 20px;
+  border: 1px solid #ccc;
   border-radius: 5px;
+  margin-left: 2rem;
 }
 
 .filter-title {
-  font-size: 20px; /* Tamaño del título de filtros */
-  margin: 1rem; /* Espacio entre el título y el select */
+  font-size: 20px;
+  margin: 1rem;
 }
 
-.filter-select {
-  width: 100%;
+.filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filter-option {
   padding: 10px;
-  border: 1px solid #ccc;
+  background-color: #0060c0;
+  color: white;
+  border: none;
   border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.filter-toggle {
+  display: none; /* Inicialmente ocultamos el botón de filtro en pantallas más grandes */
+}
+
+.fa-filter {
+  margin-right: 5px;
 }
 
 .search-bar {
+  width: 20rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -106,18 +180,61 @@ export default {
 }
 
 .product-container {
+  width: 70vw;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  margin: 1rem;
+  gap: 9px;
 }
 
 .product {
+  height: 15rem;
   border: 1px solid #ccc;
-  padding: 10px;
+  border-radius: 5px;
+  padding: 6px;
   text-align: center;
+  background-color: #003366;
+  color: white;
 }
 
 .product img {
   max-width: 100%;
+  max-height: 100px;
+}
+@media screen and (max-width: 1024px) {
+}
+
+@media screen and (max-width: 782px) {
+  /* Estilos específicos para tamaños de pantalla más pequeños, como tabletas y dispositivos móviles */
+  .filter-bar {
+    display: none; /* Oculta los filtros en dispositivos móviles */
+  }
+
+  .filter-bar.show-filters {
+    display: block; /* Muestra el menú desplegable de filtros al hacer clic en el botón de filtro */
+    width: 100%; /* Ocupa todo el ancho en pantallas más pequeñas */
+    position: absolute;
+    background-color: white;
+    z-index: 1;
+    top: 52px;
+  }
+
+  .filter-title,
+  .filter-section,
+  .filter-option {
+    font-size: 16px; /* Ajusta el tamaño del texto para pantallas más pequeñas */
+    text-align: left; /* Alinea el texto a la izquierda */
+  }
+
+  .filter-toggle {
+    display: block; /* Muestra el botón de filtro en dispositivos móviles */
+    text-align: center;
+    padding: 10px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 }
 </style>
