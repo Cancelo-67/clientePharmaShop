@@ -150,7 +150,7 @@ form {
 }
 
 label {
-  font-size: 12px;
+  font-size: 14px;
   margin-bottom: 0.5rem;
 }
 
@@ -223,7 +223,7 @@ button {
 }
 @media (max-width: 548px) {
   form {
-    max-width: 80%;
+    max-width: 100%;
   }
 }
 </style>

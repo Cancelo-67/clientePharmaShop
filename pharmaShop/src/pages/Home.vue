@@ -18,28 +18,28 @@
       </div>
       <div class="filter-title">Filtros</div>
       <div class="filter-section">
-        <div class="filter-option" @click="filterByPrice('all')">Todo</div>
-        <div class="filter-option" @click="filterByPrice('10')">
-          $10 o menos
-        </div>
-        <div class="filter-option" @click="filterByPrice('20')">
-          da $20 o menos
-        </div>
-        <div class="filter-option" @click="filterByPrice('50')">
-          $50 o menos
-        </div>
-        <div class="filter-option" @click="filterByPrice('100')">
-          $100 o menos
-        </div>
-        <div class="filter-option" @click="filterByPrice('200')">
-          $200 o menos
-        </div>
-        <!-- Agrega más opciones de precio si es necesario -->
+        <div class="filter-title">Precio</div>
+        <input
+          type="number"
+          v-model="minPrice"
+          placeholder="Mínimo"
+          class="price-input"
+        />
+        <span class="price-separator">-</span>
+        <input
+          type="number"
+          v-model="maxPrice"
+          placeholder="Máximo"
+          class="price-input"
+        />
+        <button @click="applyPriceRangeFilter" class="filter-option">
+          Aplicar
+        </button>
       </div>
     </div>
     <div class="product-container">
       <div
-        v-for="product in filteredProducts"
+        v-for="product in paginatedProducts"
         :key="product.id"
         class="product"
       >
@@ -48,6 +48,31 @@
         <p>{{ product.price }}€</p>
       </div>
     </div>
+  </div>
+  <div class="pagination">
+    <button
+      @click="setCurrentPage(currentPage - 1)"
+      :disabled="currentPage === 1"
+      class="pagination-button"
+    >
+      Página anterior
+    </button>
+    <button
+      v-for="page in totalPages"
+      :key="page"
+      @click="setCurrentPage(page)"
+      :class="{ active: page === currentPage }"
+      class="pagination-button"
+    >
+      {{ page }}
+    </button>
+    <button
+      @click="setCurrentPage(currentPage + 1)"
+      :disabled="currentPage === totalPages"
+      class="pagination-button"
+    >
+      Siguiente página
+    </button>
   </div>
 </template>
 
@@ -61,7 +86,11 @@ export default {
       products: [],
       selectedPrice: "all",
       selectedBrand: null,
-      showFilters: false, // Agregamos una propiedad para mostrar/ocultar los filtros en dispositivos móviles
+      showFilters: false,
+      itemsPerPage: 18,
+      currentPage: 1,
+      minPrice: "",
+      maxPrice: "",
     };
   },
   created() {
@@ -90,6 +119,18 @@ export default {
     closeFilters() {
       this.showFilters = false;
     },
+    setCurrentPage(pageNumber) {
+      this.currentPage = pageNumber;
+    },
+    applyPriceRangeFilter() {
+      if (this.minPrice === "" && this.maxPrice === "") {
+        this.selectedPrice = "all";
+      } else {
+        const min = parseFloat(this.minPrice) || 0;
+        const max = parseFloat(this.maxPrice) || Infinity;
+        this.selectedPrice = `${min}-${max}`;
+      }
+    },
   },
   computed: {
     filteredProducts() {
@@ -97,13 +138,26 @@ export default {
         return this.products;
       }
 
-      const maxPrice = parseFloat(this.selectedPrice);
+      const priceRange = this.selectedPrice.split("-");
+      const minPrice = parseFloat(priceRange[0]) || 0;
+      const maxPrice = parseFloat(priceRange[1]) || Infinity;
+
       return this.products.filter((product) => {
-        const priceCondition = parseFloat(product.price) <= maxPrice;
+        const priceCondition =
+          parseFloat(product.price) >= minPrice &&
+          parseFloat(product.price) <= maxPrice;
         const brandCondition =
           this.selectedBrand === null || product.brand === this.selectedBrand;
         return priceCondition && brandCondition;
       });
+    },
+    paginatedProducts() {
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.filteredProducts.slice(startIndex, endIndex);
+    },
+    totalPages() {
+      return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
     },
   },
 };
@@ -157,8 +211,26 @@ export default {
   text-align: center;
 }
 
+.pagination-button {
+  padding: 10px;
+  background-color: #003366;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  margin: 5px;
+}
+
+.pagination-button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+.pagination-button.active {
+  background-color: #0060c0;
+}
 .filter-toggle {
-  display: none; /* Inicialmente ocultamos el botón de filtro en pantallas más grandes */
+  display: none;
 }
 
 .fa-filter {
@@ -201,18 +273,30 @@ export default {
   max-width: 100%;
   max-height: 100px;
 }
-@media screen and (max-width: 1024px) {
+
+/* Estilos para el filtrado */
+.price-input {
+  width: 5rem;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  margin: 2px;
+}
+
+.price-separator {
+  font-size: 20px;
+  margin: 0 5px;
 }
 
 @media screen and (max-width: 782px) {
-  /* Estilos específicos para tamaños de pantalla más pequeños, como tabletas y dispositivos móviles */
   .filter-bar {
-    display: none; /* Oculta los filtros en dispositivos móviles */
+    display: none;
   }
 
   .filter-bar.show-filters {
-    display: block; /* Muestra el menú desplegable de filtros al hacer clic en el botón de filtro */
-    width: 100%; /* Ocupa todo el ancho en pantallas más pequeñas */
+    display: block;
+    width: 90%;
     position: absolute;
     background-color: white;
     z-index: 1;
@@ -222,12 +306,12 @@ export default {
   .filter-title,
   .filter-section,
   .filter-option {
-    font-size: 16px; /* Ajusta el tamaño del texto para pantallas más pequeñas */
-    text-align: left; /* Alinea el texto a la izquierda */
+    font-size: 16px;
+    text-align: left;
   }
 
   .filter-toggle {
-    display: block; /* Muestra el botón de filtro en dispositivos móviles */
+    display: block;
     text-align: center;
     padding: 10px;
     background-color: #003366;
@@ -235,6 +319,13 @@ export default {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+  }
+  .pagination {
+    display: flex;
+  }
+
+  .pagination-button:not(:first-child):not(:last-child) {
+    display: none; /* Oculta los botones de paginación en la vista móvil */
   }
 }
 </style>
