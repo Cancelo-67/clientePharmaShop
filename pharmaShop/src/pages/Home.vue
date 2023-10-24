@@ -18,18 +18,17 @@
       </div>
       <div class="filter-title">Filtros</div>
       <div class="filter-section">
-        <div class="filter-title">Precio</div>
         <input
           type="number"
           v-model="minPrice"
-          placeholder="Mínimo"
+          placeholder="Mínimo €"
           class="price-input"
         />
         <span class="price-separator">-</span>
         <input
           type="number"
           v-model="maxPrice"
-          placeholder="Máximo"
+          placeholder="Máximo €"
           class="price-input"
         />
         <button @click="applyPriceRangeFilter" class="filter-option">
@@ -197,7 +196,7 @@ export default {
 
 .filter-section {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 10px;
 }
 
@@ -211,6 +210,10 @@ export default {
   text-align: center;
 }
 
+.pagination {
+  display: flex;
+  justify-content: center;
+}
 .pagination-button {
   padding: 10px;
   background-color: #003366;
@@ -230,6 +233,10 @@ export default {
   background-color: #0060c0;
 }
 .filter-toggle {
+  display: none;
+}
+
+.close-button {
   display: none;
 }
 
@@ -288,8 +295,18 @@ export default {
   font-size: 20px;
   margin: 0 5px;
 }
+@media screen and (max-width: 1192px) {
+  .filter-section {
+    flex-direction: column;
+  }
+}
 
 @media screen and (max-width: 782px) {
+  .page-content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
   .filter-bar {
     display: none;
   }
@@ -321,6 +338,10 @@ export default {
     cursor: pointer;
   }
   .pagination {
+    display: flex;
+  }
+  .close-button {
+    width: 0%;
     display: flex;
   }
 

@@ -30,7 +30,7 @@
         ></i>
         <div class="user-dropdown" v-if="showUserMenu">
           <ul>
-            <li><router-link to="/perfil">Perfil</router-link></li>
+            <li><router-link to="/profile">Perfil</router-link></li>
             <li>
               <router-link to="/configuracion">Configuración</router-link>
             </li>
