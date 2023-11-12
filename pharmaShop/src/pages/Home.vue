@@ -42,8 +42,8 @@
         :key="product.id"
         class="product"
       >
-        <img :src="product.images" alt="Imagen de producto" />
-        <div>{{ product.title }}</div>
+        <img :src="product.image" alt="Imagen de producto" />
+        <div>{{ product.name }}</div>
         <p>{{ product.price }}€</p>
       </div>
     </div>
@@ -93,7 +93,7 @@ export default {
     };
   },
   created() {
-    getProducts("https://api.escuelajs.co/api/v1/products")
+    getProducts("https://api.escuelajs.co/api/v1/products") // http://localhost:8080/products
       .then((response) => {
         this.response = response;
         this.products = response.data;
@@ -278,7 +278,7 @@ export default {
 
 .product img {
   max-width: 100%;
-  max-height: 100px;
+  max-height: 180px;
 }
 
 /* Estilos para el filtrado */

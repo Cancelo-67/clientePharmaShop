@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Navbar />
+    <Navbar v-if="showNavbar" />
     <router-view />
   </div>
 </template>
@@ -9,9 +9,20 @@
 import Navbar from "./components/Navbar.vue";
 
 export default {
-  name: "NavBar",
+  name: "App",
   components: {
     Navbar,
+  },
+  data() {
+    return {
+      showNavbar: true,
+    };
+  },
+  watch: {
+    $route(to, from) {
+      // Puedes personalizar esta lógica según tus necesidades.
+      this.showNavbar = !to.meta.hideNavbar;
+    },
   },
 };
 </script>

@@ -15,13 +15,13 @@ const routes = [
     path: "/register",
     name: "Register",
     component: Register,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, hideNavbar: true }, // Oculta el Navbar en esta ruta
   },
   {
     path: "/login",
     name: "Login",
     component: Login,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, hideNavbar: true }, // Oculta el Navbar en esta ruta
   },
   {
     path: "/profile",
