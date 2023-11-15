@@ -21,27 +21,31 @@
       </div>
     </nav>
     <nav class="navbar-center">
-      <i class="fa-solid fa-user" style="color: #41aba9"></i>
-      <button>Información</button>
       <i class="fa-regular fa-circle-question" style="color: #41aba9"></i>
+      <button>Información</button>
+      <i class="fa-solid fa-user" style="color: #41aba9"></i>
       <button>Iniciar Sesión</button>
     </nav>
     <div class="navbar-down">
-      <img src="../images/logo-transparent.png" alt="" class="img-logo" />
+      <img src="../images/logo-transparent.png" alt="Logo" class="img-logo" />
       <i class="fa-solid fa-cart-shopping" style="color: #41aba9"></i>
     </div>
-    <nav class="nav-category">
-      <p class="category-item">Dental</p>
-      <p class="category-item">Cosmetica</p>
-      <p class="category-item">Nutrición</p>
-      <p class="category-item">Bebé y Mamá</p>
-      <p class="category-item">Salud</p>
-      <p class="category-item">Higiene</p>
-      <p class="category-item">Óptica</p>
-      <p class="category-item">Ortopedia</p>
-      <p class="category-item">Mascotas</p>
-      <p class="category-item">Medicamentos</p>
-    </nav>
+    <div class="div-table">
+      <table class="table-category">
+        <tr>
+          <th>Dental</th>
+          <th>Cosmética</th>
+          <th>Nutrición</th>
+          <th>Bebé y Mamá</th>
+          <th>Salud</th>
+          <th>Higiene</th>
+          <th>Óptica</th>
+          <th>Ortopedia</th>
+          <th>Mascotas</th>
+          <th>Medicamentos</th>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -71,33 +75,35 @@ export default {};
   }
 }
 .navbar-center {
+  padding-top: 4px;
+  width: 98vw;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   button {
     color: gray;
     background-color: transparent;
     border: none;
   }
 }
-.nav-category {
+.div-table {
   width: 100vw;
   display: flex;
-  justify-content: space-between;
-  padding: 0% 1em;
-  align-items: center;
+  justify-content: center;
+  .table-category {
+    width: 90vw;
+    border: 2px solid #41aba9;
+    tr {
+      th {
+        padding: 1em;
+        border: 2px solid #41aba9;
+      }
+    }
+  }
 }
 
-.category-item {
-  font-size: 15px;
-  padding: 0.6em 1.3em; /* Ajustar según sea necesario */
-  border: 1px solid #41aba9;
-  max-width: 150px; /* Ajustar según sea necesario */
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
 .navbar-down {
   width: 91vw;
+  height: 13vh;
   display: flex;
   align-items: center;
   justify-content: space-between;

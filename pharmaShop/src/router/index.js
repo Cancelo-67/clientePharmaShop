@@ -4,6 +4,7 @@ import Login from "../pages/Login.vue";
 import Register from "../pages/Register.vue";
 import Profile from "../pages/Profile.vue";
 import Home from "../pages/Home.vue";
+import Category from "../pages/Category.vue";
 
 const routes = [
   {
@@ -34,6 +35,12 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/products/:category",
+    name: "Category",
+    component: Category,
     meta: { requiresAuth: true },
   },
 ];
