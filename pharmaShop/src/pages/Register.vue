@@ -1,56 +1,74 @@
 <template>
   <div class="popup" v-if="goodPopup">
     <div class="popup-content">
-      <h2>Usuario creado</h2>
+      <h2>Usuario logueado</h2>
       <p>Bienvenido a PharmaShop!</p>
     </div>
   </div>
   <div class="popup" v-if="badPopup">
     <div class="popup-content">
-      <h2>Usuario no creado</h2>
+      <h2>Usuario incorrecto</h2>
       <p>Vuelva a introducir las credenciales</p>
     </div>
   </div>
-  <div class="container">
-    <form @submit.prevent="submitForm">
-      <h1>Registrarse</h1>
-      <div class="form-group">
-        <label for="username">Nombre de usuario</label>
-        <input type="text" id="username" v-model="formData.username" />
-      </div>
 
-      <div class="form-group">
-        <label for="surname">Apellido</label>
-        <input type="text" id="surname" v-model="formData.surname" />
-      </div>
+  <div class="prueba">
+    <img src="../images/logo-transparent.png" alt="Imagen logo" />
+    <div class="container">
+      <form @submit.prevent="submitForm">
+        <h1>Crear cuenta</h1>
+        <button>
+          <i class="fa-brands fa-google" style="color: #000000"> </i>Crear
+          cuenta con Google
+        </button>
+        <div class="separator-container">
+          <hr class="separator-horizontal" />
+          <p class="inline-text">O bien</p>
+          <hr class="separator-horizontal" />
+        </div>
+        <input type="text" value="Nombre" />
+        <input type="text" value="Correo Electronico" />
+        <input type="text" value="Contraseña" />
+        <input type="text" value="Repetir Contraseña" />
+        <div class="checkbox">
+          <input
+            type="checkbox"
+            id="privacyPolicy"
+            v-model="acceptPrivacyPolicy"
+          />
+          <label for="privacyPolicy"
+            >He leído y acepto la política de privacidad</label
+          >
+        </div>
 
-      <div class="form-group">
-        <label for="phoneNumber">Número de teléfono</label>
-        <input type="tel" id="phoneNumber" v-model="formData.phoneNumber" />
+        <button>Crear cuenta</button>
+        <div class="separator-container">
+          <hr class="separator-horizontal" />
+          <p class="inline-text">O bien</p>
+          <hr class="separator-horizontal" />
+        </div>
+        <button @click="goLogin()">Iniciar Sesion</button>
+      </form>
+      <hr class="separator-vertical" />
+      <div class="container-word">
+        <i class="fa-solid fa-truck" style="color: #41aba9"></i>
+        <div class="div1">
+          <h2>Gestiona tus pedidos</h2>
+          <p>
+            Ten el control de todos tus pedidos y recibe notificaciones con el
+            seguimiento
+          </p>
+        </div>
+        <i class="fa-solid fa-medal" style="color: #41aba9"></i>
+        <div class="div2">
+          <h2>Lista de deseos personalizada</h2>
+          <p>
+            Guarda tus productos favoritos en las listas de deseos
+            personalizadas
+          </p>
+        </div>
       </div>
-
-      <div class="form-group">
-        <label for="email">Correo Electrónico</label>
-        <input type="email" id="email" v-model="formData.email" />
-      </div>
-
-      <div class="form-group">
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" v-model="formData.password" />
-      </div>
-
-      <div class="form-group">
-        <label for="address">Dirección</label>
-        <input type="text" id="address" v-model="formData.address" />
-      </div>
-
-      <button type="submit">Registrarse</button>
-      <p>O si lo prefieres</p>
-      <button>
-        <i class="fa-brands fa-google"></i>
-        <p>Acceder con Google</p>
-      </button>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -76,6 +94,9 @@ export default {
     };
   },
   methods: {
+    goLogin() {
+      this.$router.push("/login");
+    },
     async fetchUsers() {
       try {
         const response = await axios.get("https://dummyjson.com/users");
@@ -115,32 +136,92 @@ export default {
 };
 </script>
 
-<style scoped>
-.container {
+<style lang="scss" scoped>
+.prueba {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  a {
-    p {
-      text-decoration: none;
-      color: #fff;
+  background-image: url("../images/fondo1.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  img {
+    width: 222px;
+  }
+  .container {
+    display: flex;
+    justify-content: center;
+    flex-direction: row-reverse;
+    height: 100vh;
+    padding: 2rem; /* Agregar espacio alrededor del formulario */
+    form {
+      width: 100%;
+      max-width: 450px; /* Limitar el ancho del formulario en pantallas grandes */
+      padding: 1rem; /* Agregar espacio dentro del formulario */
+      border-radius: 5px;
+      color: #000000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-evenly;
+      height: 75vh;
+      div {
+        width: 10vw;
+        display: flex;
+      }
+      .checkbox {
+        width: 20%;
+      }
+      .checkbox {
+        display: flex;
+        align-items: center;
+        margin-top: 1rem; /* Ajusta el margen según sea necesario */
+      }
+
+      .checkbox input {
+        margin-right: 0.5rem; /* Espacio entre el checkbox y el texto */
+      }
+
+      .checkbox label {
+        font-size: 14px; /* Ajusta el tamaño de la fuente según sea necesario */
+        color: #000; /* Ajusta el color del texto según sea necesario */
+      }
+    }
+    .separator-vertical {
+      margin: 2rem; /* Ajusta según sea necesario */
+      border-top: 2px solid #41aba9; /* Color y estilo de la línea */
+    }
+    .separator-container {
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Centra los elementos horizontalmente */
+      margin: 1rem 0; /* Ajusta el margen según sea necesario */
+      width: 25vw;
+    }
+
+    .separator-horizontal {
+      flex-grow: 1;
+      height: 1px;
+      border-top: 2px solid #41aba9; /* Ajusta el color según sea necesario */
+      margin: 0 10px; /* Ajusta el margen según sea necesario */
+    }
+
+    .inline-text {
+      white-space: nowrap;
+      font-size: 14px; /* Ajusta el tamaño de la fuente según sea necesario */
+      margin: 0; /* Elimina el margen para que esté al ras con las líneas de separación */
+    }
+    .container-word {
+      .fa-medal,
+      .fa-truck {
+        font-size: 42px; /* Tamaño deseado */
+      }
     }
   }
 }
 
-form {
-  width: 100%;
-  max-width: 450px;
-  background-color: #003366;
-  padding: 1rem;
+.spec {
   color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-  border-radius: 5px;
 }
 
 .form-group {
@@ -150,30 +231,29 @@ form {
 }
 
 label {
-  font-size: 14px;
-  margin-bottom: 0.5rem;
+  font-size: 14px; /* Aumentar el tamaño de la fuente de las etiquetas */
+  margin-bottom: 0.5rem; /* Reducir el espacio entre etiquetas y campos de entrada */
 }
 
 input {
-  background-color: #0056b3;
+  width: 300px;
   border-radius: 5px;
   border: 1px solid;
-  color: #fff;
-  padding: 0.3rem;
-  font-size: 14px;
+  color: #000000;
+  padding: 0.7rem; /* Aumentar el espacio interno de los campos de entrada */
+  font-size: 14px; /* Aumentar el tamaño de la fuente de los campos de entrada */
 }
 
 button {
   padding: 1rem 2rem;
-  background-color: #007bff;
-  color: #fff;
+  background-color: #41aba9;
+  color: #000000;
   border: none;
   cursor: pointer;
   border-radius: 5px;
-  font-size: 14px;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  font-size: 14px; /* Aumentar el tamaño de la fuente del botón */
 }
+
 .google-login {
   display: flex;
   align-items: center;
@@ -203,12 +283,16 @@ button {
   text-align: center;
 }
 
-/* @media para hacer que el formulario sea responsive */
-@media (max-width: 768px) {
-  form {
-    max-width: 60%;
-    padding: 1rem;
+/* Estilos para hacer la página responsive */
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 1rem; /* Reducir el espacio alrededor del formulario en pantallas pequeñas */
   }
+
+  form {
+    padding: 1rem; /* Reducir el espacio dentro del formulario en pantallas pequeñas */
+  }
+
   label {
     font-size: 16px; /* Aumentar el tamaño de la fuente de las etiquetas en pantallas pequeñas */
   }
@@ -219,11 +303,6 @@ button {
 
   button {
     font-size: 16px; /* Aumentar el tamaño de la fuente del botón en pantallas pequeñas */
-  }
-}
-@media (max-width: 548px) {
-  form {
-    max-width: 100%;
   }
 }
 </style>

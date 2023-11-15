@@ -18,7 +18,7 @@
       <form @submit.prevent="submitForm">
         <h1>Iniciar sesion</h1>
         <button>
-          <i class="fa-brands fa-google" style="color: #000000"></i>Iniciar
+          <i class="fa-brands fa-google" style="color: #000000"> </i>Iniciar
           Sesion con Google
         </button>
         <div>
@@ -36,7 +36,7 @@
           <p class="inline-text">¿Eres nuevo cliente?</p>
           <hr class="separator-horizontal" />
         </div>
-        <button>Crear cuenta</button>
+        <button @click="goRegister()">Crear cuenta</button>
       </form>
       <hr class="separator-vertical" />
       <div class="container-word">
@@ -63,14 +63,13 @@
 
 <script>
 import axios from "axios";
+import { authenticateUser } from "../helper/token";
 export default {
   data() {
     return {
       // Creo un objeto que contiene los datos del formulario
-      formData: {
-        email: "",
-        password: "",
-      },
+      email: "",
+      password: "",
       // Creo una lista que contiene los usuarios
       users: [],
       // Creo dos variables para que se muestre el popup correcto
@@ -79,36 +78,24 @@ export default {
     };
   },
   methods: {
+    goRegister() {
+      this.$router.push("/register");
+    },
     async fetchUsers() {
-      try {
-        const response = await axios.get("https://dummyjson.com/users"); //https://dummyjson.com/users
-        this.users = response.data.users;
-        console.log(this.users);
-      } catch (error) {
-        console.error(error);
-      }
+      // try {
+      //   const response = await axios.get("http://localhost:8080/users");
+      //   this.users = response.data.users;
+      //   console.log(this.users);
+      // } catch (error) {
+      //   console.error(error);
+      // }
     },
     async submitForm() {
       try {
-        const userExists = this.users.find(
-          (user) =>
-            user.email === this.formData.email &&
-            user.password === this.formData.password
-        );
-        if (!userExists) {
-          this.badPopup = true;
-          setTimeout(() => {
-            this.badPopup = false;
-          }, 1800);
-        } else {
-          this.goodPopup = true;
-          setTimeout(() => {
-            this.goodPopup = false;
-            this.$router.push("/");
-          }, 1800);
-        }
+        const token = await authenticateUser(this.email, this.password);
+        console.log("Token obtenido:", token);
       } catch (error) {
-        console.error(error);
+        console.error("Error en la autenticación:", error);
       }
     },
   },
@@ -127,6 +114,7 @@ export default {
   background-image: url("../images/fondo1.png");
   background-repeat: no-repeat;
   background-size: cover;
+
   img {
     width: 222px;
   }
@@ -146,6 +134,7 @@ export default {
       flex-direction: column;
       align-items: center;
       justify-content: space-evenly;
+      height: 75vh;
       div {
         width: 10vw;
         display: flex;
