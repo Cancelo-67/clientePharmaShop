@@ -16,10 +16,10 @@
     <img src="../images/logo-transparent.png" alt="Imagen logo" />
     <div class="container">
       <form @submit.prevent="submitForm">
-        <h1>Iniciar sesion</h1>
+        <h1>Iniciar sesión</h1>
         <button>
           <i class="fa-brands fa-google" style="color: #000000"> </i>Iniciar
-          Sesion con Google
+          Sesión con Google
         </button>
         <div>
           <hr class="separator-horizontal" />
@@ -27,10 +27,18 @@
           <hr class="separator-horizontal" />
         </div>
 
-        <input type="text" value="Correo Electronico" />
-        <input type="text" value="Contraseña" />
+        <input
+          type="text"
+          v-model="formData.email"
+          placeholder="Correo Electrónico"
+        />
+        <input
+          type="password"
+          v-model="formData.password"
+          placeholder="Contraseña"
+        />
         <p>He olvidado mi contraseña</p>
-        <button>Iniciar Sesion</button>
+        <button type="submit">Iniciar Sesión</button>
         <div class="separator-container">
           <hr class="separator-horizontal" />
           <p class="inline-text">¿Eres nuevo cliente?</p>
@@ -63,45 +71,62 @@
 
 <script>
 import axios from "axios";
-import { authenticateUser } from "../helper/token";
 export default {
   data() {
     return {
-      // Creo un objeto que contiene los datos del formulario
-      email: "",
-      password: "",
-      // Creo una lista que contiene los usuarios
+      formData: {
+        email: "",
+        password: "",
+        token: "",
+      },
       users: [],
-      // Creo dos variables para que se muestre el popup correcto
       goodPopup: false,
       badPopup: false,
     };
   },
+
   methods: {
     goRegister() {
       this.$router.push("/register");
     },
-    async fetchUsers() {
-      // try {
-      //   const response = await axios.get("http://localhost:8080/users");
-      //   this.users = response.data.users;
-      //   console.log(this.users);
-      // } catch (error) {
-      //   console.error(error);
-      // }
-    },
     async submitForm() {
       try {
-        const token = await authenticateUser(this.email, this.password);
-        console.log("Token obtenido:", token);
+        const responseToken = await axios.post(
+          "http://localhost:8080/token",
+          {},
+          {
+            auth: {
+              username: this.formData.email,
+              password: this.formData.password,
+            },
+          }
+        );
+
+        // Guardar el token en el objeto formData
+        this.formData.token = responseToken.data;
+
+        // Usar el token para obtener información del usuario
+        const responseUser = await axios.get("http://localhost:8080/users", {
+          headers: {
+            Authorization: `Bearer ${this.formData.token}`,
+          },
+        });
+
+        // Mostrar información del usuario
+        console.log(responseUser.data);
+
+        this.goodPopup = true;
+        this.badPopup = false;
       } catch (error) {
-        console.error("Error en la autenticación:", error);
+        console.error("Error:", error);
+        // Manejar el error y mostrar el popup incorrecto si es necesario.
+        this.goodPopup = false;
+        this.badPopup = true;
       }
     },
+    fetchUsers() {},
   },
-  mounted() {
-    this.fetchUsers();
-  },
+  mounted() {},
 };
 </script>
 
@@ -142,17 +167,20 @@ export default {
     }
     .separator-vertical {
       margin: 2rem; /* Ajusta según sea necesario */
-      border-top: 1px solid #41aba9; /* Color y estilo de la línea */
+      border-top: 2px solid #41aba9; /* Color y estilo de la línea */
     }
     .separator-container {
       display: flex;
       align-items: center;
+      justify-content: center; /* Centra los elementos horizontalmente */
+      margin: 1rem 0; /* Ajusta el margen según sea necesario */
+      width: 25vw;
     }
 
     .separator-horizontal {
       flex-grow: 1;
       height: 1px;
-      background-color: #000; /* Ajusta el color según tu diseño */
+      border-top: 2px solid #41aba9; /* Ajusta el color según sea necesario */
       margin: 0 10px; /* Ajusta el margen según sea necesario */
     }
 

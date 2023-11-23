@@ -27,22 +27,84 @@
       <button>Iniciar Sesión</button>
     </nav>
     <div class="navbar-down">
-      <img src="../images/logo-transparent.png" alt="Logo" class="img-logo" />
+      <router-link to="/" class="logo-link">
+        <img src="../images/logo-transparent.png" alt="Logo" class="img-logo" />
+      </router-link>
       <i class="fa-solid fa-cart-shopping" style="color: #41aba9"></i>
     </div>
     <div class="div-table">
       <table class="table-category">
         <tr>
-          <th>Dental</th>
-          <th>Cosmética</th>
-          <th>Nutrición</th>
-          <th>Bebé y Mamá</th>
-          <th>Salud</th>
-          <th>Higiene</th>
-          <th>Óptica</th>
-          <th>Ortopedia</th>
-          <th>Mascotas</th>
-          <th>Medicamentos</th>
+          <th>
+            <router-link
+              :to="{ name: 'Category', params: { category: 'Dental' } }"
+              class="custom-link"
+              >Dental</router-link
+            >
+          </th>
+          <th>
+            <router-link
+              :to="{ name: 'Category', params: { category: 'Cosmetica' } }"
+              class="custom-link"
+              >Cosmética</router-link
+            >
+          </th>
+          <th>
+            <router-link
+              :to="{ name: 'Category', params: { category: 'Nutricion' } }"
+              class="custom-link"
+              >Nutrición</router-link
+            >
+          </th>
+          <th>
+            <router-link
+              :to="{ name: 'Category', params: { category: 'Bebeymama' } }"
+              class="custom-link"
+              >Bebé y Mamá</router-link
+            >
+          </th>
+          <th>
+            <router-link
+              :to="{ name: 'Category', params: { category: 'Salud' } }"
+              class="custom-link"
+              >Salud</router-link
+            >
+          </th>
+          <th>
+            <router-link
+              :to="{ name: 'Category', params: { category: 'Higiene' } }"
+              class="custom-link"
+              >Higiene</router-link
+            >
+          </th>
+          <th>
+            <router-link
+              :to="{ name: 'Category', params: { category: 'Optica' } }"
+              class="custom-link"
+              >Óptica</router-link
+            >
+          </th>
+          <th>
+            <router-link
+              :to="{ name: 'Category', params: { category: 'Ortopedia' } }"
+              class="custom-link"
+              >Ortopedia</router-link
+            >
+          </th>
+          <th>
+            <router-link
+              :to="{ name: 'Category', params: { category: 'Mascotas' } }"
+              class="custom-link"
+              >Mascotas</router-link
+            >
+          </th>
+          <th>
+            <router-link
+              :to="{ name: 'Category', params: { category: 'Medicamentos' } }"
+              class="custom-link"
+              >Medicamentos</router-link
+            >
+          </th>
         </tr>
       </table>
     </div>
@@ -100,6 +162,10 @@ export default {};
     }
   }
 }
+.custom-link {
+  color: black; /* Cambia el color a tu preferencia */
+  text-decoration: none; /* Elimina el subrayado predeterminado */
+}
 
 .navbar-down {
   width: 91vw;
@@ -111,7 +177,53 @@ export default {};
     font-size: 45px;
   }
 }
+.logo-link {
+  text-decoration: none;
+}
+
 .img-logo {
-  width: 15%;
+  width: 40%; /* Ajusta el tamaño del logo según tus necesidades */
+  height: auto; /* Esto mantiene la proporción del logo */
+}
+
+@media (max-width: 768px) {
+  .navbar-up {
+    flex-direction: column;
+    align-items: center;
+    div:last-child {
+      width: 100%; /* Ocupa todo el ancho en dispositivos móviles */
+      margin-top: 10px; /* Espaciado entre las secciones */
+    }
+  }
+  .navbar-center {
+    flex-direction: column;
+    align-items: center;
+    button {
+      margin-top: 10px; /* Espaciado entre los botones */
+    }
+  }
+  .navbar-down {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 80%; /* Ajusta el tamaño del logo en dispositivos móviles */
+    }
+    i {
+      margin-top: 10px; /* Espaciado entre el logo y el icono de carrito */
+    }
+  }
+  .div-table {
+    width: 100%;
+    overflow-x: auto; /* Agrega una barra de desplazamiento horizontal si es necesario */
+    .table-category {
+      width: 100%;
+      tr {
+        th {
+          white-space: nowrap; /* Evita que el texto se desborde en dispositivos móviles */
+        }
+      }
+    }
+  }
 }
 </style>

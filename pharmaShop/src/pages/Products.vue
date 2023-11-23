@@ -48,6 +48,7 @@
       </div>
     </div>
   </div>
+
   <div class="pagination">
     <button
       @click="setCurrentPage(currentPage - 1)"
