@@ -71,6 +71,9 @@
 
 <script>
 import axios from "axios";
+import bcrypt from "bcryptjs";
+import Cookies from "js-cookie";
+
 export default {
   data() {
     return {
@@ -79,9 +82,9 @@ export default {
         password: "",
         token: "",
       },
-      users: [],
       goodPopup: false,
       badPopup: false,
+      users: [],
     };
   },
 
@@ -102,31 +105,43 @@ export default {
           }
         );
 
-        // Guardar el token en el objeto formData
         this.formData.token = responseToken.data;
 
-        // Usar el token para obtener información del usuario
         const responseUser = await axios.get("http://localhost:8080/users", {
           headers: {
             Authorization: `Bearer ${this.formData.token}`,
           },
         });
 
-        // Mostrar información del usuario
-        console.log(responseUser.data);
+        // Almacena la lista completa de usuarios en la propiedad users
+        this.users = responseUser.data;
 
-        this.goodPopup = true;
-        this.badPopup = false;
+        // Busca el usuario específico por nombre de usuario
+        const user = this.users.find(
+          (user) => user.name === this.formData.email
+        );
+
+        if (
+          user &&
+          this.comparePasswords(this.formData.password, user.password)
+        ) {
+          // Si el usuario existe y las contraseñas coinciden
+          Cookies.set("userToken", this.formData.token);
+          //this.goodPopup = true;
+        } else {
+          console.log("mal");
+          //this.badPopup = true;
+        }
       } catch (error) {
         console.error("Error:", error);
-        // Manejar el error y mostrar el popup incorrecto si es necesario.
-        this.goodPopup = false;
-        this.badPopup = true;
+        //this.badPopup = true;
       }
     },
-    fetchUsers() {},
+    comparePasswords(inputPassword, hashedPassword) {
+      // Compara la contraseña ingresada con la contraseña almacenada
+      return bcrypt.compareSync(inputPassword, hashedPassword);
+    },
   },
-  mounted() {},
 };
 </script>
 
@@ -148,11 +163,11 @@ export default {
     justify-content: center;
     flex-direction: row-reverse;
     height: 100vh;
-    padding: 2rem; /* Agregar espacio alrededor del formulario */
+    padding: 2rem;
     form {
       width: 100%;
-      max-width: 450px; /* Limitar el ancho del formulario en pantallas grandes */
-      padding: 1rem; /* Agregar espacio dentro del formulario */
+      max-width: 450px;
+      padding: 1rem;
       border-radius: 5px;
       color: #000000;
       display: flex;
