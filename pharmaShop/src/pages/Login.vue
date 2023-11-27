@@ -118,23 +118,32 @@ export default {
 
         // Busca el usuario específico por nombre de usuario
         const user = this.users.find(
-          (user) => user.name === this.formData.email
+          (user) => user.username === this.formData.email
         );
+
+        console.log(this.users);
 
         if (
           user &&
           this.comparePasswords(this.formData.password, user.password)
         ) {
-          // Si el usuario existe y las contraseñas coinciden
-          Cookies.set("userToken", this.formData.token);
-          //this.goodPopup = true;
+          this.goodPopup = true;
+          setTimeout(() => {
+            this.goodPopup = false;
+            // Si el usuario existe y las contraseñas coinciden
+            Cookies.set("userLogued", JSON.stringify(user));
+            Cookies.set("userToken", JSON.stringify(this.formData.token));
+            this.$router.push("/");
+          }, 2000);
         } else {
-          console.log("mal");
-          //this.badPopup = true;
+          this.badPopup = true;
+          setTimeout(() => {
+            this.badPopup = false;
+            this.$router.push("/");
+          }, 2000);
         }
       } catch (error) {
         console.error("Error:", error);
-        //this.badPopup = true;
       }
     },
     comparePasswords(inputPassword, hashedPassword) {
@@ -276,25 +285,34 @@ button {
 }
 
 /* Estilos para hacer la página responsive */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1090px) {
   .container {
-    padding: 1rem; /* Reducir el espacio alrededor del formulario en pantallas pequeñas */
+    flex-direction: column; /* Cambia la dirección del contenedor a columna */
   }
 
   form {
-    padding: 1rem; /* Reducir el espacio dentro del formulario en pantallas pequeñas */
-  }
-
-  label {
-    font-size: 16px; /* Aumentar el tamaño de la fuente de las etiquetas en pantallas pequeñas */
+    width: 100%; /* Ajusta el ancho del formulario al 100% en pantallas pequeñas */
+    max-width: none; /* Elimina la restricción máxima de ancho */
   }
 
   input {
-    font-size: 16px; /* Aumentar el tamaño de la fuente de los campos de entrada en pantallas pequeñas */
+    width: 100%; /* Ajusta el ancho de los campos de entrada al 100% en pantallas pequeñas */
   }
 
-  button {
-    font-size: 16px; /* Aumentar el tamaño de la fuente del botón en pantallas pequeñas */
+  .separator-container {
+    width: 100%; /* Ajusta el ancho del contenedor de separadores al 100% en pantallas pequeñas */
+  }
+
+  .container-word {
+    .div1,
+    .div2 {
+      text-align: center; /* Centra el texto en las secciones de la palabra */
+    }
+
+    .fa-medal,
+    .fa-truck {
+      font-size: 24px; /* Reduzca el tamaño del ícono en pantallas pequeñas */
+    }
   }
 }
 </style>

@@ -71,7 +71,7 @@ export default {
 form {
   width: 100%;
   max-width: 80%;
-  background-color: #003366;
+  background-color: #41aba9;
   padding: 1rem;
   color: #fff;
   display: flex;

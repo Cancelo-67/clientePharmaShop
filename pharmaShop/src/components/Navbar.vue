@@ -24,7 +24,7 @@
       <i class="fa-regular fa-circle-question" style="color: #41aba9"></i>
       <button>Información</button>
       <i class="fa-solid fa-user" style="color: #41aba9"></i>
-      <button>Iniciar Sesión</button>
+      <button>{{ username }}</button>
     </nav>
     <div class="navbar-down">
       <router-link to="/" class="logo-link">
@@ -112,7 +112,29 @@
 </template>
 
 <script>
-export default {};
+import Cookies from "js-cookie";
+
+export default {
+  data() {
+    return {
+      username: "",
+    };
+  },
+  mounted() {
+    // Verificar si hay un objeto de usuario almacenado en la cookie al cargar el componente
+    const userObjectFromCookie = Cookies.get("userLogued");
+    if (userObjectFromCookie) {
+      const userObject = JSON.parse(userObjectFromCookie);
+      this.username = userObject.username;
+    }
+  },
+  methods: {
+    goLogin() {
+      // Redirigir a la página de inicio de sesión
+      this.$router.push("/login");
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

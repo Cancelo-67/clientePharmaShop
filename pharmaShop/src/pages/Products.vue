@@ -77,7 +77,8 @@
 </template>
 
 <script>
-import getProducts from "../helper/api";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default {
   data() {
@@ -93,9 +94,18 @@ export default {
       maxPrice: "",
     };
   },
-  created() {
-    getProducts("http://localhost:8080/products")
+
+  mounted() {
+    const userToken = Cookies.get("userToken");
+    console.log(userToken);
+    axios
+      .get("http://localhost:8080/products", {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
       .then((response) => {
+        console.log("bien");
         this.response = response;
         this.products = response.data;
       })
@@ -104,17 +114,6 @@ export default {
       });
   },
   methods: {
-    async fetchToken() {
-      try {
-        const response = await axios.post("http://localhost:8080/token", {
-          // Aquí envía tus credenciales o información necesaria para obtener el token
-        });
-
-        this.token = response.data.token; // Asigna el token a una propiedad en tu componente
-      } catch (error) {
-        console.error("Error al obtener el token:", error);
-      }
-    },
     filterByPrice(price) {
       this.selectedPrice = price;
     },
@@ -190,7 +189,7 @@ export default {
 
 .filter-bar {
   color: #ffffff;
-  background-color: #003366;
+  background-color: #41aba9;
   width: 24%;
   display: flex;
   flex-direction: column;
@@ -228,7 +227,7 @@ export default {
 }
 .pagination-button {
   padding: 10px;
-  background-color: #003366;
+  background-color: #41aba9;
   color: white;
   border: none;
   border-radius: 5px;
@@ -284,7 +283,7 @@ export default {
   border-radius: 5px;
   padding: 6px;
   text-align: center;
-  background-color: #003366;
+  background-color: #41aba9;
   color: white;
 }
 
@@ -343,7 +342,7 @@ export default {
     display: block;
     text-align: center;
     padding: 10px;
-    background-color: #003366;
+    background-color: #41aba9;
     color: white;
     border: none;
     border-radius: 5px;
