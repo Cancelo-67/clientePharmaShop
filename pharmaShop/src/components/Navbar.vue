@@ -1,5 +1,6 @@
 <template>
   <div class="navbar">
+    <dropdown-menu v-if="isMenuOpen" @closeMenu="closeMenu"></dropdown-menu>
     <nav class="navbar-up">
       <div>
         <p>PharmaShop-Lideres en confianza</p>
@@ -24,7 +25,7 @@
       <i class="fa-regular fa-circle-question" style="color: #41aba9"></i>
       <button>Información</button>
       <i class="fa-solid fa-user" style="color: #41aba9"></i>
-      <button>{{ username }}</button>
+      <button @click="toggleMenu()">{{ username }}</button>
     </nav>
     <div class="navbar-down">
       <router-link to="/" class="logo-link">
@@ -113,11 +114,16 @@
 
 <script>
 import Cookies from "js-cookie";
+import DropdownMenu from "@/components/DropdownMenu.vue";
 
 export default {
+  components: {
+    DropdownMenu,
+  },
   data() {
     return {
       username: "",
+      isMenuOpen: false,
     };
   },
   mounted() {
@@ -130,8 +136,13 @@ export default {
   },
   methods: {
     goLogin() {
-      // Redirigir a la página de inicio de sesión
       this.$router.push("/login");
+    },
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
+    },
+    closeMenu() {
+      this.isMenuOpen = false;
     },
   },
 };
@@ -139,9 +150,6 @@ export default {
 
 <style lang="scss" scoped>
 .navbar {
-  background-image: url("../images/fondo.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 .navbar-up {
   padding: 4px;

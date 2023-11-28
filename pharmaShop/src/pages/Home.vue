@@ -1,64 +1,56 @@
 <template>
-  <section class="container">
-    <article class="images">
-      <div class="carousel-container">
-        <div class="carousel">
-          <img :src="currentImage" alt="Slide" />
-          <div class="indicators">
-            <span
-              v-for="(image, index) in images"
-              :key="index"
-              :class="{ active: index === currentImageIndex }"
-              @click="goToImage(index)"
-            ></span>
+  <div class="container-all">
+    <section class="section1">
+      <article class="images">
+        <div class="carousel-container">
+          <div class="carousel">
+            <img :src="currentImage" alt="Slide" />
+            <div class="indicators">
+              <span
+                v-for="(image, index) in images"
+                :key="index"
+                :class="{ active: index === currentImageIndex }"
+                @click="goToImage(index)"
+              ></span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="home-images">
-        <article>
-          <img
-            src="https://www.sago.es/wp-content/uploads/2015/02/invisol-compo-300x300.png"
-            alt=""
-          />
-        </article>
-        <article>
-          <img
-            src="https://www.shutterstock.com/image-photo/covid-vaccine-health-medicine-healthcare-260nw-2267533107.jpg"
-            alt=""
-          />
-        </article>
-        <article>
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNQZMHv_t4BAyCvpCOEf02i-UyhvzYX7eYFg&usqp=CAU"
-            alt=""
-          />
-        </article>
-        <article>
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAw-YBvRsVYuL1OL9iTdkm6c98YcC683wI9w&usqp=CAU"
-            alt=""
-          />
-        </article>
-      </div>
-    </article>
-    <article>
-      <h2>Destacados</h2>
+        <div class="home-images">
+          <article>
+            <img src="../images/imagen2.png" alt="" />
+          </article>
+          <article>
+            <img src="../images/imagen3.png" alt="" />
+          </article>
+          <article>
+            <img src="../images/imagen4.png" alt="" />
+          </article>
+          <article>
+            <img src="../images/imagen5.png" alt="" />
+          </article>
+        </div>
+      </article>
+    </section>
+    <section class="section2">
+      <h2>DESTACADOS</h2>
       <hr class="separator-horizontal" />
-    </article>
-    <article></article>
-    <article></article>
-  </section>
+    </section>
+    <section class="section3">
+      <h2>EN PROMOCIÓN</h2>
+      <hr class="separator-horizontal" />
+    </section>
+    <section class="section4">
+      <h2>MARCAS MAS BUSCADAS</h2>
+      <hr class="separator-horizontal" />
+    </section>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      images: [
-        "https://www.nationalgeographic.com.es/medio/2022/10/10/tierra-de-fuego_63adbec1_800x800.jpg",
-        "https://www.vientonortesur.org/wp-content/uploads/2022/05/indonesia-800x900-1.jpg",
-        // Agrega más URLs de imágenes según sea necesario
-      ],
+      images: ["/src/images/imagen1.png", "/src/images/imagen1.png"],
       currentImageIndex: 0,
     };
   },
@@ -83,34 +75,42 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
-  background-image: url("../images/fondo.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
+.section1 {
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+.container-all {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+.articles {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .images {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   width: 80%;
-  justify-self: center;
+
   .home-images {
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
-    width: 57%;
+    justify-content: flex-end;
+    article {
+      box-sizing: border-box;
+      padding: 5px;
+      img {
+        width: 400px;
+      }
+    }
   }
-}
-.carousel-container {
-  left: 10px; /* Ajusta según sea necesario */
-  top: 50%;
-  width: 523px; /* Ajusta según sea necesario */
-  height: 627px;
 }
 
 .carousel {
@@ -118,9 +118,10 @@ export default {
   text-align: center;
 
   img {
-    max-width: 100%;
+    height: 800px;
     max-height: 100vh;
     margin: 0 auto;
+    width: 5;
   }
 
   .separator-horizontal {
