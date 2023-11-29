@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div>Prueba de Categoria</div>
 </template>
 
 <script>

@@ -1,5 +1,6 @@
 <template>
   <div class="navbar">
+    <dropdown-menu v-if="isMenuOpen" @closeMenu="closeMenu"></dropdown-menu>
     <nav class="navbar-up">
       <div>
         <p>PharmaShop-Lideres en confianza</p>
@@ -24,25 +25,29 @@
       <i class="fa-regular fa-circle-question" style="color: #41aba9"></i>
       <button>Información</button>
       <i class="fa-solid fa-user" style="color: #41aba9"></i>
-      <button>Iniciar Sesión</button>
+      <button @click="toggleMenu()">{{ username }}</button>
     </nav>
     <div class="navbar-down">
-      <img src="../images/logo-transparent.png" alt="Logo" class="img-logo" />
+      <router-link to="/" class="logo-link">
+        <img src="../images/logo-transparent.png" alt="Logo" class="img-logo" />
+      </router-link>
       <i class="fa-solid fa-cart-shopping" style="color: #41aba9"></i>
     </div>
     <div class="div-table">
       <table class="table-category">
         <tr>
-          <th>Dental</th>
-          <th>Cosmética</th>
-          <th>Nutrición</th>
-          <th>Bebé y Mamá</th>
-          <th>Salud</th>
-          <th>Higiene</th>
-          <th>Óptica</th>
-          <th>Ortopedia</th>
-          <th>Mascotas</th>
-          <th>Medicamentos</th>
+          <th
+            v-for="category in categories"
+            :key="category"
+            :class="{ 'active-category': currentCategory === category }"
+          >
+            <router-link
+              :to="{ name: 'Category', params: { category: category } }"
+              class="custom-link"
+              @click="updateCurrentCategory(category)"
+              >{{ category }}</router-link
+            >
+          </th>
         </tr>
       </table>
     </div>
@@ -50,14 +55,60 @@
 </template>
 
 <script>
-export default {};
+import Cookies from "js-cookie";
+import DropdownMenu from "@/components/DropdownMenu.vue";
+
+export default {
+  components: {
+    DropdownMenu,
+  },
+  data() {
+    return {
+      username: "",
+      isMenuOpen: false,
+      currentCategory: "",
+      categories: [
+        "Dental",
+        "Cosmetica",
+        "Nutricion",
+        "Bebe y mama",
+        "Salud",
+        "Higiene",
+        "Optica",
+        "Ortopedia",
+        "Mascotas",
+        "Medicamentos",
+      ],
+    };
+  },
+  mounted() {
+    // Verificar si hay un objeto de usuario almacenado en la cookie al cargar el componente
+    const userObjectFromCookie = Cookies.get("userLogued");
+    if (userObjectFromCookie) {
+      const userObject = JSON.parse(userObjectFromCookie);
+      this.username = userObject.username;
+    }
+    this.currentCategory = this.$route.params.category;
+  },
+  methods: {
+    goLogin() {
+      this.$router.push("/login");
+    },
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
+    },
+    closeMenu() {
+      this.isMenuOpen = false;
+    },
+    updateCurrentCategory(category) {
+      this.currentCategory = category;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 .navbar {
-  background-image: url("../images/fondo.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 .navbar-up {
   padding: 4px;
@@ -73,6 +124,15 @@ export default {};
     justify-content: space-between;
     width: 17%;
   }
+}
+.custom-link {
+  color: black;
+  text-decoration: none;
+}
+
+.active-category {
+  background-color: #66e0ca; // Color de resaltado para la categoría actual
+  color: white; // Color de texto para la categoría actual
 }
 .navbar-center {
   padding-top: 4px;
@@ -100,6 +160,10 @@ export default {};
     }
   }
 }
+.custom-link {
+  color: black; /* Cambia el color a tu preferencia */
+  text-decoration: none; /* Elimina el subrayado predeterminado */
+}
 
 .navbar-down {
   width: 91vw;
@@ -111,7 +175,53 @@ export default {};
     font-size: 45px;
   }
 }
+.logo-link {
+  text-decoration: none;
+}
+
 .img-logo {
-  width: 15%;
+  width: 40%; /* Ajusta el tamaño del logo según tus necesidades */
+  height: auto; /* Esto mantiene la proporción del logo */
+}
+
+@media (max-width: 768px) {
+  .navbar-up {
+    flex-direction: column;
+    align-items: center;
+    div:last-child {
+      width: 100%; /* Ocupa todo el ancho en dispositivos móviles */
+      margin-top: 10px; /* Espaciado entre las secciones */
+    }
+  }
+  .navbar-center {
+    flex-direction: column;
+    align-items: center;
+    button {
+      margin-top: 10px; /* Espaciado entre los botones */
+    }
+  }
+  .navbar-down {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 80%; /* Ajusta el tamaño del logo en dispositivos móviles */
+    }
+    i {
+      margin-top: 10px; /* Espaciado entre el logo y el icono de carrito */
+    }
+  }
+  .div-table {
+    width: 100%;
+    overflow-x: auto; /* Agrega una barra de desplazamiento horizontal si es necesario */
+    .table-category {
+      width: 100%;
+      tr {
+        th {
+          white-space: nowrap; /* Evita que el texto se desborde en dispositivos móviles */
+        }
+      }
+    }
+  }
 }
 </style>

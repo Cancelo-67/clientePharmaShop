@@ -16,10 +16,10 @@
     <img src="../images/logo-transparent.png" alt="Imagen logo" />
     <div class="container">
       <form @submit.prevent="submitForm">
-        <h1>Iniciar sesion</h1>
+        <h1>Iniciar sesión</h1>
         <button>
           <i class="fa-brands fa-google" style="color: #000000"> </i>Iniciar
-          Sesion con Google
+          Sesión con Google
         </button>
         <div>
           <hr class="separator-horizontal" />
@@ -27,10 +27,18 @@
           <hr class="separator-horizontal" />
         </div>
 
-        <input type="text" value="Correo Electronico" />
-        <input type="text" value="Contraseña" />
+        <input
+          type="text"
+          v-model="formData.email"
+          placeholder="Correo Electrónico"
+        />
+        <input
+          type="password"
+          v-model="formData.password"
+          placeholder="Contraseña"
+        />
         <p>He olvidado mi contraseña</p>
-        <button>Iniciar Sesion</button>
+        <button type="submit">Iniciar Sesión</button>
         <div class="separator-container">
           <hr class="separator-horizontal" />
           <p class="inline-text">¿Eres nuevo cliente?</p>
@@ -63,44 +71,82 @@
 
 <script>
 import axios from "axios";
-import { authenticateUser } from "../helper/token";
+import bcrypt from "bcryptjs";
+import Cookies from "js-cookie";
+
 export default {
   data() {
     return {
-      // Creo un objeto que contiene los datos del formulario
-      email: "",
-      password: "",
-      // Creo una lista que contiene los usuarios
-      users: [],
-      // Creo dos variables para que se muestre el popup correcto
+      formData: {
+        email: "",
+        password: "",
+        token: "",
+      },
       goodPopup: false,
       badPopup: false,
+      users: [],
     };
   },
+
   methods: {
     goRegister() {
       this.$router.push("/register");
     },
-    async fetchUsers() {
-      // try {
-      //   const response = await axios.get("http://localhost:8080/users");
-      //   this.users = response.data.users;
-      //   console.log(this.users);
-      // } catch (error) {
-      //   console.error(error);
-      // }
-    },
     async submitForm() {
       try {
-        const token = await authenticateUser(this.email, this.password);
-        console.log("Token obtenido:", token);
+        const responseToken = await axios.post(
+          "http://localhost:8080/token",
+          {},
+          {
+            auth: {
+              username: this.formData.email,
+              password: this.formData.password,
+            },
+          }
+        );
+
+        this.formData.token = responseToken.data;
+
+        const responseUser = await axios.get("http://localhost:8080/users", {
+          headers: {
+            Authorization: `Bearer ${this.formData.token}`,
+          },
+        });
+
+        // Almacena la lista completa de usuarios en la propiedad users
+        this.users = responseUser.data;
+
+        // Busca el usuario específico por nombre de usuario
+        const user = this.users.find(
+          (user) => user.username === this.formData.email
+        );
+        if (
+          user &&
+          this.comparePasswords(this.formData.password, user.password)
+        ) {
+          this.goodPopup = true;
+          setTimeout(() => {
+            this.goodPopup = false;
+            // Si el usuario existe y las contraseñas coinciden
+            Cookies.set("userLogued", JSON.stringify(user));
+            Cookies.set("userToken", JSON.stringify(this.formData.token));
+            this.$router.push("/");
+          }, 2000);
+        } else {
+          this.badPopup = true;
+          setTimeout(() => {
+            this.badPopup = false;
+            this.$router.push("/");
+          }, 2000);
+        }
       } catch (error) {
-        console.error("Error en la autenticación:", error);
+        console.error("Error:", error);
       }
     },
-  },
-  mounted() {
-    this.fetchUsers();
+    comparePasswords(inputPassword, hashedPassword) {
+      // Compara la contraseña ingresada con la contraseña almacenada
+      return bcrypt.compareSync(inputPassword, hashedPassword);
+    },
   },
 };
 </script>
@@ -123,11 +169,11 @@ export default {
     justify-content: center;
     flex-direction: row-reverse;
     height: 100vh;
-    padding: 2rem; /* Agregar espacio alrededor del formulario */
+    padding: 2rem;
     form {
       width: 100%;
-      max-width: 450px; /* Limitar el ancho del formulario en pantallas grandes */
-      padding: 1rem; /* Agregar espacio dentro del formulario */
+      max-width: 450px;
+      padding: 1rem;
       border-radius: 5px;
       color: #000000;
       display: flex;
@@ -142,17 +188,20 @@ export default {
     }
     .separator-vertical {
       margin: 2rem; /* Ajusta según sea necesario */
-      border-top: 1px solid #41aba9; /* Color y estilo de la línea */
+      border-top: 2px solid #41aba9; /* Color y estilo de la línea */
     }
     .separator-container {
       display: flex;
       align-items: center;
+      justify-content: center; /* Centra los elementos horizontalmente */
+      margin: 1rem 0; /* Ajusta el margen según sea necesario */
+      width: 25vw;
     }
 
     .separator-horizontal {
       flex-grow: 1;
       height: 1px;
-      background-color: #000; /* Ajusta el color según tu diseño */
+      border-top: 2px solid #41aba9; /* Ajusta el color según sea necesario */
       margin: 0 10px; /* Ajusta el margen según sea necesario */
     }
 
@@ -233,25 +282,34 @@ button {
 }
 
 /* Estilos para hacer la página responsive */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1090px) {
   .container {
-    padding: 1rem; /* Reducir el espacio alrededor del formulario en pantallas pequeñas */
+    flex-direction: column; /* Cambia la dirección del contenedor a columna */
   }
 
   form {
-    padding: 1rem; /* Reducir el espacio dentro del formulario en pantallas pequeñas */
-  }
-
-  label {
-    font-size: 16px; /* Aumentar el tamaño de la fuente de las etiquetas en pantallas pequeñas */
+    width: 100%; /* Ajusta el ancho del formulario al 100% en pantallas pequeñas */
+    max-width: none; /* Elimina la restricción máxima de ancho */
   }
 
   input {
-    font-size: 16px; /* Aumentar el tamaño de la fuente de los campos de entrada en pantallas pequeñas */
+    width: 100%; /* Ajusta el ancho de los campos de entrada al 100% en pantallas pequeñas */
   }
 
-  button {
-    font-size: 16px; /* Aumentar el tamaño de la fuente del botón en pantallas pequeñas */
+  .separator-container {
+    width: 100%; /* Ajusta el ancho del contenedor de separadores al 100% en pantallas pequeñas */
+  }
+
+  .container-word {
+    .div1,
+    .div2 {
+      text-align: center; /* Centra el texto en las secciones de la palabra */
+    }
+
+    .fa-medal,
+    .fa-truck {
+      font-size: 24px; /* Reduzca el tamaño del ícono en pantallas pequeñas */
+    }
   }
 }
 </style>

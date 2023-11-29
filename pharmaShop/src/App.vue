@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div class="div-app">
     <Navbar v-if="showNavbar" />
     <router-view />
   </div>
@@ -28,6 +28,12 @@ export default {
 </script>
 
 <style>
+.div-app {
+  background-image: url("../src/images/fondo.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 970px;
+}
 ::-webkit-scrollbar {
   display: none;
 }

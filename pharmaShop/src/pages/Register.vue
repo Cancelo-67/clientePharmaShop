@@ -26,10 +26,10 @@
           <p class="inline-text">O bien</p>
           <hr class="separator-horizontal" />
         </div>
-        <input type="text" value="Nombre" />
-        <input type="text" value="Correo Electronico" />
-        <input type="text" value="Contraseña" />
-        <input type="text" value="Repetir Contraseña" />
+        <input type="text" placeholder="Nombre" />
+        <input type="text" placeholder="Correo Electronico" />
+        <input type="text" placeholder="Contraseña" />
+        <input type="text" placeholder="Repetir Contraseña" />
         <div class="checkbox">
           <input
             type="checkbox"
