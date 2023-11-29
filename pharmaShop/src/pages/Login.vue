@@ -120,9 +120,6 @@ export default {
         const user = this.users.find(
           (user) => user.username === this.formData.email
         );
-
-        console.log(this.users);
-
         if (
           user &&
           this.comparePasswords(this.formData.password, user.password)

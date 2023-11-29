@@ -36,74 +36,16 @@
     <div class="div-table">
       <table class="table-category">
         <tr>
-          <th>
+          <th
+            v-for="category in categories"
+            :key="category"
+            :class="{ 'active-category': currentCategory === category }"
+          >
             <router-link
-              :to="{ name: 'Category', params: { category: 'Dental' } }"
+              :to="{ name: 'Category', params: { category: category } }"
               class="custom-link"
-              >Dental</router-link
-            >
-          </th>
-          <th>
-            <router-link
-              :to="{ name: 'Category', params: { category: 'Cosmetica' } }"
-              class="custom-link"
-              >Cosmética</router-link
-            >
-          </th>
-          <th>
-            <router-link
-              :to="{ name: 'Category', params: { category: 'Nutricion' } }"
-              class="custom-link"
-              >Nutrición</router-link
-            >
-          </th>
-          <th>
-            <router-link
-              :to="{ name: 'Category', params: { category: 'Bebeymama' } }"
-              class="custom-link"
-              >Bebé y Mamá</router-link
-            >
-          </th>
-          <th>
-            <router-link
-              :to="{ name: 'Category', params: { category: 'Salud' } }"
-              class="custom-link"
-              >Salud</router-link
-            >
-          </th>
-          <th>
-            <router-link
-              :to="{ name: 'Category', params: { category: 'Higiene' } }"
-              class="custom-link"
-              >Higiene</router-link
-            >
-          </th>
-          <th>
-            <router-link
-              :to="{ name: 'Category', params: { category: 'Optica' } }"
-              class="custom-link"
-              >Óptica</router-link
-            >
-          </th>
-          <th>
-            <router-link
-              :to="{ name: 'Category', params: { category: 'Ortopedia' } }"
-              class="custom-link"
-              >Ortopedia</router-link
-            >
-          </th>
-          <th>
-            <router-link
-              :to="{ name: 'Category', params: { category: 'Mascotas' } }"
-              class="custom-link"
-              >Mascotas</router-link
-            >
-          </th>
-          <th>
-            <router-link
-              :to="{ name: 'Category', params: { category: 'Medicamentos' } }"
-              class="custom-link"
-              >Medicamentos</router-link
+              @click="updateCurrentCategory(category)"
+              >{{ category }}</router-link
             >
           </th>
         </tr>
@@ -124,6 +66,19 @@ export default {
     return {
       username: "",
       isMenuOpen: false,
+      currentCategory: "",
+      categories: [
+        "Dental",
+        "Cosmetica",
+        "Nutricion",
+        "Bebe y mama",
+        "Salud",
+        "Higiene",
+        "Optica",
+        "Ortopedia",
+        "Mascotas",
+        "Medicamentos",
+      ],
     };
   },
   mounted() {
@@ -133,6 +88,7 @@ export default {
       const userObject = JSON.parse(userObjectFromCookie);
       this.username = userObject.username;
     }
+    this.currentCategory = this.$route.params.category;
   },
   methods: {
     goLogin() {
@@ -143,6 +99,9 @@ export default {
     },
     closeMenu() {
       this.isMenuOpen = false;
+    },
+    updateCurrentCategory(category) {
+      this.currentCategory = category;
     },
   },
 };
@@ -165,6 +124,15 @@ export default {
     justify-content: space-between;
     width: 17%;
   }
+}
+.custom-link {
+  color: black;
+  text-decoration: none;
+}
+
+.active-category {
+  background-color: #66e0ca; // Color de resaltado para la categoría actual
+  color: white; // Color de texto para la categoría actual
 }
 .navbar-center {
   padding-top: 4px;
