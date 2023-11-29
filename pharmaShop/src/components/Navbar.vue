@@ -1,6 +1,5 @@
 <template>
   <div class="navbar">
-    <dropdown-menu v-if="isMenuOpen" @closeMenu="closeMenu"></dropdown-menu>
     <nav class="navbar-up">
       <div>
         <p>PharmaShop-Lideres en confianza</p>
@@ -24,8 +23,10 @@
     <nav class="navbar-center">
       <i class="fa-regular fa-circle-question" style="color: #41aba9"></i>
       <button>Información</button>
+      <!-- DropdownMenu se mostrará cuando isMenuOpen sea true -->
+      <dropdown-menu v-if="isMenuOpen" @closeMenu="closeMenu"></dropdown-menu>
       <i class="fa-solid fa-user" style="color: #41aba9"></i>
-      <button @click="toggleMenu()">{{ username }}</button>
+      <button @click="toggleMenu">{{ username }}</button>
     </nav>
     <div class="navbar-down">
       <router-link to="/" class="logo-link">
@@ -56,7 +57,7 @@
 
 <script>
 import Cookies from "js-cookie";
-import DropdownMenu from "@/components/DropdownMenu.vue";
+import DropdownMenu from "./DropdownMenu.vue";
 
 export default {
   components: {
@@ -82,7 +83,6 @@ export default {
     };
   },
   mounted() {
-    // Verificar si hay un objeto de usuario almacenado en la cookie al cargar el componente
     const userObjectFromCookie = Cookies.get("userLogued");
     if (userObjectFromCookie) {
       const userObject = JSON.parse(userObjectFromCookie);
@@ -93,12 +93,6 @@ export default {
   methods: {
     goLogin() {
       this.$router.push("/login");
-    },
-    toggleMenu() {
-      this.isMenuOpen = !this.isMenuOpen;
-    },
-    closeMenu() {
-      this.isMenuOpen = false;
     },
     updateCurrentCategory(category) {
       this.currentCategory = category;
