@@ -14,19 +14,27 @@
         <p>Tus productos en casa en solo 24 - 48 horas</p>
       </div>
       <div>
-        <i class="fa-solid fa-phone" style="color: #ffffff"></i>
-        <p>111 111 111</p>
-        <i class="fa-brands fa-whatsapp" style="color: #ffffff"></i>
-        <p>111 111 111</p>
+        <article class="article-up">
+          <i class="fa-solid fa-phone" style="color: #ffffff"></i>
+          <p>111 111 111</p>
+        </article>
+        <article class="article-up">
+          <i class="fa-brands fa-whatsapp" style="color: #ffffff"></i>
+          <p>111 111 111</p>
+        </article>
       </div>
     </nav>
     <nav class="navbar-center">
-      <i class="fa-regular fa-circle-question" style="color: #41aba9"></i>
-      <button>Información</button>
-      <!-- DropdownMenu se mostrará cuando isMenuOpen sea true -->
-      <dropdown-menu v-if="isMenuOpen" @closeMenu="closeMenu"></dropdown-menu>
-      <i class="fa-solid fa-user" style="color: #41aba9"></i>
-      <button @click="toggleMenu">{{ username }}</button>
+      <article class="article-center1">
+        <i class="fa-regular fa-circle-question" style="color: #41aba9"></i>
+        <button>Información</button>
+      </article>
+      <article class="article-center2">
+        <!-- DropdownMenu se mostrará cuando isMenuOpen sea true -->
+        <dropdown-menu v-if="isMenuOpen" @closeMenu="closeMenu"></dropdown-menu>
+        <i class="fa-solid fa-user" style="color: #41aba9"></i>
+        <button @click="toggleMenu">{{ username }}</button>
+      </article>
     </nav>
     <div class="navbar-down">
       <router-link to="/" class="logo-link">
@@ -102,8 +110,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.navbar {
-}
 .navbar-up {
   padding: 4px;
   color: white;
@@ -116,8 +122,15 @@ export default {
   div:last-child {
     display: flex;
     justify-content: space-between;
-    width: 17%;
+    width: 16%;
   }
+}
+
+.article-up {
+  display: flex;
+  align-items: center;
+  width: 50%;
+  display: flex;
 }
 .custom-link {
   color: black;
@@ -134,10 +147,15 @@ export default {
   display: flex;
   justify-content: flex-end;
   button {
+    margin-left: 3px;
     color: gray;
     background-color: transparent;
     border: none;
   }
+}
+
+.article-center1 {
+  margin-right: 20px;
 }
 .div-table {
   width: 100vw;

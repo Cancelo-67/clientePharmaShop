@@ -55,7 +55,7 @@
           <button class="btn-cart-eye">
             <i class="fa-solid fa-eye" style="color: #000000"></i>
           </button>
-          <button class="btn-cart" @click="addCart(product.id)">
+          <button class="btn-cart" @click="addCart(product)">
             <i class="fa-solid fa-cart-shopping" style="color: #ffffff"></i>
             AÑADIR
           </button>
@@ -151,38 +151,50 @@ export default {
       currentPage: 1,
       minPrice: "",
       maxPrice: "",
-      searchQuery: "", // Nueva propiedad para la búsqueda
+      searchQuery: "",
+      cartItems: [], // Nueva propiedad para almacenar IDs de productos en el carrito
     };
   },
 
   mounted() {
-    const userToken = JSON.parse(decodeURIComponent(Cookies.get("userToken")));
-    axios
-      .get("http://localhost:8080/products", {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      })
-      .then((response) => {
-        this.products = response.data;
-      })
-      .catch((error) => {
-        console.error("Error al obtener los productos:", error);
-      });
+    this.fetchProducts();
   },
+
   methods: {
+    async fetchProducts() {
+      const userToken = JSON.parse(
+        decodeURIComponent(Cookies.get("userToken"))
+      );
+
+      try {
+        const response = await axios.get("http://localhost:8080/products", {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        });
+
+        this.products = response.data;
+      } catch (error) {
+        console.error("Error al obtener los productos:", error);
+      }
+    },
+
     filterByPrice(price) {
       this.selectedPrice = price;
     },
+
     toggleFilters() {
       this.showFilters = !this.showFilters;
     },
+
     closeFilters() {
       this.showFilters = false;
     },
+
     setCurrentPage(pageNumber) {
       this.currentPage = pageNumber;
     },
+
     applyPriceRangeFilter() {
       if (this.minPrice === "" && this.maxPrice === "") {
         this.selectedPrice = "all";
@@ -192,17 +204,54 @@ export default {
         this.selectedPrice = `${min}-${max}`;
       }
     },
+
     handleSearch() {
-      this.currentPage = 1; // Reiniciar a la primera página al realizar una búsqueda
+      this.currentPage = 1;
     },
-    addCart(id) {
+
+    addCart(product) {
       const userLogued = JSON.parse(
         decodeURIComponent(Cookies.get("userLogued"))
       );
-      userLogued.cart.push(id);
-      console.log(userLogued);
+
+      // Asumo que tienes una propiedad 'user' en userLogued que contiene la información del usuario
+      const userId = userLogued ? userLogued.id : null;
+
+      if (userId) {
+        userLogued.cart.push(product);
+        this.cartItems.push(product);
+        console.log(userLogued);
+
+        // Llamar al método para actualizar el carrito en la API
+        this.updateCartInApi(userId);
+      } else {
+        console.error("ID de usuario no encontrada en userLogued");
+      }
+    },
+
+    async updateCartInApi(userId) {
+      const userToken = JSON.parse(
+        decodeURIComponent(Cookies.get("userToken"))
+      );
+
+      try {
+        const userLogued = JSON.parse(
+          decodeURIComponent(Cookies.get("userLogued"))
+        );
+        userLogued.cart = this.cartItems;
+
+        const response = await axios.put(
+          `http://localhost:8080/users/${userId}`,
+          userLogued,
+          { headers: { Authorization: `Bearer ${userToken}` } }
+        );
+        console.log("Carrito actualizado en la API:", response.data);
+      } catch (error) {
+        console.error("Error al actualizar el carrito en la API:", error);
+      }
     },
   },
+
   computed: {
     filteredProducts() {
       if (
@@ -239,11 +288,13 @@ export default {
         return priceCondition && brandCondition && matchesSearch;
       });
     },
+
     paginatedProducts() {
       const startIndex = (this.currentPage - 1) * this.itemsPerPage;
       const endIndex = startIndex + this.itemsPerPage;
       return this.filteredProducts.slice(startIndex, endIndex);
     },
+
     totalPages() {
       return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
     },
