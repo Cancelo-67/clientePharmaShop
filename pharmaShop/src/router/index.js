@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Products from "../pages/Products.vue";
+import DetailProduct from "../pages/DetailProduct.vue";
 import Login from "../pages/Login.vue";
 import Register from "../pages/Register.vue";
 import Profile from "../pages/Profile.vue";
 import Home from "../pages/Home.vue";
 import Category from "../pages/Category.vue";
+import Cart from "../pages/Cart.vue";
 
 const routes = [
   {
@@ -17,6 +19,12 @@ const routes = [
     path: "/products",
     name: "Products",
     component: Products,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/products/:productId",
+    name: "DetailProducts",
+    component: DetailProduct,
     meta: { requiresAuth: true },
   },
   {
@@ -41,6 +49,12 @@ const routes = [
     path: "/products/:category",
     name: "Category",
     component: Category,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/cart",
+    name: "Cart",
+    component: Cart,
     meta: { requiresAuth: true },
   },
 ];

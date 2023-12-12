@@ -50,7 +50,7 @@
       >
         <img :src="product.image" alt="Imagen de producto" />
         <div>{{ product.name }}</div>
-        <p>{{ product.price }}€</p>
+        <p>{{ product.price }} €</p>
         <div class="btn-product">
           <button class="btn-cart-eye">
             <i class="fa-solid fa-eye" style="color: #000000"></i>
@@ -218,12 +218,15 @@ export default {
       const userId = userLogued ? userLogued.id : null;
 
       if (userId) {
-        userLogued.cart.push(product);
-        this.cartItems.push(product);
-        console.log(userLogued);
+        // Verificar si el producto ya está en el carrito antes de agregarlo
+        if (!this.cartItems.includes(product.id)) {
+          this.cartItems.push(product.id);
 
-        // Llamar al método para actualizar el carrito en la API
-        this.updateCartInApi(userId);
+          // Llamar al método para actualizar el carrito en la API
+          this.updateCartInApi(userId);
+        } else {
+          console.warn("El producto ya está en el carrito.");
+        }
       } else {
         console.error("ID de usuario no encontrada en userLogued");
       }
@@ -245,7 +248,6 @@ export default {
           userLogued,
           { headers: { Authorization: `Bearer ${userToken}` } }
         );
-        console.log("Carrito actualizado en la API:", response.data);
       } catch (error) {
         console.error("Error al actualizar el carrito en la API:", error);
       }
@@ -368,10 +370,10 @@ export default {
 }
 
 .btn-product {
-  width: 75%;
+  width: 84%;
   height: 9%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .btn-cart {
@@ -383,7 +385,7 @@ export default {
   background-color: #66e0ca;
 }
 .btn-cart-eye {
-  width: 35%;
+  width: 21%;
   height: 87%;
   border: none;
   border-radius: 50px;

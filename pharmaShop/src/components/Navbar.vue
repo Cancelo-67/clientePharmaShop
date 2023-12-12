@@ -30,8 +30,11 @@
         <button>Información</button>
       </article>
       <article class="article-center2">
-        <!-- DropdownMenu se mostrará cuando isMenuOpen sea true -->
-        <dropdown-menu v-if="isMenuOpen" @closeMenu="closeMenu"></dropdown-menu>
+        <!-- Utiliza DropdownMenu y emite eventos según sea necesario -->
+        <dropdown-menu
+          :isOpen="isMenuOpen"
+          @closeMenu="closeMenu"
+        ></dropdown-menu>
         <i class="fa-solid fa-user" style="color: #41aba9"></i>
         <button @click="toggleMenu">{{ username }}</button>
       </article>
@@ -40,7 +43,9 @@
       <router-link to="/" class="logo-link">
         <img src="../images/logo-transparent.png" alt="Logo" class="img-logo" />
       </router-link>
-      <i class="fa-solid fa-cart-shopping" style="color: #41aba9"></i>
+      <router-link to="/cart">
+        <i class="fa-solid fa-cart-shopping" style="color: #41aba9"></i>
+      </router-link>
     </div>
     <div class="div-table">
       <table class="table-category">
@@ -104,6 +109,12 @@ export default {
     },
     updateCurrentCategory(category) {
       this.currentCategory = category;
+    },
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
+    },
+    closeMenu() {
+      this.isMenuOpen = false;
     },
   },
 };
