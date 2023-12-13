@@ -34,6 +34,7 @@
     <section class="section2">
       <h2>DESTACADOS</h2>
       <hr class="separator-horizontal" />
+      <section></section>
     </section>
     <section class="section3">
       <h2>EN PROMOCIÓN</h2>
@@ -52,6 +53,7 @@ export default {
     return {
       images: ["/src/images/imagen1.png", "/src/images/imagen1.png"],
       currentImageIndex: 0,
+      //TODO Hacer dos listas una con todos los productos y otra con los productos filtrados por la cantidad de stock
     };
   },
   computed: {
