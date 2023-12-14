@@ -8,7 +8,9 @@
           <li @click="toggleDropdown('miCuenta')">
             <span class="menu-item-header">Mi cuenta</span>
             <div v-show="dropdowns.miCuenta" class="submenu">
-              <p class="submenu-item">Mis Datos</p>
+              <router-link to="/profile"
+                ><p class="submenu-item">Mis Datos</p></router-link
+              >
               <p class="submenu-item">Mis Direcciones</p>
             </div>
           </li>
@@ -100,6 +102,7 @@ export default {
 }
 
 .options-container {
+  margin-top: 70px;
   width: 100%;
   display: flex;
   align-items: center;

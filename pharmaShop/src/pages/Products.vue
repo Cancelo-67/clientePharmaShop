@@ -52,9 +52,11 @@
         <div>{{ product.name }}</div>
         <p>{{ product.price }} €</p>
         <div class="btn-product">
-          <button class="btn-cart-eye">
-            <i class="fa-solid fa-eye" style="color: #000000"></i>
-          </button>
+          <router-link :to="'/products/' + product.id">
+            <button class="btn-cart-eye">
+              <i class="fa-solid fa-eye" style="color: #000000"></i>
+            </button>
+          </router-link>
           <button class="btn-cart" @click="addCart(product)">
             <i class="fa-solid fa-cart-shopping" style="color: #ffffff"></i>
             AÑADIR
@@ -385,7 +387,7 @@ export default {
   background-color: #66e0ca;
 }
 .btn-cart-eye {
-  width: 21%;
+  width: 150%;
   height: 87%;
   border: none;
   border-radius: 50px;

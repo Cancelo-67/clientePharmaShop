@@ -48,12 +48,14 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
       images: ["/src/images/imagen1.png", "/src/images/imagen1.png"],
       currentImageIndex: 0,
-      //TODO Hacer dos listas una con todos los productos y otra con los productos filtrados por la cantidad de stock
+      products: [],
+      productsFilter: [],
     };
   },
   computed: {
@@ -71,6 +73,9 @@ export default {
     },
     goToImage(index) {
       this.currentImageIndex = index;
+    },
+    async getProducts() {
+      const response = await axios.get("");
     },
   },
 };
