@@ -4,7 +4,7 @@
       <article class="images">
         <div class="carousel-container">
           <div class="carousel">
-            <img :src="currentImage" alt="Slide" />
+            <img :src="currentImage" alt="Slide" class="img-big" />
             <div class="indicators">
               <span
                 v-for="(image, index) in images"
@@ -34,28 +34,48 @@
     <section class="section2">
       <h2>DESTACADOS</h2>
       <hr class="separator-horizontal" />
-      <section></section>
+
+      <!-- Carrusel de productos -->
+      <div class="product-carousel">
+        <button class="nav-button prev" @click="prevProductSlide">
+          <i class="fa-solid fa-chevron-left" style="color: #000000"></i>
+        </button>
+        <div
+          class="carousel"
+          :style="{ transform: `translateX(-${currentProductSlide}px)` }"
+        >
+          <!-- Renderiza todos los productos -->
+          <div
+            v-for="(product, index) in products"
+            :key="index"
+            class="product-item"
+          >
+            <!-- Mostrar detalles del producto según tus necesidades -->
+            <p class="product-name">{{ product.name }}</p>
+            <img :src="product.image" alt="Product" class="product-image" />
+          </div>
+        </div>
+        <button class="nav-button next" @click="nextProductSlide">
+          <i class="fa-solid fa-chevron-right" style="color: #000000"></i>
+        </button>
+      </div>
     </section>
-    <section class="section3">
-      <h2>EN PROMOCIÓN</h2>
-      <hr class="separator-horizontal" />
-    </section>
-    <section class="section4">
-      <h2>MARCAS MAS BUSCADAS</h2>
-      <hr class="separator-horizontal" />
-    </section>
+    <!-- ... (Resto de las secciones) ... -->
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import Cookies from "js-cookie";
+
 export default {
   data() {
     return {
       images: ["/src/images/imagen1.png", "/src/images/imagen1.png"],
       currentImageIndex: 0,
       products: [],
-      productsFilter: [],
+      currentProductSlide: 0,
+      itemWidth: 160,
     };
   },
   computed: {
@@ -64,9 +84,13 @@ export default {
     },
   },
   mounted() {
-    setInterval(this.nextImage, 5000);
+    this.startImageInterval();
+    this.getProducts();
   },
   methods: {
+    startImageInterval() {
+      this.intervalId = setInterval(this.nextImage, 5000);
+    },
     nextImage() {
       this.currentImageIndex =
         (this.currentImageIndex + 1) % this.images.length;
@@ -74,8 +98,33 @@ export default {
     goToImage(index) {
       this.currentImageIndex = index;
     },
+    prevProductSlide() {
+      this.currentProductSlide = Math.max(
+        0,
+        this.currentProductSlide - this.itemWidth
+      );
+    },
+    nextProductSlide() {
+      const maxProductSlide = (this.products.length - 1) * this.itemWidth;
+      this.currentProductSlide = Math.min(
+        maxProductSlide,
+        this.currentProductSlide + this.itemWidth
+      );
+    },
     async getProducts() {
-      const response = await axios.get("");
+      const userToken = JSON.parse(
+        decodeURIComponent(Cookies.get("userToken"))
+      );
+      try {
+        const response = await axios.get("http://localhost:8080/products", {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        });
+        this.products = response.data;
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
     },
   },
 };
@@ -89,6 +138,10 @@ export default {
   justify-content: center;
   margin-top: 20px;
 }
+.section2 {
+  width: 57%;
+}
+
 .container-all {
   display: flex;
   flex-direction: column;
@@ -120,43 +173,34 @@ export default {
     }
   }
 }
+.img-big {
+  height: 800px;
+}
 
-.carousel {
+.product-carousel {
+  width: 80%;
+  margin: 20px auto;
+  overflow: hidden;
   position: relative;
-  text-align: center;
 
-  img {
-    height: 800px;
-    max-height: 100vh;
-    margin: 0 auto;
-    width: 5;
-  }
-
-  .separator-horizontal {
-    flex-grow: 1;
-    height: 1px;
-    background-color: #000; /* Ajusta el color según tu diseño */
-    margin: 0 10px; /* Ajusta el margen según sea necesario */
-  }
-  .indicators {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
+  .carousel {
     display: flex;
-    gap: 10px;
+    transition: transform 0.5s ease;
+  }
 
-    span {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: #ccc;
-      cursor: pointer;
+  .product-item {
+    box-sizing: border-box;
+    padding: 5px;
+    img {
+      width: 200px;
     }
+  }
+  .prev {
+    left: 0;
+  }
 
-    .active {
-      background-color: #333;
-    }
+  .next {
+    right: 0;
   }
 }
 </style>
