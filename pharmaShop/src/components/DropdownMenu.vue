@@ -6,7 +6,10 @@
         <h1 class="title">Mi cuenta</h1>
         <ul class="list-subtittle">
           <li @click="toggleDropdown('miCuenta')">
-            <span class="menu-item-header">Mi cuenta</span>
+            <span class="menu-item-header"
+              ><i class="fa-solid fa-user" style="color: #000000"></i>Mi
+              cuenta</span
+            >
             <div v-show="dropdowns.miCuenta" class="submenu">
               <router-link to="/profile"
                 ><p class="submenu-item">Mis Datos</p></router-link
@@ -16,21 +19,29 @@
           </li>
 
           <li @click="toggleDropdown('pedidos')">
-            <span class="menu-item-header">Pedidos y devoluciones</span>
+            <span class="menu-item-header"
+              ><i class="fa-solid fa-box" style="color: #000000"></i> Pedidos y
+              devoluciones</span
+            >
             <div v-show="dropdowns.pedidos" class="submenu">
               <p class="submenu-item">Pedidos, devoluciones y facturas</p>
             </div>
           </li>
 
           <li @click="toggleDropdown('pago')">
-            <span class="menu-item-header">Pago</span>
+            <span class="menu-item-header"
+              ><i class="fa-solid fa-credit-card" style="color: #000000"></i
+              >Pago</span
+            >
             <div v-show="dropdowns.pago" class="submenu">
               <p class="submenu-item">Tarjetas Vinculadas</p>
               <p class="submenu-item">Cupones Descuento</p>
             </div>
           </li>
-
-          <button @click="closeMenu">Cerrar Sesión</button>
+          <button @click="closeMenu">
+            <i class="fa-solid fa-right-from-bracket" style="color: #000000"></i
+            >Cerrar Sesión
+          </button>
         </ul>
       </div>
     </div>

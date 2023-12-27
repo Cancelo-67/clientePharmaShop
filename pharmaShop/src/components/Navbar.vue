@@ -16,11 +16,11 @@
       <div>
         <article class="article-up">
           <i class="fa-solid fa-phone" style="color: #ffffff"></i>
-          <p>111 111 111</p>
+          <p>952 944 601</p>
         </article>
         <article class="article-up">
           <i class="fa-brands fa-whatsapp" style="color: #ffffff"></i>
-          <p>111 111 111</p>
+          <p>626 405 143</p>
         </article>
       </div>
     </nav>
@@ -30,7 +30,6 @@
         <button>Información</button>
       </article>
       <article class="article-center2">
-        <!-- Utiliza DropdownMenu y emite eventos según sea necesario -->
         <dropdown-menu
           :isOpen="isMenuOpen"
           @closeMenu="closeMenu"
@@ -50,16 +49,54 @@
     <div class="div-table">
       <table class="table-category">
         <tr>
-          <th
-            v-for="category in categories"
-            :key="category"
-            :class="{ 'active-category': currentCategory === category }"
-          >
-            <router-link
-              :to="{ name: 'Category', params: { category: category } }"
-              class="custom-link"
-              @click="updateCurrentCategory(category)"
-              >{{ category }}</router-link
+          <th class="th-category">
+            <router-link :to="'/dental'" class="category-link"
+              >DENTAL</router-link
+            >
+          </th>
+          <th class="th-category">
+            <router-link :to="'/cosmetica'" class="category-link"
+              >COSMETICA</router-link
+            >
+          </th>
+          <th class="th-category">
+            <router-link :to="'/nutricion'" class="category-link"
+              >NUTRICION</router-link
+            >
+          </th>
+          <th class="th-category">
+            <router-link :to="'/bebeymama'" class="category-link"
+              >BEBÉ Y MAMÁ</router-link
+            >
+          </th>
+          <th class="th-category">
+            <router-link :to="'/salud'" class="category-link"
+              >SALUD</router-link
+            >
+          </th>
+          <th class="th-category">
+            <router-link :to="'/higiene'" class="category-link"
+              >HIGIENE</router-link
+            >
+          </th>
+          <th class="th-category">
+            <router-link :to="'/optica'" class="category-link"
+              >ÓPTICA</router-link
+            >
+          </th>
+          <th class="th-category">
+            <router-link :to="'/ortopedia'" class="category-link"
+              >ORTOPEDIA</router-link
+            >
+          </th>
+          <th class="th-category">
+            <router-link :to="'/mascotas'" class="category-link"
+              >MASCOTAS</router-link
+            >
+          </th>
+          <th class="th-category">
+            <router-link :to="'/medicamentos'" class="category-link"
+              >MEDICAMENTOS</router-link
             >
           </th>
         </tr>
@@ -80,19 +117,6 @@ export default {
     return {
       username: "",
       isMenuOpen: false,
-      currentCategory: "",
-      categories: [
-        "Dental",
-        "Cosmetica",
-        "Nutricion",
-        "Bebe y mama",
-        "Salud",
-        "Higiene",
-        "Optica",
-        "Ortopedia",
-        "Mascotas",
-        "Medicamentos",
-      ],
     };
   },
   mounted() {
@@ -101,14 +125,11 @@ export default {
       const userObject = JSON.parse(userObjectFromCookie);
       this.username = userObject.username;
     }
-    this.currentCategory = this.$route.params.category;
   },
+
   methods: {
     goLogin() {
       this.$router.push("/login");
-    },
-    updateCurrentCategory(category) {
-      this.currentCategory = category;
     },
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
@@ -162,6 +183,15 @@ export default {
     color: gray;
     background-color: transparent;
     border: none;
+  }
+}
+
+.th-category {
+  .category-link {
+    // Estilos para el enlace dentro de la celda
+    // Puedes agregar estilos adicionales aquí
+    color: black;
+    text-decoration: none;
   }
 }
 

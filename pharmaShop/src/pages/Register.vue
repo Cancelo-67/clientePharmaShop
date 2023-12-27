@@ -18,8 +18,32 @@
       <form @submit.prevent="submitForm">
         <h1>Crear cuenta</h1>
         <button>
-          <i class="fa-brands fa-google" style="color: #000000"> </i>Crear
-          cuenta con Google
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            x="0px"
+            y="0px"
+            width="100"
+            height="100"
+            viewBox="0 0 48 48"
+          >
+            <path
+              fill="#FFC107"
+              d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
+            ></path>
+            <path
+              fill="#FF3D00"
+              d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"
+            ></path>
+            <path
+              fill="#4CAF50"
+              d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"
+            ></path>
+            <path
+              fill="#1976D2"
+              d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
+            ></path>
+          </svg>
+          Crear cuenta con Google
         </button>
         <div class="separator-container">
           <hr class="separator-horizontal" />
@@ -153,11 +177,11 @@ export default {
     justify-content: center;
     flex-direction: row-reverse;
     height: 100vh;
-    padding: 2rem; /* Agregar espacio alrededor del formulario */
+    padding: 2rem;
     form {
       width: 100%;
-      max-width: 450px; /* Limitar el ancho del formulario en pantallas grandes */
-      padding: 1rem; /* Agregar espacio dentro del formulario */
+      max-width: 450px;
+      padding: 1rem;
       border-radius: 5px;
       color: #000000;
       display: flex;
@@ -175,46 +199,46 @@ export default {
       .checkbox {
         display: flex;
         align-items: center;
-        margin-top: 1rem; /* Ajusta el margen según sea necesario */
+        margin-top: 1rem;
       }
 
       .checkbox input {
-        margin-right: 0.5rem; /* Espacio entre el checkbox y el texto */
+        margin-right: 0.5rem;
       }
 
       .checkbox label {
-        font-size: 14px; /* Ajusta el tamaño de la fuente según sea necesario */
-        color: #000; /* Ajusta el color del texto según sea necesario */
+        font-size: 14px;
+        color: #000;
       }
     }
     .separator-vertical {
-      margin: 2rem; /* Ajusta según sea necesario */
-      border-top: 2px solid #41aba9; /* Color y estilo de la línea */
+      margin: 2rem;
+      border-top: 2px solid #41aba9;
     }
     .separator-container {
       display: flex;
       align-items: center;
-      justify-content: center; /* Centra los elementos horizontalmente */
-      margin: 1rem 0; /* Ajusta el margen según sea necesario */
+      justify-content: center;
+      margin: 1rem 0;
       width: 25vw;
     }
 
     .separator-horizontal {
       flex-grow: 1;
       height: 1px;
-      border-top: 2px solid #41aba9; /* Ajusta el color según sea necesario */
-      margin: 0 10px; /* Ajusta el margen según sea necesario */
+      border-top: 2px solid #41aba9;
+      margin: 0 10px;
     }
 
     .inline-text {
       white-space: nowrap;
-      font-size: 14px; /* Ajusta el tamaño de la fuente según sea necesario */
-      margin: 0; /* Elimina el margen para que esté al ras con las líneas de separación */
+      font-size: 14px;
+      margin: 0;
     }
     .container-word {
       .fa-medal,
       .fa-truck {
-        font-size: 42px; /* Tamaño deseado */
+        font-size: 42px;
       }
     }
   }
@@ -231,8 +255,8 @@ export default {
 }
 
 label {
-  font-size: 14px; /* Aumentar el tamaño de la fuente de las etiquetas */
-  margin-bottom: 0.5rem; /* Reducir el espacio entre etiquetas y campos de entrada */
+  font-size: 14px;
+  margin-bottom: 0.5rem;
 }
 
 input {
@@ -240,8 +264,8 @@ input {
   border-radius: 5px;
   border: 1px solid;
   color: #000000;
-  padding: 0.7rem; /* Aumentar el espacio interno de los campos de entrada */
-  font-size: 14px; /* Aumentar el tamaño de la fuente de los campos de entrada */
+  padding: 0.7rem;
+  font-size: 14px;
 }
 
 button {
@@ -251,7 +275,13 @@ button {
   border: none;
   cursor: pointer;
   border-radius: 5px;
-  font-size: 14px; /* Aumentar el tamaño de la fuente del botón */
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  svg {
+    width: 40px;
+    height: 35px;
+  }
 }
 
 .google-login {
@@ -260,8 +290,8 @@ button {
 }
 
 .google-login i {
-  font-size: 20px; /* Aumentar el tamaño del ícono de Google */
-  margin-right: 0.5rem; /* Agregar espacio entre el ícono y el texto */
+  font-size: 20px;
+  margin-right: 0.5rem;
 }
 
 .popup {

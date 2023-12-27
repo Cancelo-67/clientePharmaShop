@@ -96,10 +96,9 @@ label {
 }
 
 input {
-  background-color: #0056b3;
   border-radius: 5px;
   border: 1px solid;
-  color: #fff;
+  color: #000000;
   padding: 0.3rem;
   font-size: 14px;
 }

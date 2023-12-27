@@ -34,33 +34,31 @@
     <section class="section2">
       <h2>DESTACADOS</h2>
       <hr class="separator-horizontal" />
-
-      <!-- Carrusel de productos -->
       <div class="product-carousel">
-        <button class="nav-button prev" @click="prevProductSlide">
-          <i class="fa-solid fa-chevron-left" style="color: #000000"></i>
-        </button>
         <div
           class="carousel"
           :style="{ transform: `translateX(-${currentProductSlide}px)` }"
         >
-          <!-- Renderiza todos los productos -->
           <div
             v-for="(product, index) in products"
             :key="index"
             class="product-item"
           >
-            <!-- Mostrar detalles del producto según tus necesidades -->
-            <p class="product-name">{{ product.name }}</p>
-            <img :src="product.image" alt="Product" class="product-image" />
+            <div class="product-content">
+              <img :src="product.image" alt="Product" class="product-image" />
+              <p class="product-name">{{ product.name }}</p>
+              <p class="product-price">{{ product.price }} €</p>
+            </div>
           </div>
         </div>
+        <button class="nav-button prev" @click="prevProductSlide">
+          <i class="fa-solid fa-chevron-left" style="color: #000000"></i>
+        </button>
         <button class="nav-button next" @click="nextProductSlide">
           <i class="fa-solid fa-chevron-right" style="color: #000000"></i>
         </button>
       </div>
     </section>
-    <!-- ... (Resto de las secciones) ... -->
   </div>
 </template>
 
@@ -75,7 +73,7 @@ export default {
       currentImageIndex: 0,
       products: [],
       currentProductSlide: 0,
-      itemWidth: 160,
+      itemWidth: 300,
     };
   },
   computed: {
@@ -139,7 +137,12 @@ export default {
   margin-top: 20px;
 }
 .section2 {
-  width: 57%;
+  width: 94%;
+  text-align: center;
+
+  h2 {
+    margin-bottom: 10px;
+  }
 }
 
 .container-all {
@@ -178,22 +181,52 @@ export default {
 }
 
 .product-carousel {
+  height: 320px;
+  position: relative;
   width: 80%;
   margin: 20px auto;
   overflow: hidden;
-  position: relative;
 
   .carousel {
     display: flex;
     transition: transform 0.5s ease;
   }
 
+  .product-image {
+    width: 200px;
+    height: auto;
+  }
+  .product-name {
+    font-weight: bold;
+    margin-top: 5px;
+  }
+  .product-price {
+    color: #4d4d4d;
+    margin-top: 5px;
+  }
+
   .product-item {
     box-sizing: border-box;
     padding: 5px;
-    img {
-      width: 200px;
-    }
+    margin-right: 10px;
+  }
+  .product-content {
+    height: 320px;
+    border-radius: 5px;
+    text-align: center;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: #41aba9;
+  }
+  .nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    background-color: white;
   }
   .prev {
     left: 0;
@@ -201,6 +234,7 @@ export default {
 
   .next {
     right: 0;
+    z-index: 2;
   }
 }
 </style>

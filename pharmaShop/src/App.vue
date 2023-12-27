@@ -45,6 +45,6 @@ export default {
 }
 
 body {
-  font-family: "Noto Serif", sans-serif; /* Utiliza la fuente Noto Serif como fuente predeterminada para toda la pagina. */
+  font-family: "Noto Serif";
 }
 </style>

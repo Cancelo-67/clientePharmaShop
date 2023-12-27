@@ -22,7 +22,7 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/products/:productId",
+    path: "/products/:id",
     name: "DetailProducts",
     component: DetailProduct,
     meta: { requiresAuth: true },
@@ -46,7 +46,7 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/products/:category",
+    path: "/:category",
     name: "Category",
     component: Category,
     meta: { requiresAuth: true },

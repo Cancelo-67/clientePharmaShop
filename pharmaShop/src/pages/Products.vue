@@ -154,7 +154,7 @@ export default {
       minPrice: "",
       maxPrice: "",
       searchQuery: "",
-      cartItems: [], // Nueva propiedad para almacenar IDs de productos en el carrito
+      cartItems: [],
     };
   },
 
