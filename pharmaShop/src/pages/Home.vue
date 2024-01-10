@@ -176,9 +176,6 @@ export default {
     }
   }
 }
-.img-big {
-  height: 800px;
-}
 
 .product-carousel {
   height: 320px;

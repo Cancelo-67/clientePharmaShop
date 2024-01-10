@@ -38,7 +38,7 @@
               <p class="submenu-item">Cupones Descuento</p>
             </div>
           </li>
-          <button @click="closeMenu">
+          <button @click="logOut" class="button-logout">
             <i class="fa-solid fa-right-from-bracket" style="color: #000000"></i
             >Cerrar Sesión
           </button>
@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
+
 export default {
   props: {
     isOpen: {
@@ -82,6 +84,11 @@ export default {
     transitionEnd() {
       this.transitioning = false;
     },
+    logOut() {
+      Cookies.remove("userToken");
+      Cookies.remove("userLogued");
+      this.$router.push("/login");
+    },
   },
 };
 </script>
@@ -103,6 +110,7 @@ export default {
   transition: transform 0.3s ease, height 0.3s ease;
   transform-origin: top center;
   transform: translateY(0);
+  z-index: 1000;
 }
 
 .dropdown-container {
@@ -110,6 +118,11 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.button-logout {
+  background-color: transparent;
+  border: none;
 }
 
 .options-container {

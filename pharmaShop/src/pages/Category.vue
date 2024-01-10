@@ -318,7 +318,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .first-search {
   margin-top: 30px;
   display: flex;

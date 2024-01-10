@@ -245,11 +245,9 @@ export default {
         );
         userLogued.cart = this.cartItems;
 
-        const response = await axios.put(
-          `http://localhost:8080/users/${userId}`,
-          userLogued,
-          { headers: { Authorization: `Bearer ${userToken}` } }
-        );
+        await axios.put(`http://localhost:8080/users/${userId}`, userLogued, {
+          headers: { Authorization: `Bearer ${userToken}` },
+        });
       } catch (error) {
         console.error("Error al actualizar el carrito en la API:", error);
       }
@@ -306,7 +304,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .first-search {
   margin-top: 30px;
   display: flex;
