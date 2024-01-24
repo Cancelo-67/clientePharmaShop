@@ -2,63 +2,159 @@
   <div class="container">
     <form @submit.prevent="submitForm">
       <h1>Mis datos</h1>
+      <p>* Campo Obligatorio</p>
+      <div class="form-group1">
+        <label>Género:</label>
+        <div class="radio-options">
+          <input
+            type="radio"
+            id="hombre"
+            name="genero"
+            value="hombre"
+            v-model="userLogued.gender"
+          />
+          <label for="hombre">Hombre</label>
+
+          <input
+            type="radio"
+            id="mujer"
+            name="genero"
+            value="mujer"
+            v-model="userLogued.gender"
+          />
+          <label for="mujer">Mujer</label>
+
+          <input
+            type="radio"
+            id="otro"
+            name="genero"
+            value="otro"
+            v-model="userLogued.gender"
+          />
+          <label for="otro">Otro</label>
+        </div>
+      </div>
       <div class="form-group">
         <label for="username">Nombre de usuario</label>
-        <input type="text" id="username" v-model="userData.username" />
+        <input type="text" id="username" v-model="userLogued.username" />
       </div>
 
       <div class="form-group">
         <label for="surname">Apellido</label>
-        <input type="text" id="surname" v-model="userData.surname" />
+        <input type="text" id="surname" v-model="userLogued.surname" />
       </div>
 
       <div class="form-group">
         <label for="phoneNumber">Número de teléfono</label>
-        <input type="tel" id="phoneNumber" v-model="userData.phoneNumber" />
+        <input type="tel" id="phoneNumber" v-model="userLogued.phoneNumber" />
       </div>
 
       <div class="form-group">
         <label for="email">Correo Electrónico</label>
-        <input type="email" id="email" v-model="userData.email" />
+        <input type="email" id="email" v-model="userLogued.email" />
       </div>
 
       <div class="form-group">
-        <label for="address">Dirección</label>
-        <input type="text" id="address" v-model="userData.address" />
+        <label for="day">Día de nacimiento:</label>
+        <select id="day" v-model="selectedDay">
+          <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
+        </select>
       </div>
 
       <div class="form-group">
-        <label for="cp">C.P</label>
-        <input type="text" id="cp" v-model="userData.cp" />
+        <label for="month">Mes de nacimiento:</label>
+        <select id="month" v-model="selectedMonth">
+          <option
+            v-for="(month, index) in months"
+            :key="index + 1"
+            :value="index + 1"
+          >
+            {{ month }}
+          </option>
+        </select>
       </div>
 
-      <button type="submit">Actualizar usuario</button>
-      <button @click="deleteUser">Eliminar usuario</button>
+      <div class="form-group">
+        <label for="year">Año de nacimiento:</label>
+        <select id="year" v-model="selectedYear">
+          <option v-for="year in years" :key="year" :value="year">
+            {{ year }}
+          </option>
+        </select>
+      </div>
+      <button type="submit">Guardar</button>
     </form>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import Cookies from "js-cookie";
+
 export default {
   data() {
     return {
-      userData: {
-        username: "NombrePredeterminado",
-        surname: "ApellidoPredeterminado",
-        phoneNumber: "123-456-7890",
-        email: "correo@predeterminado.com",
-        address: "DirecciónPredeterminada",
-        cp: "12345",
-      },
+      userLogued: null,
+      selectedDay: null,
+      selectedMonth: null,
+      selectedYear: null,
     };
   },
+  computed: {
+    days() {
+      return [...Array(31).keys()].map((day) => day + 1);
+    },
+    months() {
+      return [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre",
+      ];
+    },
+    years() {
+      const currentYear = new Date().getFullYear();
+      return [...Array(100).keys()].map((year) => currentYear - year);
+    },
+  },
   methods: {
+    initializeUserData() {
+      // Inicializa el usuario después de cargar los datos
+      this.userLogued = JSON.parse(
+        decodeURIComponent(Cookies.get("userLogued"))
+      );
+      this.selectedDay = this.extractDay(this.userLogued.birthdate);
+      this.selectedMonth = this.extractMonth(this.userLogued.birthdate);
+      this.selectedYear = this.extractYear(this.userLogued.birthdate);
+    },
+    extractDay(date) {
+      return date ? parseInt(date.split("/")[0]) : null;
+    },
+    extractMonth(date) {
+      return date ? parseInt(date.split("/")[1]) : null;
+    },
+    extractYear(date) {
+      return date ? parseInt(date.split("/")[2]) : null;
+    },
     submitForm() {
-      // Aquí puedes enviar los datos del formulario
+      console.log(this.userLogued);
+      // Agrega la lógica para enviar el formulario
     },
     deleteUser() {
-      // Agrega lógica para eliminar el usuario
+      // Agrega la lógica para eliminar el usuario
     },
+  },
+  mounted() {
+    // Llama a initializeUserData después de que el componente está montado
+    this.initializeUserData();
   },
 };
 </script>
@@ -71,20 +167,41 @@ export default {
 form {
   width: 100%;
   max-width: 80%;
-  background-color: #41aba9;
-  padding: 1rem;
-  color: #fff;
+  background-color: #c5c5c5;
+  padding: 3rem;
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: start;
   justify-content: space-evenly;
   border-radius: 5px;
+  color: #000000;
   h1 {
     width: 384px;
   }
 }
 
+.radio-options {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Opcional: Estilos para resaltar la opción seleccionada */
+.radio-options input[type="radio"]:checked + label {
+  background-color: #41aba9;
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
 .form-group {
+  width: 30%;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+.form-group1 {
+  width: 20%;
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
@@ -105,7 +222,7 @@ input {
 
 button {
   padding: 1rem 2rem;
-  background-color: #007bff;
+  background-color: #41aba9;
   color: #fff;
   border: none;
   cursor: pointer;

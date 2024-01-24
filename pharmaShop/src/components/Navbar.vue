@@ -9,7 +9,7 @@
         <i class="fa-solid fa-star" style="color: #ffffff"></i>
         <i class="fa-solid fa-star" style="color: #ffffff"></i>
       </div>
-      <div>
+      <div class="navbar-div-up">
         <i class="fa-solid fa-truck-fast" style="color: #ffffff"></i>
         <p>Tus productos en casa en solo 24 - 48 horas</p>
       </div>
@@ -157,12 +157,20 @@ export default {
     width: 16%;
   }
 }
+.navbar-div-up {
+  p {
+    margin-left: 10px;
+  }
+}
 
 .article-up {
   display: flex;
   align-items: center;
   width: 50%;
   display: flex;
+  p {
+    margin-left: 11px;
+  }
 }
 .custom-link {
   color: black;
@@ -220,10 +228,11 @@ export default {
 
 .navbar-down {
   width: 91vw;
-  height: 13vh;
+  height: 11vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   i {
     font-size: 45px;
   }

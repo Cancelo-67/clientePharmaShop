@@ -53,12 +53,12 @@
         <p>{{ product.price }} €</p>
         <div class="btn-product">
           <router-link :to="'/products/' + product.id">
-            <button class="btn-cart-eye">
+            <button class="btn-fav-eye">
               <i class="fa-solid fa-eye" style="color: #000000"></i>
             </button>
           </router-link>
-          <button class="btn-cart" @click="addCart(product)">
-            <i class="fa-solid fa-cart-shopping" style="color: #ffffff"></i>
+          <button class="btn-fav" @click="addFav(product)">
+            <i class="fa-solid fa-fav-shopping" style="color: #ffffff"></i>
             AÑADIR
           </button>
         </div>
@@ -154,7 +154,7 @@ export default {
       minPrice: "",
       maxPrice: "",
       searchQuery: "",
-      cartItems: [],
+      favItems: [],
     };
   },
 
@@ -225,7 +225,7 @@ export default {
       this.currentPage = 1;
     },
 
-    addCart(product) {
+    addFav(product) {
       const userLogued = JSON.parse(
         decodeURIComponent(Cookies.get("userLogued"))
       );
@@ -235,11 +235,11 @@ export default {
 
       if (userId) {
         // Verificar si el producto ya está en el carrito antes de agregarlo
-        if (!this.cartItems.includes(product.id)) {
-          this.cartItems.push(product.id);
+        if (!this.favItems.includes(product.id)) {
+          this.favItems.push(product.id);
 
           // Llamar al método para actualizar el carrito en la API
-          this.updateCartInApi(userId);
+          this.updateFavInApi(userId);
         } else {
           console.warn("El producto ya está en el carrito.");
         }
@@ -248,7 +248,7 @@ export default {
       }
     },
 
-    async updateCartInApi(userId) {
+    async updateFavInApi(userId) {
       const userToken = JSON.parse(
         decodeURIComponent(Cookies.get("userToken"))
       );
@@ -257,7 +257,7 @@ export default {
         const userLogued = JSON.parse(
           decodeURIComponent(Cookies.get("userLogued"))
         );
-        userLogued.cart = this.cartItems;
+        userLogued.favorites = this.favItems;
 
         await axios.put(`http://localhost:8080/users/${userId}`, userLogued, {
           headers: { Authorization: `Bearer ${userToken}` },
@@ -390,7 +390,7 @@ export default {
   justify-content: space-around;
 }
 
-.btn-cart {
+.btn-fav {
   width: 60%;
   height: 26px;
   border: none;
@@ -398,7 +398,7 @@ export default {
   color: white;
   background-color: #66e0ca;
 }
-.btn-cart-eye {
+.btn-fav-eye {
   width: 150%;
   height: 87%;
   border: none;

@@ -7,7 +7,7 @@
         <ul class="list-subtittle">
           <li @click="toggleDropdown('miCuenta')">
             <span class="menu-item-header"
-              ><i class="fa-solid fa-user" style="color: #000000"></i>Mi
+              ><i class="fa-solid fa-user" style="color: #ffffff"></i>Mi
               cuenta</span
             >
             <div v-show="dropdowns.miCuenta" class="submenu">
@@ -20,7 +20,7 @@
 
           <li @click="toggleDropdown('pedidos')">
             <span class="menu-item-header"
-              ><i class="fa-solid fa-box" style="color: #000000"></i> Pedidos y
+              ><i class="fa-solid fa-box" style="color: #ffffff"></i> Pedidos y
               devoluciones</span
             >
             <div v-show="dropdowns.pedidos" class="submenu">
@@ -30,7 +30,7 @@
 
           <li @click="toggleDropdown('pago')">
             <span class="menu-item-header"
-              ><i class="fa-solid fa-credit-card" style="color: #000000"></i
+              ><i class="fa-solid fa-credit-card" style="color: #ffffff"></i
               >Pago</span
             >
             <div v-show="dropdowns.pago" class="submenu">
@@ -39,7 +39,7 @@
             </div>
           </li>
           <button @click="logOut" class="button-logout">
-            <i class="fa-solid fa-right-from-bracket" style="color: #000000"></i
+            <i class="fa-solid fa-right-from-bracket" style="color: #ffffff"></i
             >Cerrar Sesión
           </button>
         </ul>
@@ -95,6 +95,8 @@ export default {
 
 <style scoped>
 .title {
+  color: #ffffff;
+  font-size: 30px;
   margin-right: 220px;
   margin-bottom: 27px;
 }
@@ -121,13 +123,21 @@ export default {
 }
 
 .button-logout {
+  width: 150px;
+  display: flex;
+  font-size: 20px;
+  color: #ffffff;
   background-color: transparent;
   border: none;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
 }
 
 .options-container {
   margin-top: 70px;
-  width: 100%;
+  width: 140%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -136,14 +146,19 @@ export default {
 }
 
 ul {
+  height: 155px;
+  display: flex;
   width: 50%;
   list-style: none;
   padding: 0;
   margin: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
 }
 
 .menu-item-header {
-  color: #000;
+  color: #ffffff;
 
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-family: Noto Serif;
@@ -154,7 +169,7 @@ ul {
 }
 
 .submenu {
-  color: #000;
+  color: #ffffff;
 
   font-family: Noto Serif;
   font-size: 18px;
@@ -178,7 +193,7 @@ ul {
   border: none;
   font-size: 18px;
   cursor: pointer;
-  color: black;
+  color: #ffffff;
   outline: none;
 }
 

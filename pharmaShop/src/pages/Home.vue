@@ -157,6 +157,9 @@ export default {
   justify-content: center;
   align-items: center;
 }
+.img-big {
+  width: 661px;
+}
 .images {
   display: flex;
   flex-direction: row;
