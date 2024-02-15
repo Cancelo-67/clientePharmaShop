@@ -123,7 +123,7 @@ export default {
     },
     async fetchUsers() {
       try {
-        const response = await axios.get("https://dummyjson.com/users");
+        const response = await axios.get("http://localhost:8080/users");
         this.users = response.data.users;
         console.log(this.users);
       } catch (error) {

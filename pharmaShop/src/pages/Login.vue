@@ -168,7 +168,6 @@ export default {
       }
     },
     comparePasswords(inputPassword, hashedPassword) {
-      // Compara la contraseña ingresada con la contraseña almacenada
       return bcrypt.compareSync(inputPassword, hashedPassword);
     },
   },

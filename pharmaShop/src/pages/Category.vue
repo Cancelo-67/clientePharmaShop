@@ -57,8 +57,11 @@
               <i class="fa-solid fa-eye" style="color: #000000"></i>
             </button>
           </router-link>
-          <button class="btn-fav" @click="addFav(product)">
-            <i class="fa-solid fa-fav-shopping" style="color: #ffffff"></i>
+          <button class="btn-cart" @click="toggleCart(product)">
+            <i
+              class="fa-solid fa-cart-shopping"
+              style="color: #ffffff; font-size: 15px"
+            ></i>
             AÑADIR
           </button>
         </div>
@@ -144,6 +147,9 @@ import Cookies from "js-cookie";
 export default {
   data() {
     return {
+      userLogued: JSON.parse(decodeURIComponent(Cookies.get("userLogued"))),
+      userToken: JSON.parse(decodeURIComponent(Cookies.get("userToken"))),
+      productsCart: JSON.parse(localStorage.getItem("productsCart")) || [],
       response: null,
       products: [],
       selectedPrice: "all",
@@ -155,6 +161,7 @@ export default {
       maxPrice: "",
       searchQuery: "",
       favItems: [],
+      quantity: 1,
     };
   },
 
@@ -175,28 +182,19 @@ export default {
       }
     },
     async fetchProducts() {
-      const userToken = JSON.parse(
-        decodeURIComponent(Cookies.get("userToken"))
-      );
-
       try {
         const response = await axios.get(
           `http://localhost:8080/products/byCategory/${this.$route.params.category}`,
           {
             headers: {
-              Authorization: `Bearer ${userToken}`,
+              Authorization: `Bearer ${this.userToken}`,
             },
           }
         );
-        console.log(response);
         this.products = response.data;
       } catch (error) {
         console.error("Error al obtener los productos:", error);
       }
-    },
-
-    filterByPrice(price) {
-      this.selectedPrice = price;
     },
 
     toggleFilters() {
@@ -225,43 +223,44 @@ export default {
       this.currentPage = 1;
     },
 
-    addFav(product) {
-      const userLogued = JSON.parse(
-        decodeURIComponent(Cookies.get("userLogued"))
+    async toggleCart(product) {
+      const productCart = {
+        image: product.image,
+        name: product.name,
+        price: product.price,
+        quantity: this.quantity,
+      };
+
+      // Verificar si el producto ya está en el carrito
+      const existingProductIndex = this.productsCart.findIndex(
+        (item) => item.name === productCart.name
       );
 
-      // Asumo que tienes una propiedad 'user' en userLogued que contiene la información del usuario
-      const userId = userLogued ? userLogued.id : null;
-
-      if (userId) {
-        // Verificar si el producto ya está en el carrito antes de agregarlo
-        if (!this.favItems.includes(product.id)) {
-          this.favItems.push(product.id);
-
-          // Llamar al método para actualizar el carrito en la API
-          this.updateFavInApi(userId);
-        } else {
-          console.warn("El producto ya está en el carrito.");
-        }
+      if (existingProductIndex !== -1) {
+        // Si el producto ya está en el carrito, quita el producto
+        this.productsCart.splice(existingProductIndex, 1);
       } else {
-        console.error("ID de usuario no encontrada en userLogued");
+        // Si el producto no está en el carrito, agrégalo
+        this.productsCart.push(productCart);
       }
+
+      // Guardar la lista de productos en localStorage
+      localStorage.setItem("productsCart", JSON.stringify(this.productsCart));
+
+      console.log(this.productsCart);
     },
 
     async updateFavInApi(userId) {
-      const userToken = JSON.parse(
-        decodeURIComponent(Cookies.get("userToken"))
-      );
-
       try {
-        const userLogued = JSON.parse(
-          decodeURIComponent(Cookies.get("userLogued"))
-        );
         userLogued.favorites = this.favItems;
 
-        await axios.put(`http://localhost:8080/users/${userId}`, userLogued, {
-          headers: { Authorization: `Bearer ${userToken}` },
-        });
+        await axios.put(
+          `http://localhost:8080/users/${userId}`,
+          this.userLogued,
+          {
+            headers: { Authorization: `Bearer ${this.userToken}` },
+          }
+        );
       } catch (error) {
         console.error("Error al actualizar el carrito en la API:", error);
       }
@@ -390,13 +389,14 @@ export default {
   justify-content: space-around;
 }
 
-.btn-fav {
+.btn-cart {
   width: 60%;
   height: 26px;
   border: none;
   border-radius: 50px;
   color: white;
   background-color: #66e0ca;
+  cursor: pointer;
 }
 .btn-fav-eye {
   width: 150%;
@@ -405,6 +405,7 @@ export default {
   border-radius: 50px;
   color: white;
   background-color: #66e0ca;
+  cursor: pointer;
 }
 
 .pagination-button[disabled] {

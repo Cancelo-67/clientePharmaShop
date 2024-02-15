@@ -24,7 +24,7 @@
                   +
                 </button>
               </div>
-              <button class="btn-addCart">
+              <button @click="toggleCart(product)" class="btn-addCart">
                 <i
                   class="fa-solid fa-cart-shopping"
                   style="color: #ffffff; font-size: 20px"
@@ -37,7 +37,7 @@
                     'fa-regular fa-heart': !product.isFavorite,
                     'fa-solid fa-heart': product.isFavorite,
                   }"
-                  style="color: #000000; font-size: 20px"
+                  style="color: #ff0000; font-size: 20px"
                 ></i>
               </button>
             </div>
@@ -61,22 +61,25 @@
             class="product-item"
           >
             <div class="product-content">
-              <img :src="product.image" alt="Product" class="product-image" />
+              <img :src="product.image" alt="Product" class="" />
               <p class="product-name">{{ product.name }}</p>
               <p class="product-price">{{ product.price }} €</p>
-              <button class="btn-cart" @click="">
-                <i class="fa-solid fa-cart-shopping" style="color: #ffffff"></i>
-                AÑADIR
-              </button>
+              <div class="btn-product">
+                <button @click="changeUrl(product)" class="btn-fav-eye">
+                  <i class="fa-solid fa-eye" style="color: #000000"></i>
+                </button>
+
+                <button class="btn-cart" @click="toggleFavorite(product)">
+                  <i
+                    class="fa-solid fa-cart-shopping"
+                    style="color: #ffffff"
+                  ></i>
+                  AÑADIR
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <button class="nav-button-prev" @click="prevProductSlide">
-          <i class="fa-solid fa-chevron-left" style="color: #000000"></i>
-        </button>
-        <button class="nav-button-next" @click="nextProductSlide">
-          <i class="fa-solid fa-chevron-right" style="color: #000000"></i>
-        </button>
       </section>
       <div class="separator">
         <h2>¿POR QUÉ CONFIAR EN NOSOTROS?</h2>
@@ -140,31 +143,10 @@
           >
             <div class="comment-container">
               <p>{{ comment.name }}</p>
-              <span v-if="comment.id_user !== editCommentId">
+              <span v-if="comment.id_user">
                 {{ comment.comment }}
               </span>
-              <span v-else>
-                <textarea v-model="editedComment" rows="2" cols="30"></textarea>
-                <div>
-                  <button
-                    @click="saveComment(comment.id)"
-                    class="btn btn-primary btn-sm"
-                  >
-                    Guardar cambios
-                  </button>
-                  <button @click="cancelEdit" class="btn btn-secondary btn-sm">
-                    Cancelar
-                  </button>
-                </div>
-              </span>
-              <div v-if="!editCommentId">
-                <button
-                  @click="editComment(comment)"
-                  v-if="comment.eliminate"
-                  class="btn btn-warning btn-sm"
-                >
-                  Editar
-                </button>
+              <div>
                 <button
                   @click="eliminateComment(comment)"
                   v-if="comment.eliminate"
@@ -199,25 +181,16 @@ export default {
       products: [],
       currentProductSlide: 0,
       itemWidth: 300,
+      productsCart: JSON.parse(localStorage.getItem("productsCart")) || [],
       favItems: JSON.parse(localStorage.getItem("favItems")) || [],
       newComment: "",
       comments: [],
-      editCommentId: null,
-      editedComment: {},
     };
   },
   mounted() {
     this.fetchProduct(this.productId);
     this.getProducts();
     this.getComments();
-
-    const storedFavItems = localStorage.getItem("favItems");
-    this.favItems = storedFavItems ? JSON.parse(storedFavItems) : [];
-
-    // Verificar si el producto actual está en la lista de favoritos
-    if (this.product) {
-      this.product.isFavorite = this.favItems.includes(this.product.id);
-    }
   },
   methods: {
     async fetchProduct(productId) {
@@ -232,8 +205,10 @@ export default {
         );
 
         const product = response.data[0];
-        product.isFavorite = this.favItems.includes(productId);
+        console.log(product.id);
+        product.isFavorite = this.favItems.includes(product.id);
         this.product = product;
+        console.log(product.isFavorite);
       } catch (error) {
         console.error("Error al obtener el producto:", error);
       }
@@ -271,12 +246,41 @@ export default {
         this.quantity--;
       }
     },
-    async toggleFavorite(product) {
-      console.log(this.userLogued.id);
+    async changeUrl(product) {
+      console.log(product);
+      const router = this.$router;
+      await router.push("/products/" + product.id);
+      window.location.reload();
+      //TODO: Preguntar porque tengo que recordar la pagina.
+    },
+    async toggleCart(product) {
+      const productCart = {
+        image: product.image,
+        name: product.name,
+        price: product.price,
+        quantity: this.quantity,
+      };
 
+      // Verificar si el producto ya está en el carrito
+      const existingProductIndex = this.productsCart.findIndex(
+        (item) => item.name === productCart.name
+      );
+
+      if (existingProductIndex !== -1) {
+        // Si el producto ya está en el carrito, actualiza la cantidad
+        this.productsCart[existingProductIndex].quantity += this.quantity;
+      } else {
+        // Si el producto no está en el carrito, agrégalo
+        this.productsCart.push(productCart);
+      }
+
+      // Guardar la lista de productos en localStorage
+      localStorage.setItem("productsCart", JSON.stringify(this.productsCart));
+    },
+
+    async toggleFavorite(product) {
       if (!this.favItems.includes(product.id)) {
         this.favItems.push(product.id);
-        console.log("hecho");
         product.isFavorite = true;
       } else {
         const index = this.favItems.indexOf(product.id);
@@ -289,8 +293,6 @@ export default {
 
       // Llamar al método para actualizar el carrito en la API
       this.updateFavInApi(this.userLogued.id);
-
-      console.log(this.favItems);
     },
     async updateFavInApi(userId) {
       try {
@@ -375,34 +377,6 @@ export default {
         console.log(error);
       }
     },
-    editComment(comment) {
-      if (!this.editedComments[comment.id]) {
-        this.editedComments = {
-          ...this.editedComments,
-          [comment.id]: comment.id,
-        };
-        this.editedComment = comment.comment;
-      }
-    },
-    saveComment(commentId) {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${this.userToken}`, // Añade el token en la cabecera
-        },
-      };
-      const comment = this.comments.find((comment) => comment.id === commentId);
-      comment.comment = this.editedComment;
-      this.editedComments[comment.id] = false;
-      axios.put(
-        `http://localhost:8080/comments/${comment.id}`,
-        config,
-        comment
-      );
-    },
-    cancelEdit(comment) {
-      this.editedComments[comment.id] = false;
-      this.editedComment = "";
-    },
   },
 };
 </script>
@@ -449,7 +423,7 @@ h2 {
   flex-wrap: wrap;
   justify-content: space-around;
   width: 100%;
-  max-width: 1200px; /* Ajusta el valor según sea necesario */
+  max-width: 1200px;
   margin: 20px 0;
 }
 
@@ -472,14 +446,7 @@ img {
   max-width: 600px;
   margin: 20px;
 }
-.btn-cart {
-  color: white;
-  border: none;
-  height: 9%;
-  width: 57%;
-  border-radius: 13px;
-  background: #66e0ca;
-}
+
 .btn-addFav {
   background: transparent;
   border: none;
@@ -520,45 +487,33 @@ img {
   padding: 10px;
   background-color: #41aba9;
 }
-
-.nav-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: transparent;
+.btn-product {
+  display: flex;
+  width: 70%;
+  height: 9%;
+  display: flex;
+  justify-content: space-around;
+  a {
+    width: 50%;
+  }
+}
+.btn-fav-eye {
+  width: 22%;
+  height: 87%;
   border: none;
+  border-radius: 50px;
+  color: white;
+  background-color: #66e0ca;
   cursor: pointer;
-  font-size: 20px;
-  color: #000;
 }
-
-.nav-button-prev,
-.nav-button-next {
-  position: absolute;
-  bottom: 10px;
-  background-color: transparent;
+.btn-cart {
+  color: white;
   border: none;
+  height: 100%;
+  width: 57%;
+  border-radius: 13px;
+  background: #66e0ca;
   cursor: pointer;
-  font-size: 20px;
-  color: #000;
-}
-
-.nav-button-prev {
-  left: 0;
-}
-
-.nav-button-next {
-  right: 0;
-  z-index: 2;
-}
-
-.nav-button-prev {
-  left: 0;
-}
-
-.nav-button-next {
-  right: 0;
-  z-index: 2;
 }
 
 .section3 {
@@ -576,6 +531,10 @@ img {
 
 .section4 {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Añade esto para centrar verticalmente */
 }
 
 .comment-form {
@@ -589,14 +548,14 @@ img {
 .comment-input {
   margin-bottom: 10px;
   width: 20%;
-  padding: 8px; /* Agregamos un poco de relleno al área de texto */
+  padding: 8px;
 }
 
 .comment-button {
   width: 10%;
-  margin-top: 10px; /* Añadimos un margen superior para separar el botón del área de texto */
-  padding: 12px; /* Ajustamos el relleno del botón para hacerlo más grande */
-  background-color: #41aba9;
+  margin-top: 10px;
+  padding: 12px;
+  background-color: #66e0ca;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -606,30 +565,31 @@ img {
   width: 100%;
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(calc(33.33% - 20px), 1fr)
-  ); // Ajusta según sea necesario
-  gap: 20px; // Añade espacio entre los elementos
+  grid-template-columns: repeat(auto-fill, minmax(calc(33.33% - 20px), 1fr));
+  gap: 20px;
 }
 
 .li-comment {
-  width: 100%; // O ajusta según sea necesario
+  width: 100%;
 }
 
 @media screen and (max-width: 767px) {
   .ul-comment {
-    grid-template-columns: 1fr; // En una pantalla pequeña, solo una columna
+    grid-template-columns: 1fr;
   }
 }
 
 .comment-container {
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
+  display: flex;
+  width: 72%;
+  color: black;
+  background-color: #41aba9;
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  align-items: center;
 }
 
 .comment-container textarea {
@@ -644,15 +604,11 @@ img {
 .comment-container button {
   padding: 8px 15px;
   margin-right: 10px;
-  background-color: #4caf50;
+  background-color: red;
   color: #ffffff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-}
-
-.comment-container button:hover {
-  background-color: #45a049;
 }
 
 .comment-container button + button {

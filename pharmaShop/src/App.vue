@@ -29,6 +29,8 @@ export default {
 
 <style>
 .div-app {
+  width: 100vw;
+
   background-image: url("../src/images/fondo.jpg");
   background-repeat: no-repeat;
   background-size: cover;

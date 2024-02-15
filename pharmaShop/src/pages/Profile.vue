@@ -45,42 +45,52 @@
       </div>
 
       <div class="form-group">
-        <label for="phoneNumber">Número de teléfono</label>
-        <input type="tel" id="phoneNumber" v-model="userLogued.phoneNumber" />
-      </div>
-
-      <div class="form-group">
         <label for="email">Correo Electrónico</label>
         <input type="email" id="email" v-model="userLogued.email" />
       </div>
+      <div class="div-nac">
+        <p>Fecha de nacimiento</p>
+        <div class="div-nacGroup">
+          <div class="form-group">
+            <select id="day" v-model="selectedDay">
+              <option v-for="day in days" :key="day" :value="day">
+                {{ day }}
+              </option>
+            </select>
+          </div>
 
-      <div class="form-group">
-        <label for="day">Día de nacimiento:</label>
-        <select id="day" v-model="selectedDay">
-          <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
-        </select>
+          <div class="form-group">
+            <select id="month" v-model="selectedMonth">
+              <option
+                v-for="(month, index) in months"
+                :key="index + 1"
+                :value="index + 1"
+              >
+                {{ month }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <select id="year" v-model="selectedYear">
+              <option v-for="year in years" :key="year" :value="year">
+                {{ year }}
+              </option>
+            </select>
+          </div>
+        </div>
       </div>
-
       <div class="form-group">
-        <label for="month">Mes de nacimiento:</label>
-        <select id="month" v-model="selectedMonth">
-          <option
-            v-for="(month, index) in months"
-            :key="index + 1"
-            :value="index + 1"
-          >
-            {{ month }}
-          </option>
-        </select>
+        <label for="username">Contraseña Actual</label>
+        <input type="text" id="username" />
       </div>
-
       <div class="form-group">
-        <label for="year">Año de nacimiento:</label>
-        <select id="year" v-model="selectedYear">
-          <option v-for="year in years" :key="year" :value="year">
-            {{ year }}
-          </option>
-        </select>
+        <label for="username">Nueva Contraseña</label>
+        <input type="text" id="username" />
+      </div>
+      <div class="form-group">
+        <label for="username">Confirmar Contraseña</label>
+        <input type="text" id="username" />
       </div>
       <button type="submit">Guardar</button>
     </form>
@@ -94,7 +104,7 @@ import Cookies from "js-cookie";
 export default {
   data() {
     return {
-      userLogued: null,
+      userLogued: {},
       selectedDay: null,
       selectedMonth: null,
       selectedYear: null,
@@ -182,20 +192,16 @@ form {
 }
 
 .radio-options {
+  width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 /* Opcional: Estilos para resaltar la opción seleccionada */
-.radio-options input[type="radio"]:checked + label {
-  background-color: #41aba9;
-  color: #ffffff;
-  padding: 5px 10px;
-  border-radius: 5px;
-}
 
 .form-group {
-  width: 30%;
+  width: 90%;
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
@@ -207,10 +213,10 @@ form {
   flex-direction: column;
 }
 
-label {
-  font-size: 14px;
-  margin-bottom: 0.5rem;
-}
+// label {
+//   font-size: 14px;
+//   margin-bottom: 0.5rem;
+// }
 
 input {
   border-radius: 5px;
@@ -218,6 +224,23 @@ input {
   color: #000000;
   padding: 0.3rem;
   font-size: 14px;
+}
+.div-nac {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.div-nacGroup {
+  width: 35%;
+  display: flex;
+  justify-content: space-between;
+}
+select {
+  display: flex;
+  justify-content: center;
+  background-color: #d9d9d9;
+  border-radius: 7px;
+  border: none;
 }
 
 button {

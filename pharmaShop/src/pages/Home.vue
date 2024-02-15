@@ -32,31 +32,37 @@
       </article>
     </section>
     <section class="section2">
-      <h2>DESTACADOS</h2>
-      <hr class="separator-horizontal" />
-      <div class="product-carousel">
+      <div class="div-separator">
+        <h2>DESTACADOS</h2>
+        <hr class="separator-horizontal" />
+      </div>
+
+      <div
+        class="carousel"
+        :style="{ transform: `translateX(-${currentProductSlide}px)` }"
+      >
         <div
-          class="carousel"
-          :style="{ transform: `translateX(-${currentProductSlide}px)` }"
+          v-for="(product, index) in products"
+          :key="index"
+          class="product-item"
         >
-          <div
-            v-for="(product, index) in products"
-            :key="index"
-            class="product-item"
-          >
-            <div class="product-content">
-              <img :src="product.image" alt="Product" class="product-image" />
-              <p class="product-name">{{ product.name }}</p>
-              <p class="product-price">{{ product.price }} €</p>
+          <div class="product-content">
+            <img :src="product.image" alt="Product" class="product-image" />
+            <p class="product-name">{{ product.name }}</p>
+            <p class="product-price">{{ product.price }} €</p>
+            <div class="btn-product">
+              <router-link :to="'/products/' + product.id">
+                <button class="btn-fav-eye">
+                  <i class="fa-solid fa-eye" style="color: #000000"></i>
+                </button>
+              </router-link>
+              <button class="btn-cart" @click="toggleCart(product)">
+                <i class="fa-solid fa-cart-shopping" style="color: #ffffff"></i>
+                AÑADIR
+              </button>
             </div>
           </div>
         </div>
-        <button class="nav-button prev" @click="prevProductSlide">
-          <i class="fa-solid fa-chevron-left" style="color: #000000"></i>
-        </button>
-        <button class="nav-button next" @click="nextProductSlide">
-          <i class="fa-solid fa-chevron-right" style="color: #000000"></i>
-        </button>
       </div>
     </section>
   </div>
@@ -69,11 +75,14 @@ import Cookies from "js-cookie";
 export default {
   data() {
     return {
+      productsCart: JSON.parse(localStorage.getItem("productsCart")) || [],
       images: ["/src/images/imagen1.png", "/src/images/imagen1.png"],
       currentImageIndex: 0,
+      currentProductSlide: 0,
       products: [],
       currentProductSlide: 0,
       itemWidth: 300,
+      quantity: 1,
     };
   },
   computed: {
@@ -96,19 +105,6 @@ export default {
     goToImage(index) {
       this.currentImageIndex = index;
     },
-    prevProductSlide() {
-      this.currentProductSlide = Math.max(
-        0,
-        this.currentProductSlide - this.itemWidth
-      );
-    },
-    nextProductSlide() {
-      const maxProductSlide = (this.products.length - 1) * this.itemWidth;
-      this.currentProductSlide = Math.min(
-        maxProductSlide,
-        this.currentProductSlide + this.itemWidth
-      );
-    },
     async getProducts() {
       const userToken = JSON.parse(
         decodeURIComponent(Cookies.get("userToken"))
@@ -123,6 +119,32 @@ export default {
       } catch (error) {
         console.error("Error fetching products:", error);
       }
+    },
+    async toggleCart(product) {
+      const productCart = {
+        image: product.image,
+        name: product.name,
+        price: product.price,
+        quantity: this.quantity,
+      };
+
+      // Verificar si el producto ya está en el carrito
+      const existingProductIndex = this.productsCart.findIndex(
+        (item) => item.name === productCart.name
+      );
+
+      if (existingProductIndex !== -1) {
+        // Si el producto ya está en el carrito, quita el producto
+        this.productsCart.splice(existingProductIndex, 1);
+      } else {
+        // Si el producto no está en el carrito, agrégalo
+        this.productsCart.push(productCart);
+      }
+
+      // Guardar la lista de productos en localStorage
+      localStorage.setItem("productsCart", JSON.stringify(this.productsCart));
+
+      console.log(this.productsCart);
     },
   },
 };
@@ -218,23 +240,79 @@ export default {
     padding: 10px;
     background-color: #41aba9;
   }
-  .nav-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
-    background-color: white;
-  }
-  .prev {
-    left: 0;
-  }
+}
 
-  .next {
-    right: 0;
-    z-index: 2;
-  }
+.section2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  width: 100%;
+}
+
+.carousel {
+  display: flex;
+  width: 100%;
+  overflow-x: auto;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.product-item {
+  flex: 0 0 auto;
+  width: 220px;
+  margin-right: 10px;
+}
+
+.product-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 357px;
+  width: 100%;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px solid #ddd;
+  padding: 10px;
+  background-color: #41aba9;
+}
+img {
+  width: 100%;
+  height: auto;
+}
+.btn-cart {
+  color: white;
+  border: none;
+  height: 90%;
+  width: 56%;
+  border-radius: 13px;
+  background: #66e0ca;
+  cursor: pointer;
+}
+.btn-fav-eye {
+  width: 150%;
+  height: 87%;
+  border: none;
+  border-radius: 50px;
+  color: white;
+  background-color: #66e0ca;
+  cursor: pointer;
+}
+.btn-product {
+  width: 84%;
+  height: 9%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.div-separator {
+  display: flex;
+  flex-direction: column;
+}
+
+.separator-horizontal {
+  width: 90vw;
+  border-color: #41aba9;
 }
 </style>

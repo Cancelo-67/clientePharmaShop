@@ -15,6 +15,7 @@
                 ><p class="submenu-item">Mis Datos</p></router-link
               >
               <p class="submenu-item">Mis Direcciones</p>
+              <p class="submenu-item">Favoritos</p>
             </div>
           </li>
 
