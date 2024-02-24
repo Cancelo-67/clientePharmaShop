@@ -50,10 +50,22 @@
           <p class="inline-text">O bien</p>
           <hr class="separator-horizontal" />
         </div>
-        <input type="text" placeholder="Nombre" />
-        <input type="text" placeholder="Correo Electronico" />
-        <input type="text" placeholder="Contraseña" />
-        <input type="text" placeholder="Repetir Contraseña" />
+        <input type="text" placeholder="Nombre" v-model="formData.username" />
+        <input
+          type="text"
+          placeholder="Correo Electronico"
+          v-model="formData.email"
+        />
+        <input
+          type="text"
+          placeholder="Contraseña"
+          v-model="formData.password"
+        />
+        <input
+          type="text"
+          placeholder="Repetir Contraseña"
+          v-model="repeatPassword"
+        />
         <div class="checkbox">
           <input
             type="checkbox"

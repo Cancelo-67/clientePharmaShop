@@ -7,6 +7,7 @@ import Profile from "../pages/Profile.vue";
 import Home from "../pages/Home.vue";
 import Category from "../pages/Category.vue";
 import Cart from "../pages/Cart.vue";
+import Favorites from "../pages/Favorites.vue";
 
 const routes = [
   {
@@ -55,6 +56,12 @@ const routes = [
     path: "/cart",
     name: "Cart",
     component: Cart,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/favorites",
+    name: "Favorites",
+    component: Favorites,
     meta: { requiresAuth: true },
   },
 ];

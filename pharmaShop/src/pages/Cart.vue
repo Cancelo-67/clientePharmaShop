@@ -1,33 +1,55 @@
 <template>
-  <section>
-    <article v-for="(product, index) in productsCart" :key="index">
-      <div class="product-info">
-        <img
-          :src="product.imageUrl"
-          alt="Product Image"
-          class="product-image"
-        />
-        <div class="product-details">
-          <p>{{ product.name }}</p>
-          <div class="quantity-control">
-            <button @click="decrementQuantity" class="quantity-button-less">
-              -
-            </button>
-            <input type="number" v-model.number="product.quantity" min="1" />
-            <button @click="incrementQuantity" class="quantity-button-more">
-              +
-            </button>
-          </div>
-          <p>Precio: ${{ product.price }}</p>
-          <button @click="removeFromCart(index)">Eliminar</button>
-        </div>
+  <section class="cart-container">
+    <div class="checkout-container">
+      <h1>Resumen</h1>
+      <div class="total-container">
+        <p class="total">
+          Total (Impuestos incluidos)
+          <span class="total-amount">{{ calculateTotal() }}</span
+          ><span class="currency">€</span>
+        </p>
       </div>
-    </article>
-    <div v-if="productsCart.length === 0">
+      <hr class="separator" />
+      <button class="checkout-button">Realizar Pedido</button>
+    </div>
+    <div v-if="productsCart.length === 0" class="empty-cart">
       <p>El carrito está vacío.</p>
     </div>
-    <div v-else>
-      <p>Total: ${{ calculateTotal() }}</p>
+    <div v-else class="product-container">
+      <div
+        v-for="(product, index) in productsCart"
+        :key="index"
+        class="product-subcontainer"
+      >
+        <div class="product-info">
+          <img
+            :src="product.image"
+            alt="Product Image"
+            class="product-image-large"
+          />
+          <div class="product-details">
+            <p class="product-name">{{ product.name }}</p>
+            <div class="quantity-control">
+              <button @click="decreaseQuantity(index)" class="quantity-button">
+                -
+              </button>
+              <input
+                type="number"
+                v-model.number="product.quantity"
+                min="1"
+                class="quantity-input"
+              />
+              <button @click="increaseQuantity(index)" class="quantity-button">
+                +
+              </button>
+            </div>
+            <p class="product-price">Precio: {{ product.price }} €</p>
+            <button @click="removeFromCart(index)" class="remove-button">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -66,16 +88,44 @@ export default {
 </script>
 
 <style scoped>
+.cart-container {
+  width: 90%;
+  margin-top: 10px;
+  display: flex;
+  align-items: flex-start;
+  margin-left: 20px;
+  flex-direction: row-reverse;
+}
+
+.total-container {
+  margin-bottom: 20px; /* Aumentar el margen inferior */
+  padding: 20px; /* Aumentar el padding para hacerlo más grande */
+}
+
+.separator {
+  width: 100%;
+  margin: 10px 0;
+  border: none;
+  border-top: 2px dashed black;
+}
+
+.product-container {
+  width: 100%;
+}
+
+.product-subcontainer {
+  width: 70%;
+  margin-bottom: 20px;
+  border: 2px solid black;
+}
+
 .product-info {
   display: flex;
   align-items: center;
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 10px;
 }
 
-.product-image {
-  width: 100px;
+.product-image-large {
+  width: 250px;
   height: auto;
   margin-right: 20px;
 }
@@ -84,42 +134,126 @@ export default {
   flex-grow: 1;
 }
 
+.product-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
 .quantity-control {
   display: flex;
   align-items: center;
 }
 
-input[type="number"] {
-  width: 50px;
+.quantity-button {
+  background-color: #66e0ca;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  width: 30px;
+  height: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.quantity-input {
+  width: 40px;
   text-align: center;
-}
-.quantity-button-more {
-  background-color: #66e0ca;
-  color: #fff;
   border: none;
-  border-radius: 3px 10px 10px 3px;
-  width: 30px;
-  height: 30px;
-  font-size: 16px;
+  outline: none;
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.quantity-input {
+  -moz-appearance: textfield;
+}
+
+.remove-button {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px; /* Aumentar el padding */
   cursor: pointer;
+  margin-top: 10px; /* Ajustar el margen superior */
 }
-.quantity-button-less {
-  background-color: #66e0ca;
-  color: #fff;
+
+.remove-button:hover {
+  background-color: darkred; /* Cambiar el color al hacer hover */
+}
+
+.empty-cart {
+  margin-top: 20px;
+}
+
+.total {
+  font-weight: bold;
+}
+
+.total-amount {
+  vertical-align: middle; /* Alinear verticalmente con el signo de euro */
+}
+
+.currency {
+  vertical-align: middle; /* Alinear verticalmente con el total */
+}
+
+.checkout-container {
+  margin-bottom: 20px; /* Aumentar el margen inferior */
+  padding: 20px; /* Aumentar el padding para hacerlo más grande */
+  border: 2px solid black; /* Añadir un borde para resaltar */
+}
+
+.checkout-button {
+  background-color: #41aba9; /* Cambiar el color de fondo */
+  color: white; /* Cambiar el color del texto */
   border: none;
-  border-radius: 10px 3px 3px 10px;
-  width: 30px;
-  height: 30px;
-  font-size: 16px;
+  border-radius: 5px;
+  padding: 12px 25px; /* Aumentar el padding */
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #ff7f50;
+.checkout-button:hover {
+  background-color: #218b8a; /* Cambiar el color al hacer hover */
 }
 
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.empty-cart {
+  margin-top: 30px; /* Aumentar el margen superior */
+}
+
+@media (max-width: 1114px) {
+  .product-subcontainer {
+    width: 80%; /* Cambiar el ancho del producto para ocupar todo el ancho en pantallas pequeñas */
+    margin-right: 0; /* Eliminar el margen derecho */
+    margin-bottom: 20px; /* Agregar un margen inferior */
+  }
+
+  .product-image-large {
+    width: 150px; /* Aumentar el tamaño de la imagen */
+    margin-right: 20px; /* Ajustar el margen derecho */
+  }
+
+  .product-details {
+    flex-grow: 1; /* Ajustar el crecimiento del contenedor de detalles */
+  }
+
+  .quantity-control {
+    margin-top: 10px; /* Ajustar el margen superior */
+    margin-bottom: 10px; /* Agregar un margen inferior */
+  }
+}
+
+@media (max-width: 768px) {
+  .cart-container {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .product-subcontainer {
+    width: 100%; /* Cambiar el ancho del producto para ocupar todo el ancho en pantallas pequeñas */
+  }
 }
 </style>

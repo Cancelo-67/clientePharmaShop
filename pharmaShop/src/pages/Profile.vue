@@ -86,7 +86,7 @@
       </div>
       <div class="form-group">
         <label for="username">Nueva Contraseña</label>
-        <input type="text" id="username" />
+        <input type="text" id="username" v-model="newPassword" />
       </div>
       <div class="form-group">
         <label for="username">Confirmar Contraseña</label>
@@ -100,6 +100,7 @@
 <script>
 import axios from "axios";
 import Cookies from "js-cookie";
+import bcrypt from "bcryptjs";
 
 export default {
   data() {
@@ -108,6 +109,7 @@ export default {
       selectedDay: null,
       selectedMonth: null,
       selectedYear: null,
+      newPassword: "",
     };
   },
   computed: {
@@ -137,7 +139,6 @@ export default {
   },
   methods: {
     initializeUserData() {
-      // Inicializa el usuario después de cargar los datos
       this.userLogued = JSON.parse(
         decodeURIComponent(Cookies.get("userLogued"))
       );
@@ -154,9 +155,28 @@ export default {
     extractYear(date) {
       return date ? parseInt(date.split("/")[2]) : null;
     },
+
     submitForm() {
-      console.log(this.userLogued);
-      // Agrega la lógica para enviar el formulario
+      const inputPassword = this.userLogued.password; // Contraseña ingresada por el usuario
+      const storedPassword = this.newPassword; // Nueva contraseña ingresada por el usuario
+
+      // Hashear la nueva contraseña antes de compararla
+      const hashedNewPassword = bcrypt.hashSync(storedPassword, 10);
+      console.log(hashedNewPassword);
+
+      // Comparar la contraseña hasheada con la contraseña almacenada
+      const isPasswordCorrect = bcrypt.compareSync(
+        inputPassword,
+        hashedNewPassword
+      );
+
+      if (isPasswordCorrect) {
+        // Las contraseñas coinciden, puedes cambiar la contraseña
+        console.log("Contraseña actual correcta. Cambiando contraseña...");
+      } else {
+        // Las contraseñas no coinciden
+        console.log("La contraseña actual es incorrecta.");
+      }
     },
     deleteUser() {
       // Agrega la lógica para eliminar el usuario
@@ -197,8 +217,6 @@ form {
   justify-content: space-between;
   align-items: center;
 }
-
-/* Opcional: Estilos para resaltar la opción seleccionada */
 
 .form-group {
   width: 90%;

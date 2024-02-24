@@ -69,7 +69,7 @@
                   <i class="fa-solid fa-eye" style="color: #000000"></i>
                 </button>
 
-                <button class="btn-cart" @click="toggleFavorite(product)">
+                <button class="btn-cart" @click="toggleCart(product)">
                   <i
                     class="fa-solid fa-cart-shopping"
                     style="color: #ffffff"
@@ -205,10 +205,8 @@ export default {
         );
 
         const product = response.data[0];
-        console.log(product.id);
         product.isFavorite = this.favItems.includes(product.id);
         this.product = product;
-        console.log(product.isFavorite);
       } catch (error) {
         console.error("Error al obtener el producto:", error);
       }

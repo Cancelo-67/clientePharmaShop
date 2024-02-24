@@ -496,9 +496,6 @@ export default {
     align-items: center;
     flex-direction: column;
   }
-  .filter-bar {
-    display: none;
-  }
 
   .filter-bar.show-filters {
     display: block;
@@ -533,9 +530,57 @@ export default {
     width: 0%;
     display: flex;
   }
-
   .pagination-button:not(:first-child):not(:last-child) {
     display: none; /* Oculta los botones de paginación en la vista móvil */
+  }
+}
+
+@media (max-width: 853px) {
+  .filter-bar {
+    display: none;
+  }
+  .page-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 3rem;
+    margin-top: 2rem;
+    flex-wrap: wrap; // Permite que los elementos se ajusten en filas adicionales en pantallas más pequeñas
+  }
+
+  .filter-bar {
+    color: #ffffff;
+    background-color: #41aba9;
+    width: 24%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 2rem;
+    flex-shrink: 0; // Evita que la barra de filtro se reduzca demasiado en pantallas pequeñas
+  }
+
+  .product-container {
+    width: 90%; // Ajusta el ancho para ocupar todo el espacio disponible
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(200px, 1fr)
+    ); // Cambia el número de columnas y el ancho mínimo de cada elemento
+    margin: 1rem;
+    gap: 10px;
+  }
+
+  .product {
+    width: 100%; // Ajusta el ancho del producto para ocupar todo el espacio disponible en la cuadrícula
+  }
+
+  .product img {
+    margin: 10px auto; // Centra la imagen horizontalmente
+    max-width: 100%;
+    max-height: 180px;
   }
 }
 </style>

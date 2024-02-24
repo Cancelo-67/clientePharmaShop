@@ -315,4 +315,10 @@ img {
   width: 90vw;
   border-color: #41aba9;
 }
+@media (max-width: 1878px) {
+  .images img {
+    max-width: 100%; /* La imagen no superará el ancho de su contenedor */
+    height: auto; /* La altura se ajustará automáticamente para mantener la proporción */
+  }
+}
 </style>

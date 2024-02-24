@@ -14,8 +14,11 @@
               <router-link to="/profile"
                 ><p class="submenu-item">Mis Datos</p></router-link
               >
+
               <p class="submenu-item">Mis Direcciones</p>
-              <p class="submenu-item">Favoritos</p>
+              <router-link to="/favorites"
+                ><p class="submenu-item">Favoritos</p>
+              </router-link>
             </div>
           </li>
 
@@ -201,5 +204,48 @@ ul {
 .dropdown-menu[data-v-xxxxxxx] {
   transform: translateY(100%);
   height: auto;
+}
+
+@media (max-width: 700px) {
+  .dropdown-menu {
+    width: 320px; /* Reducir el ancho del menú desplegable */
+    top: 72px;
+  }
+
+  .title {
+    font-size: 24px; /* Reducir el tamaño de fuente del título */
+    margin-right: 0; /* Eliminar el margen derecho */
+    margin-bottom: 20px; /* Reducir el margen inferior */
+  }
+
+  .menu-item-header {
+    font-size: 18px; /* Reducir el tamaño de fuente de los elementos del menú */
+  }
+
+  .submenu {
+    font-size: 16px; /* Reducir el tamaño de fuente del submenu */
+    margin-top: 5px; /* Reducir el margen superior */
+  }
+
+  .button-logout {
+    width: 120px; /* Reducir el ancho del botón de cerrar sesión */
+    font-size: 16px; /* Reducir el tamaño de fuente del botón de cerrar sesión */
+  }
+
+  .options-container {
+    margin-top: 50px; /* Reducir el margen superior */
+    width: 100%; /* Ajustar el ancho al 100% */
+  }
+
+  ul {
+    height: auto; /* Eliminar la altura fija */
+    max-height: 300px; /* Limitar la altura máxima del menú */
+    overflow-y: auto; /* Agregar desplazamiento vertical si es necesario */
+  }
+
+  .dropdown-menu[data-v-xxxxxxx] {
+    transform: translateY(100%);
+    height: auto;
+  }
 }
 </style>

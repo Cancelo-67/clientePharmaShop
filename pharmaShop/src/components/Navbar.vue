@@ -46,65 +46,22 @@
         <i class="fa-solid fa-cart-shopping" style="color: #41aba9"></i>
       </router-link>
     </div>
-    <div class="div-table">
-      <table class="table-category">
-        <tr>
-          <th class="th-category">
-            <router-link :to="'/dental'" class="category-link"
-              >DENTAL</router-link
-            >
-          </th>
-          <th class="th-category">
-            <router-link :to="'/cosmetica'" class="category-link"
-              >COSMETICA</router-link
-            >
-          </th>
-          <th class="th-category">
-            <router-link :to="'/nutricion'" class="category-link"
-              >NUTRICION</router-link
-            >
-          </th>
-          <th class="th-category">
-            <router-link :to="'/bebeymama'" class="category-link"
-              >BEBÉ Y MAMÁ</router-link
-            >
-          </th>
-          <th class="th-category">
-            <router-link :to="'/salud'" class="category-link"
-              >SALUD</router-link
-            >
-          </th>
-          <th class="th-category">
-            <router-link :to="'/higiene'" class="category-link"
-              >HIGIENE</router-link
-            >
-          </th>
-          <th class="th-category">
-            <router-link :to="'/optica'" class="category-link"
-              >ÓPTICA</router-link
-            >
-          </th>
-          <th class="th-category">
-            <router-link :to="'/ortopedia'" class="category-link"
-              >ORTOPEDIA</router-link
-            >
-          </th>
-          <th class="th-category">
-            <router-link :to="'/mascotas'" class="category-link"
-              >MASCOTAS</router-link
-            >
-          </th>
-          <th class="th-category">
-            <router-link :to="'/medicamentos'" class="category-link"
-              >MEDICAMENTOS</router-link
-            >
-          </th>
-        </tr>
-      </table>
+    <div class="div-ul">
+      <ul class="ul-category">
+        <li
+          class="li-category"
+          v-for="(category, index) in categories"
+          :key="index"
+          :class="{ active: isCurrentRoute(category.route) }"
+        >
+          <router-link :to="category.route" class="category-link">{{
+            category.label
+          }}</router-link>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
-
 <script>
 import Cookies from "js-cookie";
 import DropdownMenu from "./DropdownMenu.vue";
@@ -117,6 +74,18 @@ export default {
     return {
       username: "",
       isMenuOpen: false,
+      categories: [
+        { label: "DENTAL", route: "/dental" },
+        { label: "COSMÉTICA", route: "/cosmetica" },
+        { label: "NUTRICIÓN", route: "/nutricion" },
+        { label: "BEBÉ Y MAMÁ", route: "/bebeymama" },
+        { label: "SALUD", route: "/salud" },
+        { label: "HIGIENE", route: "/higiene" },
+        { label: "ÓPTICA", route: "/optica" },
+        { label: "ORTOPEDIA", route: "/ortopedia" },
+        { label: "MASCOTAS", route: "/mascotas" },
+        { label: "MEDICAMENTOS", route: "/medicamentos" },
+      ],
     };
   },
   mounted() {
@@ -128,6 +97,9 @@ export default {
   },
 
   methods: {
+    isCurrentRoute(route) {
+      return this.$route.path === route;
+    },
     goLogin() {
       this.$router.push("/login");
     },
@@ -148,15 +120,18 @@ export default {
   background-color: #41aba9;
   display: flex;
   justify-content: space-between;
+
   div {
     display: flex;
   }
+
   div:last-child {
     display: flex;
     justify-content: space-between;
     width: 16%;
   }
 }
+
 .navbar-div-up {
   p {
     margin-left: 10px;
@@ -167,25 +142,18 @@ export default {
   display: flex;
   align-items: center;
   width: 50%;
-  display: flex;
+
   p {
     margin-left: 11px;
   }
 }
-.custom-link {
-  color: black;
-  text-decoration: none;
-}
 
-.active-category {
-  background-color: #66e0ca; // Color de resaltado para la categoría actual
-  color: white; // Color de texto para la categoría actual
-}
 .navbar-center {
   padding-top: 4px;
   width: 98vw;
   display: flex;
   justify-content: flex-end;
+
   button {
     margin-left: 3px;
     color: gray;
@@ -194,36 +162,47 @@ export default {
   }
 }
 
-.th-category {
-  .category-link {
-    // Estilos para el enlace dentro de la celda
-    // Puedes agregar estilos adicionales aquí
-    color: black;
-    text-decoration: none;
-  }
-}
-
 .article-center1 {
   margin-right: 20px;
 }
-.div-table {
+
+.div-ul {
   width: 100vw;
   display: flex;
   justify-content: center;
-  .table-category {
-    width: 90vw;
-    border: 2px solid #41aba9;
-    tr {
-      th {
-        padding: 1em;
-        border: 2px solid #41aba9;
-      }
-    }
+
+  .ul-category {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .li-category {
+    flex: 1 1 20%;
+    text-align: center;
+    margin: 5px;
+  }
+
+  .category-link {
+    text-decoration: none;
+    color: #333;
+    display: block;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  .category-link:hover {
+    background-color: #66e0ca;
   }
 }
-.custom-link {
-  color: black; /* Cambia el color a tu preferencia */
-  text-decoration: none; /* Elimina el subrayado predeterminado */
+.li-category.active {
+  background-color: #41aba9;
+  color: white;
+  border-radius: 5px;
 }
 
 .navbar-down {
@@ -237,51 +216,73 @@ export default {
     font-size: 45px;
   }
 }
+
 .logo-link {
   text-decoration: none;
 }
 
 .img-logo {
-  width: 40%; /* Ajusta el tamaño del logo según tus necesidades */
-  height: auto; /* Esto mantiene la proporción del logo */
+  width: 40%;
+  height: auto;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1218px) {
+  .div-table {
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 852px) {
   .navbar-up {
     flex-direction: column;
     align-items: center;
+
     div:last-child {
-      width: 100%; /* Ocupa todo el ancho en dispositivos móviles */
-      margin-top: 10px; /* Espaciado entre las secciones */
+      width: 100%;
+      margin-top: 10px;
     }
   }
+  .logo-link {
+    display: none;
+  }
+
   .navbar-center {
     flex-direction: column;
     align-items: center;
+
     button {
-      margin-top: 10px; /* Espaciado entre los botones */
+      margin-top: 10px;
     }
   }
+
   .navbar-down {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
     img {
-      width: 80%; /* Ajusta el tamaño del logo en dispositivos móviles */
+      width: 80%;
     }
+
     i {
-      margin-top: 10px; /* Espaciado entre el logo y el icono de carrito */
+      margin-top: 10px;
     }
   }
+
   .div-table {
     width: 100%;
-    overflow-x: auto; /* Agrega una barra de desplazamiento horizontal si es necesario */
-    .table-category {
-      width: 100%;
-      tr {
-        th {
-          white-space: nowrap; /* Evita que el texto se desborde en dispositivos móviles */
-        }
+    overflow-x: auto; /* Permitir el desplazamiento horizontal si la tabla es demasiado ancha */
+  }
+
+  .table-category {
+    width: 100%; /* Establecer un ancho del 100% para que la tabla se ajuste al contenedor */
+    border: 2px solid #41aba9;
+
+    tr {
+      th {
+        padding: 1em;
+        border: 2px solid #41aba9;
+        white-space: nowrap; /* Evitar que el texto se desborde a la siguiente línea */
       }
     }
   }
