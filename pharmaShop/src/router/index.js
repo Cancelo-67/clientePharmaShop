@@ -14,7 +14,7 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
-    meta: { requiresAuth: false },
+    meta: { requiresAuth: true },
   },
   {
     path: "/products",
@@ -24,7 +24,7 @@ const routes = [
   },
   {
     path: "/products/:id",
-    name: "DetailProducts",
+    name: "DetailProduct",
     component: DetailProduct,
     meta: { requiresAuth: true },
   },
@@ -32,13 +32,13 @@ const routes = [
     path: "/register",
     name: "Register",
     component: Register,
-    meta: { requiresAuth: true, hideNavbar: true }, // Oculta el Navbar en esta ruta
+    meta: { requiresAuth: false, hideNavbar: true }, // No requiere autenticación
   },
   {
     path: "/login",
     name: "Login",
     component: Login,
-    meta: { requiresAuth: true, hideNavbar: true }, // Oculta el Navbar en esta ruta
+    meta: { requiresAuth: false, hideNavbar: true }, // No requiere autenticación
   },
   {
     path: "/profile",
@@ -60,6 +60,10 @@ const routes = [
   },
   {
     path: "/favorites",
+    beboreEnter: (to, from, next) => {
+      if (1 === 1) next("/login");
+      else next();
+    },
     name: "Favorites",
     component: Favorites,
     meta: { requiresAuth: true },
@@ -70,5 +74,22 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+// router.beforeEach((to, from, next) => {
+//   const requiresAuth = to.meta.requiresAuth;
+//   const isAuthenticated = true;
+
+//   if (requiresAuth && !isAuthenticated) {
+//     next("/login");
+//   } else if (to.name === "Login" || to.name === "Register") {
+//     if (isAuthenticated) {
+//       next("/login"); // Si el usuario está autenticado, redirige a la página de perfil si intenta acceder a la página de inicio de sesión o registro
+//     } else {
+//       next();
+//     }
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;

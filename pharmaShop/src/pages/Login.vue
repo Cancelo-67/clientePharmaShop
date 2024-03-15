@@ -53,8 +53,8 @@
 
         <input
           type="text"
-          v-model="formData.email"
-          placeholder="Correo Electrónico"
+          v-model="formData.username"
+          placeholder="Nombre de usuario"
         />
         <input
           type="password"
@@ -102,7 +102,7 @@ export default {
   data() {
     return {
       formData: {
-        email: "",
+        username: "",
         password: "",
         token: "",
       },
@@ -123,7 +123,7 @@ export default {
           {},
           {
             auth: {
-              username: this.formData.email,
+              username: this.formData.username,
               password: this.formData.password,
             },
           }
@@ -142,7 +142,7 @@ export default {
 
         // Busca el usuario específico por nombre de usuario
         const user = this.users.find(
-          (user) => user.username === this.formData.email
+          (user) => user.username === this.formData.username
         );
         if (
           user &&
@@ -301,13 +301,26 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 9999;
 }
 
 .popup-content {
   background-color: #fff;
-  padding: 1rem;
-  border-radius: 5px;
+  padding: 3rem;
+  border-radius: 15px;
   text-align: center;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  max-width: 90%;
+  max-height: 90%;
+  overflow-y: auto;
+}
+
+.popup-content h2 {
+  color: #333;
+}
+
+.popup-content p {
+  color: #666;
 }
 
 /* Estilos para hacer la página responsive */

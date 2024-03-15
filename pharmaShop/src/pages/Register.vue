@@ -1,14 +1,14 @@
 <template>
   <div class="popup" v-if="goodPopup">
     <div class="popup-content">
-      <h2>Usuario logueado</h2>
+      <h2>Usuario registrado</h2>
       <p>Bienvenido a PharmaShop!</p>
     </div>
   </div>
   <div class="popup" v-if="badPopup">
     <div class="popup-content">
       <h2>Usuario incorrecto</h2>
-      <p>Vuelva a introducir las credenciales</p>
+      <p>{{ messagePopup }}</p>
     </div>
   </div>
 
@@ -50,31 +50,80 @@
           <p class="inline-text">O bien</p>
           <hr class="separator-horizontal" />
         </div>
-        <input type="text" placeholder="Nombre" v-model="formData.username" />
+        <input
+          type="text"
+          placeholder="Nombre de usuario"
+          v-model="formData.username"
+          required
+        />
+        <div
+          class="errorMessage"
+          v-if="usernameErrorMessage && !isUsernameValid"
+        >
+          {{ usernameErrorMessage }}
+        </div>
+        <input
+          type="text"
+          placeholder="Nombre"
+          v-model="formData.name"
+          required
+        />
+        <!-- Mensaje de error para el nombre -->
+        <div class="errorMessage" v-if="nameErrorMessage && !isNameValid">
+          {{ nameErrorMessage }}
+        </div>
+        <input
+          type="text"
+          placeholder="Apellidos"
+          v-model="formData.surname"
+          required
+        />
+        <!-- Mensaje de error para los apellidos -->
+        <div class="errorMessage" v-if="surnameErrorMessage && !isSurnameValid">
+          {{ surnameErrorMessage }}
+        </div>
         <input
           type="text"
           placeholder="Correo Electronico"
           v-model="formData.email"
+          required
         />
+        <!-- Mensaje de error para el correo electrónico -->
+        <div class="errorMessage" v-if="emailErrorMessage && !isEmailValid">
+          {{ emailErrorMessage }}
+        </div>
+        <div class="password-input-container">
+          <input
+            placeholder="Contraseña"
+            v-model="formData.password"
+            required
+            :type="passwordVisible ? 'password' : 'text'"
+          />
+          <span class="password-toggle" @click="togglePasswordVisibility">
+            <i v-if="passwordVisible" class="fa-solid fa-eye-slash"></i>
+            <i v-else class="fa-solid fa-eye"></i>
+          </span>
+        </div>
+        <!-- Mensaje de error para la contraseña -->
+        <div
+          class="errorMessage"
+          v-if="passwordErrorMessage && !isPasswordValid"
+        >
+          {{ passwordErrorMessage }}
+        </div>
         <input
-          type="text"
-          placeholder="Contraseña"
-          v-model="formData.password"
-        />
-        <input
-          type="text"
+          :type="passwordVisible ? 'password' : 'text'"
           placeholder="Repetir Contraseña"
           v-model="repeatPassword"
+          required
         />
+        <!-- Mensaje de error si se repite la contraseña -->
+        <div class="errorMessage" v-if="errorMessage">
+          {{ errorMessage }}
+        </div>
         <div class="checkbox">
-          <input
-            type="checkbox"
-            id="privacyPolicy"
-            v-model="acceptPrivacyPolicy"
-          />
-          <label for="privacyPolicy"
-            >He leído y acepto la política de privacidad</label
-          >
+          <input type="checkbox" id="privacyPolicy" required />
+          <label>He leído y acepto la política de privacidad</label>
         </div>
 
         <button>Crear cuenta</button>
@@ -110,59 +159,168 @@
 
 <script>
 import axios from "axios";
+import Cookies from "js-cookie";
+
 export default {
   data() {
     return {
-      // Creo un objeto que contiene los datos del formulario
+      messagePopup: "",
       formData: {
         username: "",
+        name: "",
         surname: "",
-        phoneNumber: "",
+        role: "USER",
+        birthdate: "",
         email: "",
         password: "",
         address: "",
+        favorites: [],
+        cart: [],
       },
-      // Creo una lista que contiene los usuarios
+      userToken: {
+        username: "",
+        password: "",
+      },
+      passwordVisible: false,
+      repeatPassword: "",
       users: [],
-      // Creo dos variables para que se muestre el popup correcto dependiento del momento
       goodPopup: false,
       badPopup: false,
+      errorMessage: "",
+      usernameErrorMessage: "",
+      nameErrorMessage: "",
+      surnameErrorMessage: "",
+      emailErrorMessage: "",
+      passwordErrorMessage: "",
     };
   },
+  computed: {
+    isUsernameValid() {
+      return /^[a-zA-Z0-9_]{3,16}$/.test(this.formData.username);
+    },
+    isNameValid() {
+      return /^[a-zA-ZáéíóúüÁÉÍÓÚÜ\s]+$/.test(this.formData.name);
+    },
+    isSurnameValid() {
+      return /^[a-zA-ZáéíóúüÁÉÍÓÚÜ\s]+$/.test(this.formData.surname);
+    },
+    isEmailValid() {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.formData.email);
+    },
+    isPasswordValid() {
+      return /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!.@#$%]).{8,24}$/.test(
+        this.formData.password
+      );
+    },
+  },
   methods: {
+    togglePasswordVisibility() {
+      this.passwordVisible = !this.passwordVisible;
+    },
     goLogin() {
       this.$router.push("/login");
     },
     async fetchUsers() {
       try {
         const response = await axios.get("http://localhost:8080/users");
-        this.users = response.data.users;
-        console.log(this.users);
+        this.users = response.data;
       } catch (error) {
         console.error(error);
       }
     },
     async submitForm() {
       try {
+        this.errorMessage = "";
+        this.usernameErrorMessage = "";
+        this.nameErrorMessage = "";
+        this.surnameErrorMessage = "";
+        this.emailErrorMessage = "";
+        this.passwordErrorMessage = "";
+
+        // Validar que las contraseñas coincidan
+        if (this.formData.password !== this.repeatPassword) {
+          this.errorMessage = "Las contraseñas no coinciden.";
+        }
+        // Validar que todos los campos sean válidos
+        if (!this.isUsernameValid) {
+          this.usernameErrorMessage =
+            "Por favor, complete el Nombre de Usuario correctamente.";
+        }
+        if (!this.isNameValid) {
+          this.nameErrorMessage =
+            "Por favor, complete el Nombre correctamente.";
+        }
+        if (!this.isSurnameValid) {
+          this.surnameErrorMessage =
+            "Por favor, complete los Apellidos correctamente.";
+        }
+        if (!this.isEmailValid) {
+          this.emailErrorMessage =
+            "Por favor, complete el Email correctamente.";
+        }
+        if (!this.isPasswordValid) {
+          this.passwordErrorMessage =
+            "Por favor, complete la contraseña correctamente.";
+        }
+
+        // Verificar si hay mensajes de error
+        if (
+          this.errorMessage ||
+          this.usernameErrorMessage ||
+          this.nameErrorMessage ||
+          this.surnameErrorMessage ||
+          this.emailErrorMessage ||
+          this.passwordErrorMessage
+        ) {
+          return;
+        }
+
+        // Verificar si el usuario ya existe
         const userExists = this.users.find(
           (user) =>
-            user.email === this.formData.email &&
-            user.password === this.formData.password
+            user.username === this.formData.username ||
+            user.email === this.formData.email
         );
+
         if (!userExists) {
+          // Agregar nuevo usuario a la lista
+          const responsePost = await axios.post(
+            "http://localhost:8080/users",
+            this.formData
+          );
+
+          const responseToken = await axios.post(
+            "http://localhost:8080/token",
+            {},
+            {
+              auth: {
+                username: this.formData.username,
+                password: this.formData.password,
+              },
+            }
+          );
+          console.log(responseToken);
+          // Mostrar popup de registro exitoso
+          this.goodPopup = true;
+          setTimeout(() => {
+            Cookies.set("userLogued", JSON.stringify(responsePost.data));
+            Cookies.set("userToken", JSON.stringify(responseToken.data));
+            this.goodPopup = false;
+            this.$router.push("/");
+          }, 1800);
+        } else {
+          // Mostrar popup de usuario existente
+          this.messagePopup =
+            "El nombre de usuario o el Email ya están registrados.";
           this.badPopup = true;
           setTimeout(() => {
             this.badPopup = false;
           }, 1800);
-        } else {
-          this.goodPopup = true;
-          setTimeout(() => {
-            this.goodPopup = false;
-            this.$router.push("/");
-          }, 1800);
         }
       } catch (error) {
         console.error(error);
+        this.errorMessage =
+          "Error al procesar el formulario. Inténtalo de nuevo más tarde.";
       }
     },
   },
@@ -192,7 +350,7 @@ export default {
     padding: 2rem;
     form {
       width: 100%;
-      max-width: 450px;
+      max-width: 535px;
       padding: 1rem;
       border-radius: 5px;
       color: #000000;
@@ -201,21 +359,13 @@ export default {
       align-items: center;
       justify-content: space-evenly;
       height: 75vh;
-      div {
-        width: 10vw;
-        display: flex;
-      }
+
       .checkbox {
-        width: 20%;
-      }
-      .checkbox {
+        width: 100%;
         display: flex;
         align-items: center;
+        justify-content: center;
         margin-top: 1rem;
-      }
-
-      .checkbox input {
-        margin-right: 0.5rem;
       }
 
       .checkbox label {
@@ -235,6 +385,9 @@ export default {
       width: 25vw;
     }
 
+    #privacyPolicy {
+      width: 10%;
+    }
     .separator-horizontal {
       flex-grow: 1;
       height: 1px;
@@ -254,6 +407,28 @@ export default {
       }
     }
   }
+}
+.password-input-container {
+  position: relative;
+}
+
+.password-input-container input {
+  padding-right: 30px;
+}
+
+.password-input-container .password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 0.8em;
+  margin-top: 0.2em;
+  width: 60%;
 }
 
 .spec {
@@ -316,13 +491,18 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 9999;
 }
 
 .popup-content {
   background-color: #fff;
-  padding: 1rem;
-  border-radius: 5px;
+  padding: 3rem;
+  border-radius: 15px;
   text-align: center;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  max-width: 90%;
+  max-height: 90%;
+  overflow-y: auto;
 }
 
 /* Estilos para hacer la página responsive */

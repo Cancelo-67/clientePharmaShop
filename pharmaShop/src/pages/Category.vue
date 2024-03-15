@@ -11,6 +11,7 @@
       />
     </div>
   </div>
+
   <div class="page-content">
     <!-- Botón de filtro para dispositivos móviles -->
     <button class="filter-toggle" @click="toggleFilters">
@@ -57,10 +58,11 @@
               <i class="fa-solid fa-eye" style="color: #000000"></i>
             </button>
           </router-link>
+
           <button class="btn-cart" @click="toggleCart(product)">
             <i
               class="fa-solid fa-cart-shopping"
-              style="color: #ffffff; font-size: 15px"
+              style="color: #000000; font-size: 15px"
             ></i>
             AÑADIR
           </button>
@@ -169,13 +171,11 @@ export default {
     this.fetchProducts();
   },
   watch: {
-    // Observa cambios en la ruta
     $route: "fetchProductsOnRouteChange",
   },
 
   methods: {
     async fetchProductsOnRouteChange() {
-      // Verifica si hay un cambio en la categoría antes de realizar la llamada
       if (this.$route.params.category !== this.prevCategory) {
         this.prevCategory = this.$route.params.category;
         await this.fetchProducts();
@@ -231,7 +231,6 @@ export default {
         quantity: this.quantity,
       };
 
-      // Verificar si el producto ya está en el carrito
       const existingProductIndex = this.productsCart.findIndex(
         (item) => item.name === productCart.name
       );
@@ -394,7 +393,7 @@ export default {
   height: 26px;
   border: none;
   border-radius: 50px;
-  color: white;
+  color: black;
   background-color: #66e0ca;
   cursor: pointer;
 }
@@ -403,7 +402,7 @@ export default {
   height: 87%;
   border: none;
   border-radius: 50px;
-  color: white;
+  color: black;
   background-color: #66e0ca;
   cursor: pointer;
 }

@@ -29,8 +29,15 @@
           />
           <div class="product-details">
             <p class="product-name">{{ product.name }}</p>
+
+            <p class="product-price">Precio: {{ product.price }} €</p>
+          </div>
+          <div class="div-price">
             <div class="quantity-control">
-              <button @click="decreaseQuantity(index)" class="quantity-button">
+              <button
+                @click="decreaseQuantity(index)"
+                class="quantity-button-less"
+              >
                 -
               </button>
               <input
@@ -39,11 +46,13 @@
                 min="1"
                 class="quantity-input"
               />
-              <button @click="increaseQuantity(index)" class="quantity-button">
+              <button
+                @click="increaseQuantity(index)"
+                class="quantity-button-more"
+              >
                 +
               </button>
             </div>
-            <p class="product-price">Precio: {{ product.price }} €</p>
             <button @click="removeFromCart(index)" class="remove-button">
               <i class="fas fa-trash-alt"></i>
             </button>
@@ -89,17 +98,17 @@ export default {
 
 <style scoped>
 .cart-container {
-  width: 90%;
+  width: 74%;
   margin-top: 10px;
   display: flex;
   align-items: flex-start;
-  margin-left: 20px;
+  margin-left: 0px;
   flex-direction: row-reverse;
 }
 
 .total-container {
-  margin-bottom: 20px; /* Aumentar el margen inferior */
-  padding: 20px; /* Aumentar el padding para hacerlo más grande */
+  margin-bottom: 20px;
+  padding: 20px;
 }
 
 .separator {
@@ -110,28 +119,33 @@ export default {
 }
 
 .product-container {
-  width: 100%;
+  width: 74%;
 }
 
 .product-subcontainer {
-  width: 70%;
+  width: 80%;
   margin-bottom: 20px;
-  border: 2px solid black;
+  border: 2px solid rgb(168, 168, 168);
+  border-radius: 20px;
 }
 
 .product-info {
   display: flex;
-  align-items: center;
 }
 
 .product-image-large {
   width: 250px;
   height: auto;
   margin-right: 20px;
+  border-radius: 20px;
 }
 
 .product-details {
   flex-grow: 1;
+  margin-top: 10px;
+}
+.div-price {
+  margin-top: 10px;
 }
 
 .product-name {
@@ -148,7 +162,7 @@ export default {
   background-color: #66e0ca;
   color: #fff;
   border: none;
-  border-radius: 3px;
+  border-radius: 7px 1px 1px 10px;
   width: 30px;
   height: 30px;
   font-size: 16px;
@@ -156,6 +170,29 @@ export default {
   margin: 0 5px;
 }
 
+.quantity-button-less {
+  background-color: #66e0ca;
+  color: #fff;
+  border: none;
+  border-radius: 7px 1px 1px 10px;
+  width: 30px;
+  height: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.quantity-button-more {
+  background-color: #66e0ca;
+  color: #fff;
+  border: none;
+  border-radius: 1px 7px 7px 1px;
+  width: 30px;
+  height: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 0 5px;
+}
 .quantity-input {
   width: 40px;
   text-align: center;
@@ -177,13 +214,13 @@ export default {
   color: white;
   border: none;
   border-radius: 5px;
-  padding: 8px 15px; /* Aumentar el padding */
+  padding: 8px 15px;
   cursor: pointer;
-  margin-top: 10px; /* Ajustar el margen superior */
+  margin-top: 10px;
 }
 
 .remove-button:hover {
-  background-color: darkred; /* Cambiar el color al hacer hover */
+  background-color: darkred;
 }
 
 .empty-cart {
@@ -203,9 +240,11 @@ export default {
 }
 
 .checkout-container {
+  width: 24%;
   margin-bottom: 20px; /* Aumentar el margen inferior */
   padding: 20px; /* Aumentar el padding para hacerlo más grande */
-  border: 2px solid black; /* Añadir un borde para resaltar */
+  border: 2px solid rgb(168, 168, 168);
+  border-radius: 20px;
 }
 
 .checkout-button {

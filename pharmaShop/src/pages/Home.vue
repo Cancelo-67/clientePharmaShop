@@ -2,32 +2,17 @@
   <div class="container-all">
     <section class="section1">
       <article class="images">
-        <div class="carousel-container">
-          <div class="carousel">
-            <img :src="currentImage" alt="Slide" class="img-big" />
-            <div class="indicators">
-              <span
-                v-for="(image, index) in images"
-                :key="index"
-                :class="{ active: index === currentImageIndex }"
-                @click="goToImage(index)"
-              ></span>
-            </div>
-          </div>
-        </div>
-        <div class="home-images">
-          <article>
-            <img src="../images/imagen2.png" alt="" />
-          </article>
-          <article>
-            <img src="../images/imagen3.png" alt="" />
-          </article>
-          <article>
-            <img src="../images/imagen4.png" alt="" />
-          </article>
-          <article>
-            <img src="../images/imagen5.png" alt="" />
-          </article>
+        <div class="div-video">
+          <video
+            class="video"
+            ref="videoPlayer"
+            :src="videoSource"
+            preload="auto"
+            autoplay
+            :controls="false"
+            muted
+            loop
+          ></video>
         </div>
       </article>
     </section>
@@ -57,7 +42,7 @@
                 </button>
               </router-link>
               <button class="btn-cart" @click="toggleCart(product)">
-                <i class="fa-solid fa-cart-shopping" style="color: #ffffff"></i>
+                <i class="fa-solid fa-cart-shopping" style="color: #000000"></i>
                 AÑADIR
               </button>
             </div>
@@ -75,10 +60,9 @@ import Cookies from "js-cookie";
 export default {
   data() {
     return {
-      productsCart: JSON.parse(localStorage.getItem("productsCart")) || [],
-      images: ["/src/images/imagen1.png", "/src/images/imagen1.png"],
-      currentImageIndex: 0,
-      currentProductSlide: 0,
+      autoplay: true,
+      videoSource: "/src/video/video_web.mp4",
+      userLogued: JSON.stringify("userLogged"),
       products: [],
       currentProductSlide: 0,
       itemWidth: 300,
@@ -86,17 +70,31 @@ export default {
     };
   },
   computed: {
+    async getUser() {
+      const productsCart =
+        JSON.parse(localStorage.getItem("productsCart")) || [];
+      const productsFavorites =
+        JSON.parse(localStorage.getItem("productsFavorites")) || [];
+      const response = await axios.get(
+        `http://localhost:8080/users/${this.userLogued.id}`
+      );
+      console.log(response.data);
+    },
     currentImage() {
       return this.images[this.currentImageIndex];
     },
   },
   mounted() {
-    this.startImageInterval();
     this.getProducts();
+    this.$refs.videoPlayer.addEventListener("playing", this.handlePlaying);
+    this.$refs.videoPlayer.addEventListener("pause", this.handlePause);
   },
   methods: {
-    startImageInterval() {
-      this.intervalId = setInterval(this.nextImage, 5000);
+    handlePlaying() {
+      console.log("Video is playing");
+    },
+    handlePause() {
+      console.log("Video is paused");
     },
     nextImage() {
       this.currentImageIndex =
@@ -105,6 +103,7 @@ export default {
     goToImage(index) {
       this.currentImageIndex = index;
     },
+    async updateUser() {},
     async getProducts() {
       const userToken = JSON.parse(
         decodeURIComponent(Cookies.get("userToken"))
@@ -134,16 +133,11 @@ export default {
       );
 
       if (existingProductIndex !== -1) {
-        // Si el producto ya está en el carrito, quita el producto
         this.productsCart.splice(existingProductIndex, 1);
       } else {
-        // Si el producto no está en el carrito, agrégalo
         this.productsCart.push(productCart);
       }
-
-      // Guardar la lista de productos en localStorage
       localStorage.setItem("productsCart", JSON.stringify(this.productsCart));
-
       console.log(this.productsCart);
     },
   },
@@ -182,6 +176,19 @@ export default {
 .img-big {
   width: 661px;
 }
+//css para el video
+
+.div-video {
+  width: 100%;
+}
+
+.video {
+  width: 80%;
+  border-radius: 20px;
+  margin: 30px;
+}
+
+// ------- css para las imagenes
 .images {
   display: flex;
   flex-direction: row;
@@ -282,7 +289,7 @@ img {
   height: auto;
 }
 .btn-cart {
-  color: white;
+  color: black;
   border: none;
   height: 90%;
   width: 56%;
@@ -295,7 +302,7 @@ img {
   height: 87%;
   border: none;
   border-radius: 50px;
-  color: white;
+  color: black;
   background-color: #66e0ca;
   cursor: pointer;
 }

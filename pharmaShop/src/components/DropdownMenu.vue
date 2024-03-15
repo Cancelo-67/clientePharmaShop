@@ -11,12 +11,12 @@
               cuenta</span
             >
             <div v-show="dropdowns.miCuenta" class="submenu">
-              <router-link to="/profile"
+              <router-link to="/profile" class="router-link-custom"
                 ><p class="submenu-item">Mis Datos</p></router-link
               >
 
               <p class="submenu-item">Mis Direcciones</p>
-              <router-link to="/favorites"
+              <router-link to="/favorites" class="router-link-custom"
                 ><p class="submenu-item">Favoritos</p>
               </router-link>
             </div>
@@ -91,6 +91,8 @@ export default {
     logOut() {
       Cookies.remove("userToken");
       Cookies.remove("userLogued");
+      localStorage.removeItem("favItems");
+      localStorage.removeItem("productsCart");
       this.$router.push("/login");
     },
   },
@@ -150,7 +152,7 @@ export default {
 }
 
 ul {
-  height: 155px;
+  height: 250px;
   display: flex;
   width: 50%;
   list-style: none;
@@ -187,6 +189,11 @@ ul {
 
 .submenu-item {
   margin-left: 20px;
+  text-decoration: none;
+}
+.router-link-custom .submenu-item {
+  text-decoration: none;
+  color: white;
 }
 
 .close-button {

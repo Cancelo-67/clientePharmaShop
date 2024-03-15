@@ -3,37 +3,6 @@
     <form @submit.prevent="submitForm">
       <h1>Mis datos</h1>
       <p>* Campo Obligatorio</p>
-      <div class="form-group1">
-        <label>Género:</label>
-        <div class="radio-options">
-          <input
-            type="radio"
-            id="hombre"
-            name="genero"
-            value="hombre"
-            v-model="userLogued.gender"
-          />
-          <label for="hombre">Hombre</label>
-
-          <input
-            type="radio"
-            id="mujer"
-            name="genero"
-            value="mujer"
-            v-model="userLogued.gender"
-          />
-          <label for="mujer">Mujer</label>
-
-          <input
-            type="radio"
-            id="otro"
-            name="genero"
-            value="otro"
-            v-model="userLogued.gender"
-          />
-          <label for="otro">Otro</label>
-        </div>
-      </div>
       <div class="form-group">
         <label for="username">Nombre de usuario</label>
         <input type="text" id="username" v-model="userLogued.username" />
@@ -157,24 +126,18 @@ export default {
     },
 
     submitForm() {
-      const inputPassword = this.userLogued.password; // Contraseña ingresada por el usuario
-      const storedPassword = this.newPassword; // Nueva contraseña ingresada por el usuario
-
-      // Hashear la nueva contraseña antes de compararla
+      const inputPassword = this.userLogued.password;
+      const storedPassword = this.newPassword;
       const hashedNewPassword = bcrypt.hashSync(storedPassword, 10);
       console.log(hashedNewPassword);
-
-      // Comparar la contraseña hasheada con la contraseña almacenada
       const isPasswordCorrect = bcrypt.compareSync(
         inputPassword,
         hashedNewPassword
       );
 
       if (isPasswordCorrect) {
-        // Las contraseñas coinciden, puedes cambiar la contraseña
         console.log("Contraseña actual correcta. Cambiando contraseña...");
       } else {
-        // Las contraseñas no coinciden
         console.log("La contraseña actual es incorrecta.");
       }
     },
@@ -197,7 +160,7 @@ export default {
 form {
   width: 100%;
   max-width: 80%;
-  background-color: #c5c5c5;
+  background-color: transparent;
   padding: 3rem;
   display: flex;
   flex-direction: column;
@@ -230,11 +193,6 @@ form {
   display: flex;
   flex-direction: column;
 }
-
-// label {
-//   font-size: 14px;
-//   margin-bottom: 0.5rem;
-// }
 
 input {
   border-radius: 5px;

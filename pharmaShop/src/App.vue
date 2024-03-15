@@ -20,7 +20,6 @@ export default {
   },
   watch: {
     $route(to, from) {
-      // Puedes personalizar esta lógica según tus necesidades.
       this.showNavbar = !to.meta.hideNavbar;
     },
   },
@@ -31,7 +30,7 @@ export default {
 .div-app {
   width: 100vw;
 
-  background-image: url("../src/images/fondo.jpg");
+  background-image: url("../src/images/fondo1.jpeg");
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 970px;
@@ -47,6 +46,6 @@ export default {
 }
 
 body {
-  font-family: "Noto Serif";
+  font-family: "Circular", sans-serif;
 }
 </style>

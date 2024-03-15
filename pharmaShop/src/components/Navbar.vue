@@ -2,7 +2,7 @@
   <div class="navbar">
     <nav class="navbar-up">
       <div>
-        <p>PharmaShop-Lideres en confianza</p>
+        <p class="p-navbar">PharmaShop-Lideres en confianza</p>
         <i class="fa-solid fa-star" style="color: #ffffff"></i>
         <i class="fa-solid fa-star" style="color: #ffffff"></i>
         <i class="fa-solid fa-star" style="color: #ffffff"></i>
@@ -165,39 +165,36 @@ export default {
 .article-center1 {
   margin-right: 20px;
 }
-
 .div-ul {
-  width: 100vw;
+  width: 1400px;
+  margin: auto;
+}
+
+.ul-category {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
+}
 
-  .ul-category {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-  }
+.li-category {
+  width: 18%;
+  text-align: center;
+  margin: 5px;
+}
 
-  .li-category {
-    flex: 1 1 20%;
-    text-align: center;
-    margin: 5px;
-  }
+.category-link {
+  text-decoration: none;
+  color: #333;
+  display: block;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
 
-  .category-link {
-    text-decoration: none;
-    color: #333;
-    display: block;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-
-  .category-link:hover {
-    background-color: #66e0ca;
-  }
+.category-link:hover {
+  background-color: #66e0ca;
 }
 .li-category.active {
   background-color: #41aba9;
@@ -218,11 +215,12 @@ export default {
 }
 
 .logo-link {
+  width: 15%;
   text-decoration: none;
 }
 
 .img-logo {
-  width: 40%;
+  width: 88%;
   height: auto;
 }
 
@@ -242,6 +240,12 @@ export default {
       margin-top: 10px;
     }
   }
+  .article-up {
+    display: flex;
+    align-items: center;
+    width: 50%;
+    justify-content: center;
+  }
   .logo-link {
     display: none;
   }
@@ -256,6 +260,7 @@ export default {
   }
 
   .navbar-down {
+    width: 100vw;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -277,14 +282,6 @@ export default {
   .table-category {
     width: 100%; /* Establecer un ancho del 100% para que la tabla se ajuste al contenedor */
     border: 2px solid #41aba9;
-
-    tr {
-      th {
-        padding: 1em;
-        border: 2px solid #41aba9;
-        white-space: nowrap; /* Evitar que el texto se desborde a la siguiente línea */
-      }
-    }
   }
 }
 </style>

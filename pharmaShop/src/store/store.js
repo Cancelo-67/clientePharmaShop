@@ -1,15 +1,23 @@
 import { createStore } from "vuex";
+
 const store = createStore({
-  state: { logued: false, total: 0 },
+  state: {
+    logued: false,
+    total: 0,
+  },
   actions: {
     logout({ commit }) {
-      commit("setLogued", false);
+      commit("setlogued", false);
     },
   },
   mutations: {
-    setLogued(state) {
+    setLogued(state, value) {
       state.logued = value;
+    },
+    setTotal(state, value) {
+      state.total = value;
     },
   },
 });
+
 export default store;

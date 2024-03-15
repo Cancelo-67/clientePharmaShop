@@ -27,7 +27,7 @@
               <button @click="toggleCart(product)" class="btn-addCart">
                 <i
                   class="fa-solid fa-cart-shopping"
-                  style="color: #ffffff; font-size: 20px"
+                  style="color: #000000; font-size: 20px"
                 ></i>
                 AÑADIR AL CARRO
               </button>
@@ -72,7 +72,7 @@
                 <button class="btn-cart" @click="toggleCart(product)">
                   <i
                     class="fa-solid fa-cart-shopping"
-                    style="color: #ffffff"
+                    style="color: #000000"
                   ></i>
                   AÑADIR
                 </button>
@@ -244,12 +244,10 @@ export default {
         this.quantity--;
       }
     },
-    async changeUrl(product) {
-      console.log(product);
+    changeUrl(productSelected) {
+      this.product = productSelected;
       const router = this.$router;
-      await router.push("/products/" + product.id);
-      window.location.reload();
-      //TODO: Preguntar porque tengo que recordar la pagina.
+      router.push("/products/" + productSelected.id);
     },
     async toggleCart(product) {
       const productCart = {
@@ -259,20 +257,15 @@ export default {
         quantity: this.quantity,
       };
 
-      // Verificar si el producto ya está en el carrito
       const existingProductIndex = this.productsCart.findIndex(
         (item) => item.name === productCart.name
       );
 
       if (existingProductIndex !== -1) {
-        // Si el producto ya está en el carrito, actualiza la cantidad
         this.productsCart[existingProductIndex].quantity += this.quantity;
       } else {
-        // Si el producto no está en el carrito, agrégalo
         this.productsCart.push(productCart);
       }
-
-      // Guardar la lista de productos en localStorage
       localStorage.setItem("productsCart", JSON.stringify(this.productsCart));
     },
 
@@ -318,13 +311,14 @@ export default {
       const response = await axios.get("http://localhost:8080/comments", {
         headers: { Authorization: `Bearer ${userToken}` },
       });
+      console.log();
       response.data.forEach((comment) => {
         this.productId = parseInt(this.productId);
         if (comment.id_product === this.productId)
           if (parseInt(comment.id_product) === parseInt(this.productId)) {
             this.comments.push(comment);
 
-            if (comment.id_user === userLogued.id) {
+            if (comment.id_user === userLogued.username) {
               comment.eliminate = true;
             }
           }
@@ -334,15 +328,16 @@ export default {
       const goodComment = this.newComment.trim();
       const config = {
         headers: {
-          Authorization: `Bearer ${this.userToken}`, // Añade el token en la cabecera
+          Authorization: `Bearer ${this.userToken}`,
         },
       };
 
       if (goodComment === "") {
         console.log("Comentario vacío");
+        console.log(this.userLogued);
       } else {
         const createNewComment = {
-          id_user: this.userLogued.id,
+          id_user: this.userLogued.username,
           id_product: this.productId,
           name: this.userLogued.username,
           comment: goodComment,
@@ -362,7 +357,7 @@ export default {
     async eliminateComment(comment) {
       const config = {
         headers: {
-          Authorization: `Bearer ${this.userToken}`, // Añade el token en la cabecera
+          Authorization: `Bearer ${this.userToken}`,
         },
       };
       try {
@@ -505,7 +500,7 @@ img {
   cursor: pointer;
 }
 .btn-cart {
-  color: white;
+  color: black;
   border: none;
   height: 100%;
   width: 57%;
@@ -532,7 +527,7 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Añade esto para centrar verticalmente */
+  justify-content: center;
 }
 
 .comment-form {
@@ -657,7 +652,7 @@ img {
 
 .quantity-button-more {
   background-color: #66e0ca;
-  color: #fff;
+  color: #000000;
   border: none;
   border-radius: 3px 10px 10px 3px;
   width: 30px;
@@ -667,7 +662,7 @@ img {
 }
 .quantity-button-less {
   background-color: #66e0ca;
-  color: #fff;
+  color: #000000;
   border: none;
   border-radius: 10px 3px 3px 10px;
   width: 30px;
@@ -678,10 +673,11 @@ img {
 
 .btn-addCart {
   width: 30%;
-  color: #fff;
+  color: #000000;
   background-color: #66e0ca;
   border-radius: 50px;
   border: none;
+  cursor: pointer;
 }
 
 span {
