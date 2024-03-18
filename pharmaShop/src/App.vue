@@ -30,7 +30,7 @@ export default {
 .div-app {
   width: 100vw;
 
-  background-image: url("../src/images/fondo1.jpeg");
+  background-image: url("../public/images/fondo.jpeg");
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 970px;

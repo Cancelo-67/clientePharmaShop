@@ -13,7 +13,7 @@
   </div>
 
   <div class="prueba">
-    <img src="../images/logo-transparent.png" alt="Imagen logo" />
+    <img src="../../public/images/logo-transparent.png" alt="Imagen logo" />
     <div class="container">
       <form @submit.prevent="submitForm">
         <h1>Crear cuenta</h1>

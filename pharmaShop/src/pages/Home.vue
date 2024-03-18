@@ -61,7 +61,7 @@ export default {
   data() {
     return {
       autoplay: true,
-      videoSource: "/src/video/video_web.mp4",
+      videoSource: "../public/video/video_web.mp4",
       userLogued: JSON.parse(decodeURIComponent(Cookies.get("userLogued"))),
       userToken: JSON.parse(decodeURIComponent(Cookies.get("userToken"))),
       products: [],

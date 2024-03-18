@@ -40,7 +40,11 @@
     </nav>
     <div class="navbar-down">
       <router-link to="/" class="logo-link">
-        <img src="../images/logo-transparent.png" alt="Logo" class="img-logo" />
+        <img
+          src="../../public/images/logo-transparent.png"
+          alt="Logo"
+          class="img-logo"
+        />
       </router-link>
       <router-link to="/cart">
         <i class="fa-solid fa-cart-shopping" style="color: #41aba9"></i>

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Products from "../pages/Products.vue";
+// import Products from "../pages/Products.vue";
 import DetailProduct from "../pages/DetailProduct.vue";
 import Login from "../pages/Login.vue";
 import Register from "../pages/Register.vue";
@@ -21,12 +21,12 @@ const routes = [
     component: Home,
     meta: { requiresAuth: true },
   },
-  {
-    path: "/products",
-    name: "Products",
-    component: Products,
-    meta: { requiresAuth: true },
-  },
+  // {
+  //   path: "/products",
+  //   name: "Products",
+  //   component: Products,
+  //   meta: { requiresAuth: true },
+  // },
   {
     path: "/products/:id",
     name: "DetailProduct",
@@ -65,10 +65,6 @@ const routes = [
   },
   {
     path: "/favorites",
-    beboreEnter: (to, from, next) => {
-      if (1 === 1) next("/login");
-      else next();
-    },
     name: "Favorites",
     component: Favorites,
     meta: { requiresAuth: true },
