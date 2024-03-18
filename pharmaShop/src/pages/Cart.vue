@@ -108,6 +108,7 @@ export default {
 
 <style scoped>
 .cart-container {
+  padding-left: 30px;
   width: 74%;
   margin-top: 10px;
   display: flex;
@@ -133,6 +134,7 @@ export default {
 }
 
 .product-subcontainer {
+  min-width: 410px;
   width: 80%;
   margin-bottom: 20px;
   border: 2px solid rgb(168, 168, 168);
@@ -250,6 +252,7 @@ export default {
 }
 
 .checkout-container {
+  min-width: 410px;
   width: 24%;
   margin-bottom: 20px; /* Aumentar el margen inferior */
   padding: 20px; /* Aumentar el padding para hacerlo más grande */

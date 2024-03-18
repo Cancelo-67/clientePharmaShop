@@ -283,6 +283,28 @@ export default {
     }
   }
 
+  .ul-category {
+    width: 100vw;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  a:link,
+  a:visited,
+  a:active {
+    text-decoration: none;
+  }
+  .li-category {
+    width: 33%;
+    text-align: center;
+    margin: 5px;
+  }
+
   .article-center1 {
     margin-right: 0px;
   }

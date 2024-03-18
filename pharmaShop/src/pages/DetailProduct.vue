@@ -61,7 +61,7 @@
             class="product-item"
           >
             <div class="product-content">
-              <img :src="product.image" alt="Product" class="" />
+              <img :src="product.image" alt="Product" class="product-image" />
               <p class="product-name">{{ product.name }}</p>
               <p class="product-price">{{ product.price }} €</p>
               <div class="btn-product">
@@ -458,10 +458,16 @@ img {
   width: 100%;
 }
 
+.product-image {
+  width: 200px;
+  height: auto;
+}
+
 .carousel {
   display: flex;
   width: 100%;
   overflow-x: auto;
+  overflow: hidden;
   padding: 10px;
   box-sizing: border-box;
 }
@@ -471,20 +477,15 @@ img {
   width: 220px;
   margin-right: 10px;
 }
-
 .product-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  height: 357px;
-  width: 100%;
+  height: 320px;
   border-radius: 5px;
   text-align: center;
   border: 1px solid #ddd;
   padding: 10px;
   background-color: #41aba9;
 }
+
 .btn-product {
   display: flex;
   width: 70%;
@@ -550,6 +551,7 @@ img {
 }
 
 .comment-button {
+  min-width: 200px;
   width: 10%;
   margin-top: 10px;
   padding: 12px;
@@ -572,14 +574,32 @@ img {
 }
 
 @media screen and (max-width: 767px) {
+  .details-container {
+    display: flex;
+    flex: 1;
+    max-width: 600px;
+    margin: 20px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .article3 {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    flex-direction: column;
+    height: 200px;
+  }
+
   .ul-comment {
     grid-template-columns: 1fr;
   }
 }
 
 .comment-container {
+  height: 150px;
   display: flex;
-  width: 72%;
+  width: 90%;
   color: black;
   background-color: #41aba9;
   border-radius: 8px;
@@ -588,6 +608,7 @@ img {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-direction: column;
   align-items: center;
+  justify-content: space-around;
 }
 
 .comment-container textarea {
@@ -634,11 +655,14 @@ img {
 }
 
 .btn-fav {
+  height: 61%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  width: 63%;
+  width: 79%;
   max-width: 600px;
+  justify-content: space-between;
+  align-content: center;
+  flex-direction: row;
   .btn-addCart {
     width: 50%;
     display: flex;

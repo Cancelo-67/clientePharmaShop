@@ -1,88 +1,97 @@
 <template>
-  <div class="profile-tab">
-    <form @submit.prevent="submitForm" class="profile-form">
-      <h1 class="profile-title">Mi Perfil</h1>
-      <div class="form-group">
-        <label for="username">Nombre de usuario*</label>
-        <input type="text" id="username" v-model="userLogued.username" />
-        <div
-          class="errorMessage"
-          v-if="usernameErrorMessage && !isUsernameValid"
-        >
-          {{ usernameErrorMessage }}
-        </div>
+  <div class="profile-wrapper">
+    <div class="profile-container">
+      <div class="profile-header">
+        <h1 class="profile-title">Mi Perfil</h1>
       </div>
-      <div class="form-group">
-        <label for="name">Nombre*</label>
-        <input
-          type="text"
-          id="name"
-          v-model="userLogued.name"
-          @change="validateName"
-        />
-        <!-- Mensaje de error para el nombre -->
-        <div class="errorMessage" v-if="nameErrorMessage && !isNameValid">
-          {{ nameErrorMessage }}
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="surname">Apellido*</label>
-        <input type="text" id="surname" v-model="userLogued.surname" />
-        <div class="errorMessage" v-if="surnameErrorMessage && !isSurnameValid">
-          {{ surnameErrorMessage }}
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="email">Correo Electrónico*</label>
-        <input type="email" id="email" v-model="userLogued.email" />
-        <div class="errorMessage" v-if="emailErrorMessage && !isEmailValid">
-          {{ emailErrorMessage }}
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Fecha de Nacimiento*</label>
-        <div class="date-group">
-          <input
-            type="text"
-            class="date-input"
-            v-model="selectedDay"
-            placeholder="Día"
-          />
-          <input
-            type="text"
-            class="date-input"
-            v-model="selectedMonth"
-            placeholder="Mes"
-          />
-          <input
-            type="text"
-            class="date-input"
-            v-model="selectedYear"
-            placeholder="Año"
-          />
-        </div>
-      </div>
-      <div class="password-group">
+      <form @submit.prevent="submitForm" class="profile-form">
         <div class="form-group">
-          <label for="current-password">Contraseña*</label>
-          <input
-            :type="showPassword ? 'text' : 'password'"
-            id="password1"
-            v-model="newPassword"
-          />
-          <span class="toggle-password" @click="togglePasswordVisibility1">
-            <i class="fa" :class="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
-          </span>
+          <label for="username">Nombre de usuario*</label>
+          <input type="text" id="username" v-model="userLogued.username" />
           <div
-            class="errorMessage"
-            v-if="passwordErrorMessage && !isPasswordValid"
+            class="error-message"
+            v-if="usernameErrorMessage && !isUsernameValid"
           >
-            {{ passwordErrorMessage }}
+            {{ usernameErrorMessage }}
           </div>
         </div>
-      </div>
-      <button type="submit" class="save-button">Guardar</button>
-    </form>
+        <div class="form-group">
+          <label for="name">Nombre*</label>
+          <input
+            type="text"
+            id="name"
+            v-model="userLogued.name"
+            @change="validateName"
+          />
+          <div class="error-message" v-if="nameErrorMessage && !isNameValid">
+            {{ nameErrorMessage }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="surname">Apellido*</label>
+          <input type="text" id="surname" v-model="userLogued.surname" />
+          <div
+            class="error-message"
+            v-if="surnameErrorMessage && !isSurnameValid"
+          >
+            {{ surnameErrorMessage }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Correo Electrónico*</label>
+          <input type="email" id="email" v-model="userLogued.email" />
+          <div class="error-message" v-if="emailErrorMessage && !isEmailValid">
+            {{ emailErrorMessage }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Fecha de Nacimiento*</label>
+          <div class="date-group">
+            <input
+              type="text"
+              class="date-input"
+              v-model="selectedDay"
+              placeholder="Día"
+            />
+            <input
+              type="text"
+              class="date-input"
+              v-model="selectedMonth"
+              placeholder="Mes"
+            />
+            <input
+              type="text"
+              class="date-input"
+              v-model="selectedYear"
+              placeholder="Año"
+            />
+          </div>
+        </div>
+        <div class="password-group">
+          <div class="form-group">
+            <label for="current-password">Contraseña*</label>
+            <input
+              :type="showPassword ? 'text' : 'password'"
+              id="password1"
+              v-model="newPassword"
+            />
+            <span class="toggle-password" @click="togglePasswordVisibility1">
+              <i
+                class="fa"
+                :class="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+              ></i>
+            </span>
+            <div
+              class="error-message"
+              v-if="passwordErrorMessage && !isPasswordValid"
+            >
+              {{ passwordErrorMessage }}
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="save-button">Guardar</button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -94,12 +103,11 @@ export default {
   data() {
     return {
       userLogued: {},
+      userToken: JSON.parse(decodeURIComponent(Cookies.get("userToken"))),
       selectedDay: null,
       selectedMonth: null,
       selectedYear: null,
-      passwordNow: "",
-      newPassword: "",
-      confirmPassword: "",
+      passwordNew: "",
       showPassword: false,
       usernameErrorMessage: "",
       nameErrorMessage: "",
@@ -164,7 +172,7 @@ export default {
       if (!this.isNameValid) {
         this.nameErrorMessage = "Por favor, complete el Nombre correctamente.";
       } else {
-        this.nameErrorMessage = ""; // Reiniciar el mensaje de error cuando el nombre es válido
+        this.nameErrorMessage = "";
       }
     },
     validateSurname() {
@@ -214,7 +222,7 @@ export default {
       return date ? parseInt(date.split("/")[2]) : null;
     },
 
-    submitForm() {
+    async submitForm() {
       if (
         this.usernameErrorMessage ||
         this.nameErrorMessage ||
@@ -224,8 +232,15 @@ export default {
       ) {
         return;
       }
-
-      console.log(this.userLogued);
+      this.userLogued.password = this.newPassword;
+      const response = await axios.put(
+        `http://localhost:8080/users/${this.userLogued.id}`,
+        this.userLogued,
+        {
+          headers: { Authorization: `Bearer ${this.userToken}` },
+        }
+      );
+      console.log(response);
     },
   },
   mounted() {
@@ -233,68 +248,87 @@ export default {
   },
 };
 </script>
-
 <style lang="scss" scoped>
-.profile-tab {
+/* Estilos para el contenedor principal */
+
+.profile-wrapper {
+  width: 100vw;
+}
+.profile-container {
   display: flex;
   justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Estilos para el encabezado */
+.profile-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Estilos para el título */
+.profile-title {
+  color: #333;
+  font-size: 24px;
 }
 
 .profile-form {
   width: 100%;
   max-width: 600px;
-  padding: 2rem;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.profile-title {
-  margin-bottom: 2rem;
-  color: #333;
-  font-size: 24px;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 20px;
 }
 
 label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 5px;
   color: #555;
   font-size: 16px;
 }
 
 input[type="text"],
 input[type="email"] {
-  width: 90%;
-  padding: 0.75rem;
+  width: 100%;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
 }
 
 input[type="password"] {
-  width: 90%;
-  margin-right: 10px;
-  padding: 0.75rem;
+  width: calc(100% - 35px);
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
 }
+
 .date-group {
   display: flex;
 }
 
 .date-input {
   flex: 1;
-  margin-right: 1rem;
+  margin-right: 10px;
 }
 
+/* Estilos para los mensajes de error */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* Estilos para el botón de guardar */
 .save-button {
-  padding: 0.75rem 2rem;
-  background-color: #007bff;
+  padding: 12px 20px;
+  background-color: #41aba9;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -304,10 +338,14 @@ input[type="password"] {
 }
 
 .save-button:hover {
-  background-color: #0056b3;
+  background-color: #368e8d;
 }
 
 .toggle-password {
+  display: inline-block;
+  position: relative;
+  top: -2px;
+  margin-left: -30px;
   cursor: pointer;
 }
 
@@ -316,16 +354,9 @@ input[type="password"] {
   color: #666;
 }
 
-.errorMessage {
-  color: red;
-  font-size: 0.8em;
-  margin-top: 0.2em;
-  width: 60%;
-}
-
-@media screen and (max-width: 661px) {
-  form {
-    font-size: 1rem;
+@media screen and (max-width: 768px) {
+  input[type="password"] {
+    width: calc(100% - 45px);
   }
 }
 </style>

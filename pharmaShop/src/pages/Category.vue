@@ -13,16 +13,8 @@
   </div>
 
   <div class="page-content">
-    <!-- Botón de filtro para dispositivos móviles -->
-    <button class="filter-toggle" @click="toggleFilters">
-      <i class="fa-solid fa-filter"></i> Filtrar
-    </button>
     <div class="filter-bar" :class="{ 'show-filters': showFilters }">
-      <div class="filter-close" @click="closeFilters">
-        <button class="close-button">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
+      <div class="filter-close" @click="closeFilters"></div>
       <div class="filter-title">Filtros</div>
       <div class="filter-section">
         <input
@@ -565,6 +557,13 @@ export default {
     align-items: center;
     flex-direction: column;
   }
+  .btn-product {
+    width: 82%;
+    height: 20%;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+  }
 
   .product-container {
     width: 80vw;
@@ -572,6 +571,17 @@ export default {
     grid-template-columns: repeat(3, 1fr);
     margin: 1rem;
     gap: 25px;
+  }
+  .filter-bar {
+    color: #ffffff;
+    background-color: #41aba9;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
   }
 
   .filter-bar.show-filters {

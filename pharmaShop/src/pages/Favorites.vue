@@ -1,28 +1,33 @@
 <template>
   <div class="favorites-container">
-    <h1>Tus Favoritos</h1>
+    <h1 class="page-title">Tus Favoritos</h1>
     <div v-if="favItems.length === 0" class="empty-favorites">
       No tienes ningún producto en tus favoritos.
     </div>
     <div v-else class="product-list">
       <div
-        v-for="(product, index) in products"
+        v-for="(product, index) in listfav"
         :key="index"
-        class="product-info"
+        class="product-item"
       >
-        <img :src="product[0].image" alt="" />
-        <p class="product-name">{{ product[0].name }}</p>
-        <button @click="toggleFavorite(index)" class="favorite-button">
-          <i
-            :class="[
-              'fas',
-              {
-                'fa-solid fa-heart': product.favorite,
-                'fa-regular fa-heart': !product.favorite,
-              },
-            ]"
-          ></i>
-        </button>
+        <div class="product-info">
+          <img :src="product[0].image" alt="" class="product-image" />
+          <p class="product-name">{{ product[0].name }}</p>
+          <button
+            @click="toggleFavorite(product[0].id, index)"
+            class="favorite-button"
+          >
+            <i
+              :class="[
+                'fas',
+                {
+                  'fa-heart': product.favorite,
+                  'fa-heart-o': !product.favorite,
+                },
+              ]"
+            ></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -31,6 +36,7 @@
 <script>
 import axios from "axios";
 import Cookies from "js-cookie";
+//import Vue from "vue";
 
 export default {
   data() {
@@ -39,6 +45,7 @@ export default {
       userLogued: JSON.parse(decodeURIComponent(Cookies.get("userLogued"))),
       userToken: JSON.parse(decodeURIComponent(Cookies.get("userToken"))),
       products: [],
+      listfav: [],
     };
   },
   methods: {
@@ -57,35 +64,38 @@ export default {
           },
         })
       );
-      console.log(productRequests);
       try {
         const responses = await Promise.all(productRequests);
         this.products = responses.map((response) => ({
           ...response.data,
           favorite: true,
         }));
-        console.log(this.products);
+        this.listfav = this.products;
       } catch (error) {
         console.error("Error fetching product details:", error);
       }
     },
-    toggleFavorite(index) {
-      const product = this.products[index];
-      product.favorite = !product.favorite; // Cambiar el estado del favorito
+    toggleFavorite(productId, indexProduct) {
+      console.log(`Id del producto`, productId);
+      const productIndex = this.favItems.findIndex(
+        (product) => product.id === productId
+      );
+      console.log(`Product index`, productIndex);
 
-      if (!product.favorite) {
-        // Si se está eliminando de favoritos, establecer un temporizador para eliminarlo después de 10 segundos
-        setTimeout(() => {
-          const currentIndex = this.products.findIndex(
-            (p) => p.id === product.id
-          );
-          if (currentIndex !== -1 && !this.products[currentIndex].favorite) {
-            this.products.splice(currentIndex, 1);
-          }
-        }, 5000); // 10000 milisegundos = 10 segundos
+      if (productIndex == -1) {
+        this.favItems.splice(indexProduct, 1);
+      }
+
+      const productIndex2 = this.listfav.findIndex(
+        (product) => product.id === productId
+      );
+
+      if (productIndex2 == -1) {
+        this.listfav.splice(indexProduct, 1);
       }
 
       localStorage.setItem("favItems", JSON.stringify(this.favItems));
+      console.log(`Favoritos set`, this.favItems);
     },
   },
   mounted() {
@@ -99,44 +109,82 @@ export default {
 .favorites-container {
   max-width: 1000px;
   margin: 0 auto;
+  padding: 20px;
+}
+
+.page-title {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.empty-favorites {
+  color: #555;
+  font-size: 18px;
+  text-align: center;
 }
 
 .product-list {
+  gap: 20px;
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
 }
 
 .product-item {
-  background-color: #f9f9f9;
-  padding: 10px;
-  border-radius: 5px;
+  width: calc(33.33% - 20px);
+  margin-bottom: 20px;
+  border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .product-info {
   padding: 10px;
-  width: 31%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: white;
-  img {
-    width: 40%;
-  }
+  background-color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.product-item:hover .product-info {
+  transform: translateY(-5px);
+}
+
+.product-image {
+  width: 100%;
+  height: auto;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
 .product-name {
-  color: black;
-  margin: 0;
+  color: #333;
+  font-size: 16px;
   font-weight: bold;
+  margin: 10px 0;
 }
 
 .favorite-button {
   border: none;
   background-color: transparent;
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 24px;
   color: #ff6b6b;
+}
+
+.favorite-button:hover {
+  color: #ff4d4d;
+}
+
+/* Estilos para hacer la página responsive */
+
+@media screen and (max-width: 1024px) {
+  .product-item {
+    width: calc(50% - 20px);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .product-item {
+    width: 100%;
+  }
 }
 </style>

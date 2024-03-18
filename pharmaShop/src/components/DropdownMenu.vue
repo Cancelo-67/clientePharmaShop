@@ -169,15 +169,16 @@ ul {
 
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-family: Noto Serif;
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 400;
   line-height: normal;
   cursor: pointer;
 }
 
 .submenu {
+  display: flex;
+  height: 6rem;
   color: #ffffff;
-
   font-family: Noto Serif;
   font-size: 18px;
   font-style: normal;
@@ -186,6 +187,8 @@ ul {
   margin-top: 10px;
   transform: translateY(-10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .submenu-item {
