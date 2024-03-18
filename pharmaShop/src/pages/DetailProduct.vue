@@ -256,17 +256,22 @@ export default {
         price: product.price,
         quantity: this.quantity,
       };
+      const cartKey = `productsCart_${this.userLogued.id}`;
+      const productsCart = JSON.parse(localStorage.getItem(cartKey)) || [];
 
-      const existingProductIndex = this.productsCart.findIndex(
+      const existingProductIndex = productsCart.findIndex(
         (item) => item.name === productCart.name
       );
 
       if (existingProductIndex !== -1) {
-        this.productsCart[existingProductIndex].quantity += this.quantity;
+        productsCart.splice(existingProductIndex, 1);
       } else {
-        this.productsCart.push(productCart);
+        // Si el producto no está en el carrito, agrégalo
+        productsCart.push(productCart);
       }
-      localStorage.setItem("productsCart", JSON.stringify(this.productsCart));
+
+      // Guardar la lista de productos en localStorage
+      localStorage.setItem(cartKey, JSON.stringify(productsCart));
     },
 
     async toggleFavorite(product) {

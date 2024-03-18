@@ -54,6 +54,7 @@
           type="text"
           placeholder="Nombre de usuario"
           v-model="formData.username"
+          @chage="validateUsername"
           required
         />
         <div
@@ -66,6 +67,7 @@
           type="text"
           placeholder="Nombre"
           v-model="formData.name"
+          @change="validateName"
           required
         />
         <!-- Mensaje de error para el nombre -->
@@ -76,6 +78,7 @@
           type="text"
           placeholder="Apellidos"
           v-model="formData.surname"
+          @change="validateSurname"
           required
         />
         <!-- Mensaje de error para los apellidos -->
@@ -86,6 +89,7 @@
           type="text"
           placeholder="Correo Electronico"
           v-model="formData.email"
+          @change="validateEmail"
           required
         />
         <!-- Mensaje de error para el correo electrónico -->
@@ -96,6 +100,7 @@
           <input
             placeholder="Contraseña"
             v-model="formData.password"
+            @change="validatePassword"
             required
             :type="passwordVisible ? 'password' : 'text'"
           />
@@ -115,6 +120,7 @@
           :type="passwordVisible ? 'password' : 'text'"
           placeholder="Repetir Contraseña"
           v-model="repeatPassword"
+          @change="validateRepeatPassword"
           required
         />
         <!-- Mensaje de error si se repite la contraseña -->
@@ -160,6 +166,7 @@
 <script>
 import axios from "axios";
 import Cookies from "js-cookie";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   data() {
@@ -195,11 +202,14 @@ export default {
     };
   },
   computed: {
+    ...mapState(["logued"]),
     isUsernameValid() {
       return /^[a-zA-Z0-9_]{3,16}$/.test(this.formData.username);
     },
     isNameValid() {
-      return /^[a-zA-ZáéíóúüÁÉÍÓÚÜ\s]+$/.test(this.formData.name);
+      return /^[A-Za-zÁÉÍÓÚáéíóúüÜ]{3,15}( [A-Za-zÁÉÍÓÚáéíóúüÜ]{3,15}){0,1}$/.test(
+        this.formData.name
+      );
     },
     isSurnameValid() {
       return /^[a-zA-ZáéíóúüÁÉÍÓÚÜ\s]+$/.test(this.formData.surname);
@@ -214,6 +224,49 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(["setLogued"]),
+    changeValue() {
+      this.setLogued(true);
+    },
+    validateUsername() {
+      this.usernameErrorMessage = "";
+      if (!this.isUsernameValid) {
+        this.usernameErrorMessage =
+          "Por favor, complete el Nombre de Usuario correctamente.";
+      }
+    },
+    validateName() {
+      this.nameErrorMessage = "";
+      if (!this.isNameValid) {
+        this.nameErrorMessage = "Por favor, complete el Nombre correctamente.";
+      }
+    },
+    validateSurname() {
+      this.surnameErrorMessage = "";
+      if (!this.isSurnameValid) {
+        this.surnameErrorMessage =
+          "Por favor, complete los Apellidos correctamente.";
+      }
+    },
+    validateEmail() {
+      this.emailErrorMessage = "";
+      if (!this.isEmailValid) {
+        this.emailErrorMessage = "Por favor, complete el Email correctamente.";
+      }
+    },
+    validatePassword() {
+      this.passwordErrorMessage = "";
+      if (!this.isPasswordValid) {
+        this.passwordErrorMessage =
+          "Por favor, complete la Contraseña correctamente.";
+      }
+    },
+    validateRepeatPassword() {
+      this.errorMessage = "";
+      if (this.formData.password !== this.repeatPassword) {
+        this.errorMessage = "Las contraseñas no coinciden.";
+      }
+    },
     togglePasswordVisibility() {
       this.passwordVisible = !this.passwordVisible;
     },
@@ -230,39 +283,6 @@ export default {
     },
     async submitForm() {
       try {
-        this.errorMessage = "";
-        this.usernameErrorMessage = "";
-        this.nameErrorMessage = "";
-        this.surnameErrorMessage = "";
-        this.emailErrorMessage = "";
-        this.passwordErrorMessage = "";
-
-        // Validar que las contraseñas coincidan
-        if (this.formData.password !== this.repeatPassword) {
-          this.errorMessage = "Las contraseñas no coinciden.";
-        }
-        // Validar que todos los campos sean válidos
-        if (!this.isUsernameValid) {
-          this.usernameErrorMessage =
-            "Por favor, complete el Nombre de Usuario correctamente.";
-        }
-        if (!this.isNameValid) {
-          this.nameErrorMessage =
-            "Por favor, complete el Nombre correctamente.";
-        }
-        if (!this.isSurnameValid) {
-          this.surnameErrorMessage =
-            "Por favor, complete los Apellidos correctamente.";
-        }
-        if (!this.isEmailValid) {
-          this.emailErrorMessage =
-            "Por favor, complete el Email correctamente.";
-        }
-        if (!this.isPasswordValid) {
-          this.passwordErrorMessage =
-            "Por favor, complete la contraseña correctamente.";
-        }
-
         // Verificar si hay mensajes de error
         if (
           this.errorMessage ||
@@ -299,10 +319,10 @@ export default {
               },
             }
           );
-          console.log(responseToken);
           // Mostrar popup de registro exitoso
           this.goodPopup = true;
           setTimeout(() => {
+            this.changeValue();
             Cookies.set("userLogued", JSON.stringify(responsePost.data));
             Cookies.set("userToken", JSON.stringify(responseToken.data));
             this.goodPopup = false;
@@ -456,12 +476,12 @@ input {
 }
 
 button {
-  padding: 1rem 2rem;
+  padding: 0.7rem 0.9rem;
   background-color: #41aba9;
   color: #000000;
   border: none;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 34px;
   font-size: 14px;
   display: flex;
   align-items: center;
@@ -504,7 +524,18 @@ button {
   max-height: 90%;
   overflow-y: auto;
 }
-
+@media screen and (max-width: 826px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  .separator-vertical {
+    display: none;
+  }
+  .container-word {
+    display: none;
+  }
+}
 /* Estilos para hacer la página responsive */
 @media screen and (max-width: 768px) {
   .container {

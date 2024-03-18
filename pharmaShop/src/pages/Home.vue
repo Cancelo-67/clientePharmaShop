@@ -62,7 +62,8 @@ export default {
     return {
       autoplay: true,
       videoSource: "/src/video/video_web.mp4",
-      userLogued: JSON.stringify("userLogged"),
+      userLogued: JSON.parse(decodeURIComponent(Cookies.get("userLogued"))),
+      userToken: JSON.parse(decodeURIComponent(Cookies.get("userToken"))),
       products: [],
       currentProductSlide: 0,
       itemWidth: 300,
@@ -70,32 +71,16 @@ export default {
     };
   },
   computed: {
-    async getUser() {
-      const productsCart =
-        JSON.parse(localStorage.getItem("productsCart")) || [];
-      const productsFavorites =
-        JSON.parse(localStorage.getItem("productsFavorites")) || [];
-      const response = await axios.get(
-        `http://localhost:8080/users/${this.userLogued.id}`
-      );
-      console.log(response.data);
-    },
     currentImage() {
       return this.images[this.currentImageIndex];
     },
   },
   mounted() {
+    this.updatelocalstorage();
     this.getProducts();
-    this.$refs.videoPlayer.addEventListener("playing", this.handlePlaying);
-    this.$refs.videoPlayer.addEventListener("pause", this.handlePause);
   },
   methods: {
-    handlePlaying() {
-      console.log("Video is playing");
-    },
-    handlePause() {
-      console.log("Video is paused");
-    },
+    async updatelocalstorage() {},
     nextImage() {
       this.currentImageIndex =
         (this.currentImageIndex + 1) % this.images.length;
@@ -120,25 +105,36 @@ export default {
       }
     },
     async toggleCart(product) {
+      const cartKey = `productsCart_${this.userLogued.id}`;
       const productCart = {
         image: product.image,
         name: product.name,
         price: product.price,
         quantity: this.quantity,
       };
+      // Cargar los datos del localStorage si están disponibles
+      const productsCart = JSON.parse(localStorage.getItem(cartKey)) || [];
+      const productsFavorites =
+        JSON.parse(localStorage.getItem("favItems")) || [];
+      this.userLogued.favorites = productsFavorites;
+
+      localStorage.setItem(cartKey, JSON.stringify(productsCart));
+      localStorage.setItem(
+        "favItems",
+        JSON.stringify(this.userLogued.favorites)
+      );
 
       // Verificar si el producto ya está en el carrito
-      const existingProductIndex = this.productsCart.findIndex(
+      const existingProductIndex = productsCart.findIndex(
         (item) => item.name === productCart.name
       );
 
       if (existingProductIndex !== -1) {
-        this.productsCart.splice(existingProductIndex, 1);
+        productsCart.splice(existingProductIndex, 1);
       } else {
-        this.productsCart.push(productCart);
+        productsCart.push(productCart);
       }
-      localStorage.setItem("productsCart", JSON.stringify(this.productsCart));
-      console.log(this.productsCart);
+      localStorage.setItem(cartKey, JSON.stringify(productsCart));
     },
   },
 };
@@ -180,6 +176,8 @@ export default {
 
 .div-video {
   width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .video {
@@ -188,7 +186,6 @@ export default {
   margin: 30px;
 }
 
-// ------- css para las imagenes
 .images {
   display: flex;
   flex-direction: row;

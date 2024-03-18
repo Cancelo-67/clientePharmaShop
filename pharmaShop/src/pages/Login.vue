@@ -55,11 +55,13 @@
           type="text"
           v-model="formData.username"
           placeholder="Nombre de usuario"
+          required
         />
         <input
           type="password"
           v-model="formData.password"
           placeholder="Contraseña"
+          required
         />
         <p>He olvidado mi contraseña</p>
         <button type="submit">Iniciar Sesión</button>
@@ -97,6 +99,7 @@
 import axios from "axios";
 import bcrypt from "bcryptjs";
 import Cookies from "js-cookie";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   data() {
@@ -111,12 +114,20 @@ export default {
       users: [],
     };
   },
+  computed: {
+    ...mapState(["logued"]),
+  },
 
   methods: {
+    ...mapMutations(["setLogued"]),
+    changeValue() {
+      this.setLogued(true);
+    },
     goRegister() {
       this.$router.push("/register");
     },
     async submitForm() {
+      this.logued;
       try {
         const responseToken = await axios.post(
           "http://localhost:8080/token",
@@ -150,6 +161,7 @@ export default {
         ) {
           this.goodPopup = true;
           setTimeout(() => {
+            this.changeValue();
             this.goodPopup = false;
             // Si el usuario existe y las contraseñas coinciden
             Cookies.set("userLogued", JSON.stringify(user));
@@ -191,7 +203,7 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: row-reverse;
-    height: 100vh;
+    height: 77.5vh;
     padding: 2rem;
     form {
       width: 100%;
@@ -203,10 +215,13 @@ export default {
       flex-direction: column;
       align-items: center;
       justify-content: space-evenly;
-      height: 75vh;
+      height: 60vh;
       div {
-        width: 10vw;
         display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 1rem 0;
+        width: 200px;
       }
     }
     .separator-vertical {
@@ -217,8 +232,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center; /* Centra los elementos horizontalmente */
-      margin: 1rem 0; /* Ajusta el margen según sea necesario */
-      width: 25vw;
+      width: 310px;
     }
 
     .separator-horizontal {
@@ -261,18 +275,18 @@ input {
   border-radius: 5px;
   border: 1px solid;
   color: #000000;
-  padding: 0.7rem; /* Aumentar el espacio interno de los campos de entrada */
-  font-size: 14px; /* Aumentar el tamaño de la fuente de los campos de entrada */
+  padding: 0.7rem;
+  font-size: 14px;
 }
 
 button {
-  padding: 1rem 2rem;
+  padding: 0.7rem 0.9rem;
   background-color: #41aba9;
   color: #000000;
   border: none;
   cursor: pointer;
-  border-radius: 5px;
-  font-size: 14px;
+  border-radius: 34px;
+  font-size: 12px;
   display: flex;
   align-items: center;
   svg {
@@ -352,6 +366,18 @@ button {
     .fa-truck {
       font-size: 24px; /* Reduzca el tamaño del ícono en pantallas pequeñas */
     }
+  }
+}
+@media screen and (max-width: 826px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  .separator-vertical {
+    display: none;
+  }
+  .container-word {
+    display: none;
   }
 }
 </style>

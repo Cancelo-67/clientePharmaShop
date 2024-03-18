@@ -8,6 +8,11 @@ import Home from "../pages/Home.vue";
 import Category from "../pages/Category.vue";
 import Cart from "../pages/Cart.vue";
 import Favorites from "../pages/Favorites.vue";
+import store from "../store/store";
+
+function isAuthenticated() {
+  return store.state.logued;
+}
 
 const routes = [
   {
@@ -75,21 +80,14 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   const requiresAuth = to.meta.requiresAuth;
-//   const isAuthenticated = true;
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
 
-//   if (requiresAuth && !isAuthenticated) {
-//     next("/login");
-//   } else if (to.name === "Login" || to.name === "Register") {
-//     if (isAuthenticated) {
-//       next("/login"); // Si el usuario está autenticado, redirige a la página de perfil si intenta acceder a la página de inicio de sesión o registro
-//     } else {
-//       next();
-//     }
-//   } else {
-//     next();
-//   }
-// });
+  if (requiresAuth && !isAuthenticated()) {
+    next("/login");
+  } else {
+    next();
+  }
+});
 
 export default router;

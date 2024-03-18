@@ -91,6 +91,7 @@ export default {
     logOut() {
       Cookies.remove("userToken");
       Cookies.remove("userLogued");
+      Cookies.set("userLogued", false);
       localStorage.removeItem("favItems");
       localStorage.removeItem("productsCart");
       this.$router.push("/login");
@@ -109,7 +110,7 @@ export default {
 
 .dropdown-menu {
   position: fixed;
-  top: 26px;
+  top: 24px;
   right: 0px;
   width: 440px;
   height: auto;

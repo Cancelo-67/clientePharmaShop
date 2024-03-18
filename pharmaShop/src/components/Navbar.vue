@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <nav class="navbar-up">
-      <div>
+      <div class="navbar-div-up1">
         <p class="p-navbar">PharmaShop-Lideres en confianza</p>
         <i class="fa-solid fa-star" style="color: #ffffff"></i>
         <i class="fa-solid fa-star" style="color: #ffffff"></i>
@@ -9,11 +9,11 @@
         <i class="fa-solid fa-star" style="color: #ffffff"></i>
         <i class="fa-solid fa-star" style="color: #ffffff"></i>
       </div>
-      <div class="navbar-div-up">
+      <div class="navbar-div-up2">
         <i class="fa-solid fa-truck-fast" style="color: #ffffff"></i>
         <p>Tus productos en casa en solo 24 - 48 horas</p>
       </div>
-      <div>
+      <div class="navbar-div-up3">
         <article class="article-up">
           <i class="fa-solid fa-phone" style="color: #ffffff"></i>
           <p>952 944 601</p>
@@ -115,6 +115,7 @@ export default {
 
 <style lang="scss" scoped>
 .navbar-up {
+  font-size: 0.9rem;
   padding: 4px;
   color: white;
   background-color: #41aba9;
@@ -128,11 +129,11 @@ export default {
   div:last-child {
     display: flex;
     justify-content: space-between;
-    width: 16%;
+    width: 24%;
   }
 }
 
-.navbar-div-up {
+.navbar-div-up2 {
   p {
     margin-left: 10px;
   }
@@ -166,7 +167,7 @@ export default {
   margin-right: 20px;
 }
 .div-ul {
-  width: 1400px;
+  width: 100vw;
   margin: auto;
 }
 
@@ -176,6 +177,7 @@ export default {
   margin: 0;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .li-category {
@@ -230,7 +232,7 @@ export default {
   }
 }
 
-@media (max-width: 852px) {
+@media (max-width: 926px) {
   .navbar-up {
     flex-direction: column;
     align-items: center;
@@ -246,6 +248,9 @@ export default {
     width: 50%;
     justify-content: center;
   }
+}
+
+@media (max-width: 770px) {
   .logo-link {
     display: none;
   }
@@ -272,6 +277,10 @@ export default {
     i {
       margin-top: 10px;
     }
+  }
+
+  .article-center1 {
+    margin-right: 0px;
   }
 
   .div-table {

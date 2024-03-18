@@ -50,7 +50,7 @@
         class="product"
       >
         <img :src="product.image" alt="Imagen de producto" />
-        <div>{{ product.name }}</div>
+        <div class="div-name">{{ product.name }}</div>
         <p>{{ product.price }} €</p>
         <div class="btn-product">
           <router-link :to="'/products/' + product.id">
@@ -151,7 +151,6 @@ export default {
     return {
       userLogued: JSON.parse(decodeURIComponent(Cookies.get("userLogued"))),
       userToken: JSON.parse(decodeURIComponent(Cookies.get("userToken"))),
-      productsCart: JSON.parse(localStorage.getItem("productsCart")) || [],
       response: null,
       products: [],
       selectedPrice: "all",
@@ -230,23 +229,22 @@ export default {
         price: product.price,
         quantity: this.quantity,
       };
+      const cartKey = `productsCart_${this.userLogued.id}`;
+      const productsCart = JSON.parse(localStorage.getItem(cartKey)) || [];
 
-      const existingProductIndex = this.productsCart.findIndex(
+      const existingProductIndex = productsCart.findIndex(
         (item) => item.name === productCart.name
       );
 
       if (existingProductIndex !== -1) {
-        // Si el producto ya está en el carrito, quita el producto
-        this.productsCart.splice(existingProductIndex, 1);
+        productsCart.splice(existingProductIndex, 1);
       } else {
         // Si el producto no está en el carrito, agrégalo
-        this.productsCart.push(productCart);
+        productsCart.push(productCart);
       }
 
       // Guardar la lista de productos en localStorage
-      localStorage.setItem("productsCart", JSON.stringify(this.productsCart));
-
-      console.log(this.productsCart);
+      localStorage.setItem(cartKey, JSON.stringify(productsCart));
     },
 
     async updateFavInApi(userId) {
@@ -334,14 +332,13 @@ export default {
 .filter-bar {
   color: #ffffff;
   background-color: #41aba9;
-  width: 24%;
+  width: 27%;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin-left: 2rem;
 }
 
 .filter-title {
@@ -366,7 +363,7 @@ export default {
 }
 
 .pagination {
-  width: 80%;
+  width: 70%;
   display: flex;
   justify-content: flex-end;
 }
@@ -388,8 +385,12 @@ export default {
   justify-content: space-around;
 }
 
+.div-name {
+  font-weight: 700;
+}
+
 .btn-cart {
-  width: 60%;
+  width: 90px;
   height: 26px;
   border: none;
   border-radius: 50px;
@@ -398,7 +399,7 @@ export default {
   cursor: pointer;
 }
 .btn-fav-eye {
-  width: 150%;
+  width: 30px;
   height: 87%;
   border: none;
   border-radius: 50px;
@@ -428,32 +429,32 @@ export default {
 }
 
 .search-bar {
-  width: 20rem;
+  width: 21rem;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .search-input {
-  width: 100%;
+  width: 93%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
 .product-container {
-  width: 47vw;
+  width: 58vw;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   margin: 1rem;
-  gap: 10px;
+  gap: 25px;
 }
 
 .product {
   display: flex;
   width: 104%;
-  height: 20rem;
-  border-radius: 5px;
+  height: 22rem;
+  border-radius: 15px;
   padding: 6px;
   text-align: center;
   background-color: #41aba9;
@@ -464,6 +465,8 @@ export default {
 }
 
 .product img {
+  border: 1px solid black;
+  border-radius: 22px;
   margin: 10px;
   max-width: 100%;
   max-height: 180px;
@@ -471,7 +474,7 @@ export default {
 
 /* Estilos para el filtrado */
 .price-input {
-  width: 5rem;
+  width: 87px;
   padding: 6px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -489,29 +492,7 @@ export default {
   }
 }
 
-@media screen and (max-width: 782px) {
-  .page-content {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-  }
-
-  .filter-bar.show-filters {
-    display: block;
-    width: 90%;
-    position: absolute;
-    background-color: white;
-    z-index: 1;
-    top: 52px;
-  }
-
-  .filter-title,
-  .filter-section,
-  .filter-option {
-    font-size: 16px;
-    text-align: left;
-  }
-
+@media (max-width: 1006px) {
   .filter-toggle {
     display: block;
     text-align: center;
@@ -522,19 +503,6 @@ export default {
     border-radius: 5px;
     cursor: pointer;
   }
-  .pagination {
-    display: flex;
-  }
-  .close-button {
-    width: 0%;
-    display: flex;
-  }
-  .pagination-button:not(:first-child):not(:last-child) {
-    display: none; /* Oculta los botones de paginación en la vista móvil */
-  }
-}
-
-@media (max-width: 853px) {
   .filter-bar {
     display: none;
   }
@@ -557,19 +525,27 @@ export default {
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-left: 2rem;
-    flex-shrink: 0; // Evita que la barra de filtro se reduzca demasiado en pantallas pequeñas
+  }
+  .filter-bar.show-filters {
+    display: block;
+    width: 90%;
+    position: absolute;
+    background-color: white;
+    z-index: 1;
+    top: 100px;
+  }
+
+  .close-button {
+    width: 20px;
+    display: flex;
   }
 
   .product-container {
-    width: 90%; // Ajusta el ancho para ocupar todo el espacio disponible
+    width: 80vw;
     display: grid;
-    grid-template-columns: repeat(
-      auto-fill,
-      minmax(200px, 1fr)
-    ); // Cambia el número de columnas y el ancho mínimo de cada elemento
+    grid-template-columns: repeat(4, 1fr);
     margin: 1rem;
-    gap: 10px;
+    gap: 25px;
   }
 
   .product {
@@ -580,6 +556,45 @@ export default {
     margin: 10px auto; // Centra la imagen horizontalmente
     max-width: 100%;
     max-height: 180px;
+  }
+}
+
+@media screen and (max-width: 782px) {
+  .page-content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .product-container {
+    width: 80vw;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 1rem;
+    gap: 25px;
+  }
+
+  .filter-bar.show-filters {
+    display: block;
+    width: 90%;
+    position: absolute;
+    background-color: white;
+    z-index: 1;
+    top: 100px;
+  }
+
+  .filter-title,
+  .filter-section,
+  .filter-option {
+    font-size: 16px;
+    text-align: left;
+  }
+
+  .pagination {
+    display: flex;
+  }
+  .pagination-button:not(:first-child):not(:last-child) {
+    display: none; /* Oculta los botones de paginación en la vista móvil */
   }
 }
 </style>

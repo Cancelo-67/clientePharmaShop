@@ -64,13 +64,23 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
 export default {
   data() {
     return {
-      productsCart: JSON.parse(localStorage.getItem("productsCart")) || [],
+      userLogued: JSON.parse(decodeURIComponent(Cookies.get("userLogued"))),
+      productsCart: [],
     };
   },
+  mounted() {
+    this.getCart();
+  },
   methods: {
+    getCart() {
+      const cartKey = `productsCart_${this.userLogued.id}`;
+      this.productsCart = JSON.parse(localStorage.getItem(cartKey)) || [];
+      console.log(this.productsCart);
+    },
     removeFromCart(index) {
       this.productsCart.splice(index, 1);
       localStorage.setItem("productsCart", JSON.stringify(this.productsCart));
